@@ -1,0 +1,683 @@
+*************************************************************************************************************************************
+Views:View is a database object like table 
+View contain only the schema part it doesnot conatin the data physically
+When we perform any operation on view than updation will happen in the main table 
+View is mainly used to provide the restriction on column of a table to particular user  
+
+
+mysql> create table mainstu(sid int,name varchar(20),email varchar(20) NOT NULL,totfee float default 20000 NOT NULL ,feepaid float,feebal float,course varchar(20),city varchar(14),phone bigint);
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> insert into mainstu values(101,'Sunny','sunny@gmail.com',22000,16000,6000,'Java','Silchar',8736527876);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mainstu values(102,'Raju','raju@gmail.com',28000,20000,8000,'Hadoop','Kolkata',8172609656);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into mainstu values(103,'Arjun','arjun@gmail.com',22000,20000,2000,'Java','Bangalore',7878192540);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into mainstu values(104,'Praveen','praveen123@gmail.com',26000,22000,4000,'Python','Bangalore',7407823765);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mainstu values(105,'Nabadita','naba99@gmail.com',28000,18000,10000,'Hadoop','Pune',9486408127);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mainstu values(106,'Diya','diya94@gmail.com',22000,18000,4000,'Java','Kolkata',7896789876);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into mainstu values(107,'Arnab','arab@gmail.com',18000,18000,0,'Selinium','Pune',8746823097);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from mainstu;
++------+----------+----------------------+--------+---------+--------+----------+-----------+------------+
+| sid  | name     | email                | totfee | feepaid | feebal | course   | city      | phone      |
++------+----------+----------------------+--------+---------+--------+----------+-----------+------------+
+|  101 | Sunny    | sunny@gmail.com      |  22000 |   16000 |   6000 | Java     | Silchar   | 8736527876 |
+|  102 | Raju     | raju@gmail.com       |  28000 |   20000 |   8000 | Hadoop   | Kolkata   | 8172609656 |
+|  103 | Arjun    | arjun@gmail.com      |  22000 |   20000 |   2000 | Java     | Bangalore | 7878192540 |
+|  104 | Praveen  | praveen123@gmail.com |  26000 |   22000 |   4000 | Python   | Bangalore | 7407823765 |
+|  105 | Nabadita | naba99@gmail.com     |  28000 |   18000 |  10000 | Hadoop   | Pune      | 9486408127 |
+|  106 | Diya     | diya94@gmail.com     |  22000 |   18000 |   4000 | Java     | Kolkata   | 7896789876 |
+|  107 | Arnab    | arab@gmail.com       |  18000 |   18000 |      0 | Selinium | Pune      | 8746823097 |
++------+----------+----------------------+--------+---------+--------+----------+-----------+------------+
+7 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+Dynamic view:It is also called updatable view and with dynamic view we can insert ,delete or update operation on view
+While creating view if we are not using order by or group by clause in select statement  then created view will be dynamic view 
+This example is an example of dynamic view
+
+
+
+
+
+mysql>  create view stuview as select name,email,phone,course from mainstu;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from stuview;
++----------+----------------------+------------+----------+
+| name     | email                | phone      | course   |
++----------+----------------------+------------+----------+
+| Sunny    | sunny@gmail.com      | 8736527876 | Java     |
+| Raju     | raju@gmail.com       | 8172609656 | Hadoop   |
+| Arjun    | arjun@gmail.com      | 7878192540 | Java     |
+| Praveen  | praveen123@gmail.com | 7407823765 | Python   |
+| Nabadita | naba99@gmail.com     | 9486408127 | Hadoop   |
+| Diya     | diya94@gmail.com     | 7896789876 | Java     |
+| Arnab    | arab@gmail.com       | 8746823097 | Selinium |
++----------+----------------------+------------+----------+
+7 rows in set (0.01 sec)
+
+mysql> create view stuaccview as select sid,totfee,feepaid,feebal from mainstu;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from stuaccview;
++------+--------+---------+--------+
+| sid  | totfee | feepaid | feebal |
++------+--------+---------+--------+
+|  101 |  22000 |   16000 |   6000 |
+|  102 |  28000 |   20000 |   8000 |
+|  103 |  22000 |   20000 |   2000 |
+|  104 |  26000 |   22000 |   4000 |
+|  105 |  28000 |   18000 |  10000 |
+|  106 |  22000 |   18000 |   4000 |
+|  107 |  18000 |   18000 |      0 |
++------+--------+---------+--------+
+7 rows in set (0.00 sec)
+
+mysql>  create view stuadview as select course,feepaid,city from mainstu;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>  select * from stuadview;
++----------+---------+-----------+
+| course   | feepaid | city      |
++----------+---------+-----------+
+| Java     |   16000 | Silchar   |
+| Hadoop   |   20000 | Kolkata   |
+| Java     |   20000 | Bangalore |
+| Python   |   22000 | Bangalore |
+| Hadoop   |   18000 | Pune      |
+| Java     |   18000 | Kolkata   |
+| Selinium |   18000 | Pune      |
++----------+---------+-----------+
+7 rows in set (0.01 sec)
+
+Updating the view will update the main table i.e updating stuview name  to Sunny Paul will effect all stuview ,mainstu
+
+
+
+
+
+
+
+
+
+
+mysql> update stuview set name='Sunny Paul' where name='Sunny';
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+mysql> select * from stuview;
++------------+----------------------+------------+----------+
+| name       | email                | phone      | course   |
++------------+----------------------+------------+----------+
+| Sunny Paul | sunny@gmail.com      | 8736527876 | Java     |
+| Raju       | raju@gmail.com       | 8172609656 | Hadoop   |
+| Arjun      | arjun@gmail.com      | 7878192540 | Java     |
+| Praveen    | praveen123@gmail.com | 7407823765 | Python   |
+| Nabadita   | naba99@gmail.com     | 9486408127 | Hadoop   |
+| Diya       | diya94@gmail.com     | 7896789876 | Java     |
+| Arnab      | arab@gmail.com       | 8746823097 | Selinium |
++------------+----------------------+------------+----------+
+7 rows in set (0.00 sec)
+
+
+
+mysql> select * from stuview;
++----------+----------------------+------------+----------+
+| name     | email                | phone      | course   |
++----------+----------------------+------------+----------+
+| Sunny  Paul  | sunny@gmail.com      | 8736527876 | Java     |
+| Raju     | raju@gmail.com       | 8172609656 | Hadoop   |
+| Arjun    | arjun@gmail.com      | 7878192540 | Java     |
+| Praveen  | praveen123@gmail.com | 7407823765 | Python   |
+| Nabadita | naba99@gmail.com     | 9486408127 | Hadoop   |
+| Diya     | diya94@gmail.com     | 7896789876 | Java     |
+| Arnab    | arab@gmail.com       | 8746823097 | Selinium |
++----------+----------------------+------------+----------+
+7 rows in set (0.01 sec)
+
+
+mysql> update stuaccview set totfee=24000 where sid=106;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update stuaccview set feepaid=20000 where sid=106;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+mysql> select * from mainstu;
++------+------------+----------------------+--------+---------+--------+----------+-----------+------------+
+| sid  | name       | email                | totfee | feepaid | feebal | course   | city      | phone      |
++------+------------+----------------------+--------+---------+--------+----------+-----------+------------+
+|  101 | Sunny Paul | sunny@gmail.com      |  22000 |   16000 |   6000 | Java     | Silchar   | 8736527876 |
+|  102 | Raju       | raju@gmail.com       |  28000 |   20000 |   8000 | Hadoop   | Kolkata   | 8172609656 |
+|  103 | Arjun      | arjun@gmail.com      |  22000 |   20000 |   2000 | Java     | Bangalore | 7878192540 |
+|  104 | Praveen    | praveen123@gmail.com |  26000 |   22000 |   4000 | Python   | Bangalore | 7407823765 |
+|  105 | Nabadita   | naba99@gmail.com     |  28000 |   18000 |  10000 | Hadoop   | Pune      | 9486408127 |
+|  106 | Diya       | diya94@gmail.com     |  24000 |   20000 |   4000 | Java     | Kolkata   | 7896789876 |
+|  107 | Arnab      | arab@gmail.com       |  18000 |   18000 |      0 | Selinium | Pune      | 8746823097 |
++------+------------+----------------------+--------+---------+--------+----------+-----------+------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from stuaccview;
++------+--------+---------+--------+
+| sid  | totfee | feepaid | feebal |
++------+--------+---------+--------+
+|  101 |  22000 |   16000 |   6000 |
+|  102 |  28000 |   20000 |   8000 |
+|  103 |  22000 |   20000 |   2000 |
+|  104 |  26000 |   22000 |   4000 |
+|  105 |  28000 |   18000 |  10000 |
+|  106 |  24000 |   20000 |   4000 |
+|  107 |  18000 |   18000 |      0 |
++------+--------+---------+--------+
+7 rows in set (0.00 sec)
+
+mysql>  select * from stuadview;
++----------+---------+-----------+
+| course   | feepaid | city      |
++----------+---------+-----------+
+| Java     |   16000 | Silchar   |
+| Hadoop   |   20000 | Kolkata   |
+| Java     |   20000 | Bangalore |
+| Python   |   22000 | Bangalore |
+| Hadoop   |   18000 | Pune      |
+| Java     |   20000 | Kolkata   |
+| Selinium |   18000 | Pune      |
++----------+---------+-----------+
+7 rows in set (0.00 sec)
+
+Updating the view will update the main table as well as the other view releated to it i.e updating stuaccview totpaid to 24000 and feepaid to 20000 will effect 
+all stuaccview,mainstu,stuadview also
+*************************************************************************************************************************************
+
+
+
+
+
+Static view:It is also called read only view and with static view we cannot perform insert ,delete or update operation on view
+While creating view if we are using order by or group by clause in select statement then created view will be dynamic view 
+This example is an example of dynamic view
+
+mysql> create table mainstu2(sid int,name varchar(20),email varchar(20) not null,course varchar(20),fee int,feepaid int,city varchar(20) default 'Silchar' not null);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into mainstu2 values(101,'Mohan','Mohanp@gmail.com','Java',20000,18000,'Silchar');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into mainstu2(sid,name,email,course,fee,feepaid) values(102,'Raj','raj90@gmail.com','Hadoop',30000,25000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mainstu2 values(103,'Mohit','mht92@gmail.com','Java',20000,15000,'Bangalore');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into mainstu2 values(104,'Ramesh','remesh@gmail.com','Spring',12000,8000,'Pune');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mainstu2 values(105,'Rani','rani@gmail.com','Java',20000,19000,'Jaipur');
+Query OK, 1 row affected (0.06 sec)
+
+
+mysql> select * from mainstu2;
++------+--------+------------------+--------+-------+---------+-----------+
+| sid  | name   | email            | course | fee   | feepaid | city      |
++------+--------+------------------+--------+-------+---------+-----------+
+|  101 | Mohan  | Mohanp@gmail.com | Java   | 20000 |   18000 | Silchar   |
+|  102 | Raj    | raj90@gmail.com  | Hadoop | 30000 |   25000 | Silchar   |
+|  103 | Mohit  | mht92@gmail.com  | Java   | 20000 |   15000 | Bangalore |
+|  104 | Ramesh | remesh@gmail.com | Spring | 12000 |    8000 | Pune      |
+|  105 | Rani   | rani@gmail.com   | Java   | 20000 |   19000 | Jaipur    |
++------+--------+------------------+--------+-------+---------+-----------+
+5 rows in set (0.00 sec)
+
+
+
+mysql>  create view stu2statview as select city,sum(fee) as "Collected Fee" from mainstu2 group by city;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from stu2statview;
++-----------+---------------+
+| city      | Collected Fee |
++-----------+---------------+
+| Bangalore |         20000 |
+| Jaipur    |         20000 |
+| Pune      |         12000 |
+| Silchar   |         50000 |
++-----------+---------------+
+4 rows in set (0.08 sec)
+
+
+
+mysql> create view stu2statview1 as select name,city,email  from mainstu2 order by city ;
+Query OK, 0 rows affected (0.28 sec)
+
+mysql> select * from stu2statview1;
++--------+-----------+------------------+
+| name   | city      | email            |
++--------+-----------+------------------+
+| Mohit  | Bangalore | mht92@gmail.com  |
+| Rani   | Jaipur    | rani@gmail.com   |
+| Ramesh | Pune      | remesh@gmail.com |
+| Mohan  | Silchar   | Mohanp@gmail.com |
+| Raj    | Silchar   | raj90@gmail.com  |
++--------+-----------+------------------+
+5 rows in set (0.12 sec)
+
+
+mysql> delete from stu2statview where city='Jaipur';
+ERROR 1288 (HY000): The target table stu2statview of the DELETE is not updatable
+ 
+We can only read view but cannot perform update,delete,insert operation on view
+
+
+*************************************************************************************************************************************
+Transiction:It is the process of performing set of DataBase operation as single unit
+If all the database operation of transictiom are successful than we have to save the transiction by using commit command
+If any single database operation of transictiom is  unsuccessful than we have to cancel  the entire transiction by issuing rollback command
+
+To Manage transiction we need to use following kkeyword:
+auto commit:-	If enabled than after executing the query commit will be issued
+	     	If disabled than after executing the query commit will not be issued
+commit:-		The query will be committed or saved and cannot be roll back
+			insert 
+			delete 
+			update
+
+roll back:		Uncommitteed or unsaved query will be rolled back(cancelled)
+savepoint:-	Marking from where uncommitted or unsaved query will be rolled back(cancelled)
+
+
+
+Managing autocommit option:
+To see:		select@@autocommit
+To enable:		set autocommit=1
+To disabled:	set autocommit==0
+By Default:	enabled i.e 1
+
+
+
+mysql> select@@autocommit;
++--------------+
+| @@autocommit |						by default autocommiy is 1
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> set autocommit=1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select@@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> set autocommit=0;					off i.e no longer check for commit command
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select@@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            0 |
++--------------+
+1 row in set (0.00 sec)
+
+
+Note: to perform rollback,commit,savepoint always set autocommit=0
+
+
+mysql> select@@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            0 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> create table transictiondemo(id int);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into transictiondemo values(101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo values(102);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo values(103);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
++------+
+3 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> select * from transictiondemo;
+Empty set (0.00 sec)
+
+
+
+
+
+
+mysql> insert into transictiondemo values(101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo values(102);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo values(103);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
++------+
+3 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
++------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+mysql> update  transictiondemo set id=110 where id=103;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  110 |
++------+
+3 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
++------+
+3 rows in set (0.00 sec)
+
+
+
+mysql> insert into transictiondemo values(104);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo values(105);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
++------+
+5 rows in set (0.00 sec)
+
+mysql> insert into transictiondemo values(106);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
+|  106 |
++------+
+6 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
++------+
+5 rows in set (0.00 sec)
+
+
+
+mysql> delete  from  transictiondemo;
+Query OK, 5 rows affected (0.00 sec)
+
+mysql> select * from  transictiondemo;
+Empty set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from  transictiondemo;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
++------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+mysql> select @@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            0 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> create table transictiondemo1(id int);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into transictiondemo1 values(101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(102);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(103);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(104);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into transictiondemo1 values(105);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(106);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(107);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> savepoint mohan1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(108);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(109);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> savepoint mohan2;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(110);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transictiondemo1 values(111);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from transictiondemo1;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
+|  106 |
+|  107 |
+|  108 |
+|  109 |
+|  110 |
+|  111 |
++------+
+11 rows in set (0.00 sec)
+
+mysql> rollback to mohan2;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from transictiondemo1;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
+|  106 |
+|  107 |
+|  108 |
+|  109 |
++------+
+9 rows in set (0.00 sec)
+
+mysql> rollback to mohan1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from transictiondemo1;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
+|  105 |
+|  106 |
+|  107 |
++------+
+7 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from transictiondemo1;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+|  103 |
+|  104 |
++------+
+4 rows in set (0.00 sec)
+
+
+
+
+Every time we exit MySql and  if we open MySql software again than autocommit is by default i.e 1
+*************************************************************************************************************************************

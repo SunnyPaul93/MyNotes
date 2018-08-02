@@ -1,0 +1,68 @@
+Core java for standalone application i.e in any single machine
+
+Now to develope web appln go fro advance java
+
+
+Advance java:
+
+Java Database Connectivity:
+If we want to communicate with DB that technology is JDBC
+
+Basic components of JDBC:
+1.Drivers:It is a transalter to convert java calls into database calls and database calls into 
+java calls
+
+2.Connection:To communicate with database from java application 
+
+3.Statement object:
+Purpose of Statement object :to send our sql query to database and bring results from DB to java
+statement object required
+
+4:Result Set:It holds results of sql query 
+
+
+Steps to develope JDBC Appln:
+1.Load or register driver 
+2.Estlablish connection between java appln an ddatabase
+3.Create statement object 
+4.Send and execute SQL queries
+5.Process result from result set
+6.Close connection 
+
+JDBC is a part of java standard eddision (J2SE/JSE)
+JDBC defined by java vendor and  implement this specification are Database vendors or Third party vendor 
+Database vendor provide implementation  called Driver software 
+
+Features of JDBC:
+1.It is a standard API it never going to change DB to DB (connection,statement,result set are always same for mysql,oracle or third party)
+2.It is DB independent API
+3.Most of driver are depeloped by using JAVA language only
+4.CURD operation can be performed eadily by JDBC API only
+
+
+http://www.oracle.com/technetwork/java/index-136695.html
+
+java is DB independ but driver is DB dependent
+
+JDBC API:
+A group of classes and interfaces which can be used for DB communication and used by programmers and Driver software vendor
+
+JDBC package:
+
+1.java.sql	:contain basic classes and interfaces which can be used for DB communication 
+2.javax.sql :java extension:conatins more advanced classes and interfaces used for DB communication
+
+
+
+Type 4 drivers:
+Also known as pure java driver as it is developed in completly developed in java only
+Also known native protocol driver 
+Also known as thin drivers as it won't required any extra component to communicate with database
+
+Platform indepedent as purely developed in java
+Performane is best among all drivers
+Not reqd to have ODBC driver,native libaries, middle way server
+
+Limitation:
+DB dependent driver
+		

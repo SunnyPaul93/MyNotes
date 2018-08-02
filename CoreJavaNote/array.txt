@@ -1,0 +1,181 @@
+limitation:
+array size is fixed
+hold similar type of data type(homogenous)
+
+arr is indexed collection of fixed no. of homogenous data elements
+we can reapresent huge no. of values by using single variable so that raedability of code wiil be improved
+int[] x;valid x is 1-d int array---reconemded
+int []x;valid 1-d array x is of int type
+int x[];valid
+int[6] x;invalid cannot specify size at time of declaration
+int[][] x;valid
+int [][]x;valid
+int x[][];valid
+int[] []x;valid
+int[] x[];valid
+int []x[];valid
+
+
+int[] a,b; 	a-1d b-1d
+int[] a[],b;	a-2d b-1d
+int[] a[],b[];	a-2d b-2d
+int[] []a,b;	a-2d b-2d
+int[] []a,b[];	a-2d b-3d
+int[] []a,[]b;	invalid
+int[] a,[]b;	invalid
+int[] x=new int[-3]; invalid -ve array type exception
+int[] x=new int[10]; valid
+int[] x=new int[a]; valid
+byte b=80; int[] x=new int[b];  valid
+short s=120; int[] x=new int[s];  valid
+int[] x=new int[10l];  invalid
+array size allowed data types are byte short char int is valid but any other type is invalid
+max. no. of value of elements(array size) is max range of int
+int[] x=new int[2147483647];  valid but (2147483647*4) of memory not available in my system than out of memeory errorr will take place
+int[] x=new int[2147483648];  invalid int no.too large
+int[] x=new int[2147483648l];  invalid possible loss of data
+2-d array array of array approach
+memory utilization will be improved
+is raary to array i.e sun-array size not fixed leave 2nd dimension empty
+
+int[][] x=new int[2][]; x[0]=new int[3]; x[1]=new int[1];
+
+
+
+
+int[] x=new int[1];
+sop(x);		//address of array
+sop(x[0]) 	//since int type so default value is 0
+
+
+
+int[] x=new int[2][3];
+sop(x);		//address of reference array
+sop(x[0]) 	//address of 1-d array
+sop(x[0][0]) 	//default value of int i.e 0
+
+int[] x=new int[2][];
+sop(x);		//address of reference array
+sop(x[0]) 	//null
+sop(x[0][0]) 	//null pointer exception since doing operation on null
+
+
+if array size is 5 but we are giving 6th element(x[5]) then run time exception will occur array:index out of bound
+x[-4] run time :-----array:index out of bound
+x[2.5] compile time error:----- loss of precision found double reqd. int
+
+
+
+in general:
+int[] x;  declaration
+x=new int[3];construction
+x[0]=13; x[1]=22;x[2]=55; initilization
+
+array declaration creation and initilization in a single ine:
+int[] x={13,22,55};  //internally above will happen 
+char[] ch={'a','e','i','o','u'};
+String[] A={"Ass","ssdf","sass","102"};
+
+int[][] x={{12,34},{12,45,66}};
+
+
+
+
+int[] x={10,20,30};    		valid
+int[] x;    x={10,20,20};	invslid
+int[] x=new int[6];
+sop(x.length()); invalid cannot find symbol:method length()
+sop(x.length); valid 
+length is a final variable applicable for arrays 
+length of variable represents size of array 
+
+String s="sunny";
+sop(s.length); invalid:length var not applicable for string:cannot find symbol variable length location class java.lang.string
+sop(s.length());valid-- length mtd is final mtd applicable for string and length mdt returns no.of char presentin a string 
+
+
+
+String[] s={"A","AA","AAAA"};
+sop(s.length);	//valid:3
+sop(s.length());//invalid since here string array
+sop(s[0].length);//invalid since string variable is not valid 
+sop(s[0].length());//valid:1 since string method is valid
+
+int[][] x=new int[6][3];
+sop(x.length);// 6  in multidimensional array length variable is base size only not total size 
+sop(x[0].length+""+x[1].length...........);//3
+no direct way to specify overall size of multi dimensional array but indirectly we can find as given above
+
+
+
+
+anonymous arrays:
+int[] x={10,20,30};  array name=x;
+declare array without name. 
+the main purpose of this array is just for instant or one time use i dont want the array in next line 
+new int[]{10,23,30,40};
+so size should not be given for anonymous array
+
+we can create multidimentional array also
+new int[][]{{10,23,44,55,5},{3,3,44,55,3,3},{35,4,4,3,2,3}};
+
+if we give the name of anonymous array than it is no longer anonymous array
+eg:int[] x=new int[]{10,23,45};
+
+
+just to call some mtd we reqd. an array but after completing method call we are not using the array any more
+
+int[] x=new int[5];
+x[0]=12;
+x[1]='a';
+byte b=20; x[2]=b;
+short s=30; x[3]=s;
+x[4]=33l; invalid since long but element is int type
+
+
+float[] x=new float[5];
+x[0]=12;
+x[1]='a';
+byte b=20; x[2]=b;
+short s=30; x[3]=s;
+x[4]=33l; invalid since long but element is int type
+x[5]=12.0f;
+
+
+Object[] a=new Object [12];
+a[0]=new Object();
+a[1]=new String("add");
+a[2]=new Integer(10);
+
+number1[] a=new number1[12];		(number:by,sh,int,long,float,double)
+a[0]=new integer(10);
+a[1]=new String("add");//invalid 
+a[2]=new Double(10.5);
+
+
+
+int[] x={12,3,4,4};
+char[] ch={'a','a','s'};
+int[] b=x;  valid 
+int[] c=ch; invalid char element can be promoted to int type but char array cannot be promoted to int type because char and int array are different object not relation b/w char and int array
+
+
+char-->int;valid
+char[]-->int[];invalid
+int--->double---valid
+int[]--->double[]---invalid
+float[]--->int[]---invalid
+String-->Object;--valid
+String[]-->Object[];--valid
+
+
+
+int[] a={10,20,30,40};
+int[] b={40,34};
+a=b; valid
+b=a;valid
+internally elements won't be copied but address is copied
+
+
+int[][] a=new int[3][];
+a[0]=new int[4][3];  invalid 

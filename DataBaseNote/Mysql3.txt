@@ -1,0 +1,609 @@
+***********************************************************************************************************************************
+Sub-queries:When we include one query as apart of another query than it is calles as sub-query
+1st, sub-query will be evaluated and depending on the result returned by sub-query, the main query will be executed
+Depending on the condition provided in sub-query it may return zero or more results
+When sub-query is returning exactly one record than we can use = operator to assign the result of sub-query to main query
+When sub-query is returning more than one record than we can use IN operator to assign the result of sub-query to main query
+
+
+
+mysql> select * from customer;
++-----+-------+---------------------+------------+
+| cid   | cname | email               	           | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny  | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju    | Raju@gmail.com           | 8273747474 |
+| 103 | Rani    | Rani@gmail.com           | 9182746758 |
+| 104 | Sumit   | Sumit@gmail.com         | 7182738945 |
++-----+-------+---------------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> create table customeraddress(cid int,street varchar(20),city varchar(20));
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into customeraddress values(101,'Rangirkhari','Silchar');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into customeraddress values(102,'BTM Layout','Bangalore');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into customeraddress values(103,'MKR','Bangalore');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into customeraddress values(104,'Kandiwali West','Mumbai');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> select * from customeraddress;
++------+----------------+-----------+
+| cid    | street         		| city      |
++------+----------------+-----------+-------------+
+|  101 | Rangirkhari    	| Silchar   |
+|  102 | BTM Layout   	| Bangalore |
+|  103 | MKR            		| Bangalore |
+|  104 | Kandiwali West 	| Mumbai    |
++------+----------------+-----------+
+4 rows in set (0.01 sec)
+
+mysql> create table customerfee(cid int,fee int,dop date);
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into customerfee values(101,65000,'2017-6-15');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into customerfee values(102,44300,'2017-2-19');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into customerfee values(103,87600,'2017-9-2');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into customerfee values(104,50000,'2017-11-20');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from customerfee;
++------+-------+------------+
+| cid    | fee      | dop        |
++------+-------+------------+
+|  101 | 65000 | 2017-06-15 |
+|  102 | 44300 | 2017-02-19 |
+|  103 | 87600 | 2017-09-02 |
+|  104 | 50000 | 2017-11-20 |
++------+-------+------------+
+4 rows in set (0.00 sec)
+
+
+
+
+mysql>  select cname from customer where email='SunnyPaul@gmail.com';
++-------+
+| cname |
++-------+
+| Sunny |
++-------+
+1 row in set (0.01 sec)
+
+mysql> select cname from customer where cid=(select cid from customer where email='SunnyPaul@gmail.com');
++-------+
+| cname |
++-------+
+| Sunny |
++-------+
+1 row in set (0.08 sec)
+
+mysql> select cname from customer where cid=(select cid from customer where phone=7182738945);
++-------+
+| cname |
++-------+
+| Sumit |
++-------+
+1 row in set (0.03 sec)
+
+mysql> select cname from customer where cid=(select cid from customeraddress where street='BTM Layout');
++-------+
+| cname |
++-------+
+| Raju  |
++-------+
+1 row in set (0.00 sec)
+
+
+mysql>  select cname,email from customer where cid=(select cid from customeraddress where street='Rangirkhari');
++-------+---------------------+
+| cname | email               |
++-------+---------------------+
+| Sunny | SunnyPaul@gmail.com |
++-------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> select street,city from customeraddress where cid=(select cid from customerfee where fee=87600 );
++--------+-----------+
+| street | city      |
++--------+-----------+
+| MKR    | Bangalore |
++--------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select fee,dop from customerfee where cid=(select cid from customer where cname='Sunny');
++-------+------------+
+| fee   | dop        |
++-------+------------+
+| 65000 | 2017-06-15 |
++-------+------------+
+1 row in set (0.01 sec)
+
+
+
+mysql> select * from customer where cid in(select cid from customeraddress where city='Bangalore' );
++-----+-------+----------------+------------+
+| cid | cname | email          | phone      |
++-----+-------+----------------+------------+
+| 102 | Raju  | Raju@gmail.com | 8273747474 |
+| 103 | Rani  | Rani@gmail.com | 9182746758 |
++-----+-------+----------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from customer where cid =(select cid from customeraddress where city='Bangalore' );
+ERROR 1242 (21000): Subquery returns more than 1 row
+Since here raju and rani are satying in Bangalore i.e more than one record so we have to use IN operator to assign sub-query resuult to main query
+
+
+
+
+
+mysql> select * from customer where cid in (select cid from customeraddress where city='Bangalore' );
++-----+-------+----------------+------------+
+| cid | cname | email          | phone      |
++-----+-------+----------------+------------+
+| 102 | Raju  | Raju@gmail.com | 8273747474 |
+| 103 | Rani  | Rani@gmail.com | 9182746758 |
++-----+-------+----------------+------------+
+
+
+
+
+mysql> select cname,cid,email from customer where cid in(select cid from customeraddress where cid in(select cid  from customerfee where fee=50000));
++-------+-----+-----------------+
+| cname | cid | email           |
++-------+-----+-----------------+
+| Sumit | 104 | Sumit@gmail.com |
++-------+-----+-----------------+
+1 row in set (0.00 sec)
+
+mysql>  select street,city from customeraddress where cid in(select cid from customerfee where cid in(select cid from customerfee where fee=65000));
++-------------+---------+
+| street      | city    |
++-------------+---------+
+| Rangirkhari | Silchar |
++-------------+---------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select city from customeraddress where cid=(select cid from customer where email='Raju@gmail.com');
++-----------+
+| city      |
++-----------+
+| Bangalore |
++-----------+
+1 row in set (0.00 sec)
+
+mysql>  select * from customer where cid=(select cid from customerfee where dop='2017-06-15');
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
++-----+-------+---------------------+------------+
+1 row in set (0.00 sec)
+
+
+mysql>  select * from customer where cid=(select cid from customerfee where fee between 40000 and 80000);
+ERROR 1242 (21000): Subquery returns more than 1 row
+Since more than one record so use IN instead of = operator
+
+
+
+
+
+mysql>  select * from customer where cid in(select cid from customerfee where fee between 40000 and 80000);
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju  | Raju@gmail.com      | 8273747474 |
+| 104 | Sumit | Sumit@gmail.com     | 7182738945 |
++-----+-------+---------------------+------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select fee from customerfee where cid=(select cid from customer where cname='Rani');
++-------+
+| fee   |
++-------+
+| 87600 |
++-------+
+1 row in set (0.00 sec)
+***********************************************************************************************************************************
+
+mysql> select * from studentinfo;
++------+----------+----------+--------+---------+--------+--------+-------+
+| sid  | sname    | course   | totfee | feepaid | feebal | branch | city  |
++------+----------+----------+--------+---------+--------+--------+-------+
+|    1 | Srinivas | FC       |  18000 |   10000 |   8000 | MKR    | Blore |
+|    2 | Dande    | CoreJava |   5000 |    5000 |      0 | BTM    | Pune  |
+|    3 | Manish   | Android  |   8000 |    4000 |   4000 | MHA    | Delhi |
+|    4 | DK       | Hadoop   |  18000 |    9000 |   9000 | MKR    | Blore |
+|    5 | Rajeev   | Android  |   8000 |    5000 |   3000 | BTM    | Pune  |
+|    6 | Firoj    | Hadoop   |  20000 |   15000 |   5000 | MKR    | Blore |
+|    7 | Kofel    | Android  |   8000 |    2000 |   6000 | BTM    | Delhi |
++------+----------+----------+--------+---------+--------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> create view studentinfosub as select sid,sname,course from studentinfo; 
+Query OK, 0 rows affected (0.11 sec)				
+					
+mysql> select * from studentinfosub;
++------+----------+----------+
+| sid  | sname    | course   |
++------+----------+----------+
+|    1 | Srinivas | FC       |
+|    2 | Dande    | CoreJava |
+|    3 | Manish   | Android  |
+|    4 | DK       | Hadoop   |
+|    5 | Rajeev   | Android  |
+|    6 | Firoj    | Hadoop   |
+|    7 | Kofel    | Android  |
++------+----------+----------+
+7 rows in set (0.05 sec)
+
+
+
+mysql> update studentinfosub set sname='Sri' where sid=1;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+
+mysql> select * from studentinfo;
++------+--------+----------+--------+---------+--------+--------+-------+
+| sid  | sname  | course   | totfee | feepaid | feebal | branch | city  |
++------+--------+----------+--------+---------+--------+--------+-------+
+|    1 | Sri    | FC       |  18000 |   10000 |   8000 | MKR    | Blore |
+|    2 | Dande  | CoreJava |   5000 |    5000 |      0 | BTM    | Pune  |
+|    3 | Manish | Android  |   8000 |    4000 |   4000 | MHA    | Delhi |
+|    4 | DK     | Hadoop   |  18000 |    9000 |   9000 | MKR    | Blore |
+|    5 | Rajeev | Android  |   8000 |    5000 |   3000 | BTM    | Pune  |
+|    6 | Firoj  | Hadoop   |  20000 |   15000 |   5000 | MKR    | Blore |
+|    7 | Kofel  | Android  |   8000 |    2000 |   6000 | BTM    | Delhi |
++------+--------+----------+--------+---------+--------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from studentinfosub;
++------+--------+----------+
+| sid  | sname  | course   |
++------+--------+----------+
+|    1 | Sri    | FC       |
+|    2 | Dande  | CoreJava |
+|    3 | Manish | Android  |
+|    4 | DK     | Hadoop   |
+|    5 | Rajeev | Android  |
+|    6 | Firoj  | Hadoop   |
+|    7 | Kofel  | Android  |
++------+--------+----------+
+7 rows in set (0.00 sec)
+
+Since we use view instread of table for creating studentinfosub so insert or update or delete of sub table(studentinfotable) will effect the main table(studentinfo)
+
+*************************************************************************************************************************************
+Since we use table  for creating studentinfotable so insert or update or delete of sub table(studentinfotable) will not effect the main table(studentinfo)
+
+
+mysql> select * from studentinfo;
++------+--------+----------+--------+---------+--------+--------+-------+
+| sid  | sname  | course   | totfee | feepaid | feebal | branch | city  |
++------+--------+----------+--------+---------+--------+--------+-------+
+|    1 | Sri    | FC       |  18000 |   10000 |   8000 | MKR    | Blore |
+|    2 | Dande  | CoreJava |   5000 |    5000 |      0 | BTM    | Pune  |
+|    3 | Manish | Android  |   8000 |    4000 |   4000 | MHA    | Delhi |
+|    4 | DK     | Hadoop   |  18000 |    9000 |   9000 | MKR    | Blore |
+|    5 | Rajeev | Android  |   8000 |    5000 |   3000 | BTM    | Pune  |
+|    6 | Firoj  | Hadoop   |  20000 |   15000 |   5000 | MKR    | Blore |
+|    7 | Kofel  | Android  |   8000 |    2000 |   6000 | BTM    | Delhi |
++------+--------+----------+--------+---------+--------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> create table studentinfotable as select sid,sname,course from studentinfo;
+Query OK, 7 rows affected (0.16 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from studentinfo;
++------+--------+----------+--------+---------+--------+--------+-------+
+| sid  | sname  | course   | totfee | feepaid | feebal | branch | city  |
++------+--------+----------+--------+---------+--------+--------+-------+
+|    1 | Sri    | FC       |  18000 |   10000 |   8000 | MKR    | Blore |
+|    2 | Dande  | CoreJava |   5000 |    5000 |      0 | BTM    | Pune  |
+|    3 | Manish | Android  |   8000 |    4000 |   4000 | MHA    | Delhi |
+|    4 | DK     | Hadoop   |  18000 |    9000 |   9000 | MKR    | Blore |
+|    5 | Rajeev | Android  |   8000 |    5000 |   3000 | BTM    | Pune  |
+|    6 | Firoj  | Hadoop   |  20000 |   15000 |   5000 | MKR    | Blore |
+|    7 | Kofel  | Android  |   8000 |    2000 |   6000 | BTM    | Delhi |
++------+--------+----------+--------+---------+--------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from studentinfotable;
++------+--------+----------+
+| sid  | sname  | course   |
++------+--------+----------+
+|    1 | Sri    | FC       |
+|    2 | Dande  | CoreJava |
+|    3 | Manish | Android  |
+|    4 | DK     | Hadoop   |
+|    5 | Rajeev | Android  |
+|    6 | Firoj  | Hadoop   |
+|    7 | Kofel  | Android  |
++------+--------+----------+
+7 rows in set (0.00 sec)
+
+mysql> update studentinfotable set sname='Srinivas' where sid=1;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from studentinfo;
++------+--------+----------+--------+---------+--------+--------+-------+
+| sid  | sname  | course   | totfee | feepaid | feebal | branch | city  |
++------+--------+----------+--------+---------+--------+--------+-------+
+|    1 | Sri    | FC       |  18000 |   10000 |   8000 | MKR    | Blore |
+|    2 | Dande  | CoreJava |   5000 |    5000 |      0 | BTM    | Pune  |
+|    3 | Manish | Android  |   8000 |    4000 |   4000 | MHA    | Delhi |
+|    4 | DK     | Hadoop   |  18000 |    9000 |   9000 | MKR    | Blore |
+|    5 | Rajeev | Android  |   8000 |    5000 |   3000 | BTM    | Pune  |
+|    6 | Firoj  | Hadoop   |  20000 |   15000 |   5000 | MKR    | Blore |
+|    7 | Kofel  | Android  |   8000 |    2000 |   6000 | BTM    | Delhi |
++------+--------+----------+--------+---------+--------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from studentinfotable;
++------+----------+----------+
+| sid  | sname    | course   |
++------+----------+----------+
+|    1 | Srinivas | FC       |
+|    2 | Dande    | CoreJava |
+|    3 | Manish   | Android  |
+|    4 | DK       | Hadoop   |
+|    5 | Rajeev   | Android  |
+|    6 | Firoj    | Hadoop   |
+|    7 | Kofel    | Android  |
++------+----------+----------+
+7 rows in set (0.00 sec)
+*************************************************************************************************************************************** 
+
+Auto-Increment
+MySql donot support Sequence so auto-imcrement is used
+It is used to generate numeric value in MySql
+By default auto-increment :-----
+			start with 1
+			increment by 1
+
+
+mysql> create table emp6(eid int primary key auto_increment=100,name varchar(20));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=100,name varchar(20))' at line 1
+mysql> create table emp6(eid int primary ,name varchar(20) primary key auto_increment=100);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name varchar(20) primary key auto_increment=100)' at line 1
+
+We cannot change default auto-increment implementation
+auto-increment must be used with primary key
+Here auto increment start increment the last data entried 
+Auto increment cannot be used for alpha numeric values
+In a table only one auto-increment is allowed
+
+
+mysql> create table emp4(eid int primary key auto_increment,name varchar(20));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into emp4(name) values('Sunny');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4(name) values('Ravi');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4(name) values('Raju');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4(name) values('Puneet');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into emp4(name) values('Reshmi');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4(name) values('Aliya');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from emp4;
++-----+--------+
+| eid | name   |
++-----+--------+
+|   1 | Sunny  |
+|   2 | Ravi   |
+|   3 | Raju   |
+|   4 | Puneet |
+|   5 | Reshmi |
+|   6 | Aliya  |
++-----+--------+
+6 rows in set (0.00 sec)
+
+mysql> insert into emp4 values(7,'Manu');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into emp4 values(8,'Rubi');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4 values(9,'Pritam');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into emp4 values(15,'Roshni');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into emp4(name) values('Surya');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into emp4(name) values('Mohit');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from emp4;
++-----+--------+
+| eid | name   |
++-----+--------+
+|   1 | Sunny  |
+|   2 | Ravi   |
+|   3 | Raju   |
+|   4 | Puneet |
+|   5 | Reshmi |
+|   6 | Aliya  |
+|   7 | Manu   |
+|   8 | Rubi   |
+|   9 | Pritam |
+|  15 | Roshni |
+|  16 | Surya  |
+|  17 | Mohit  |
++-----+--------+
+12 rows in set (0.00 sec)
+
+Here auto increment start increment the last data entried 
+Auto increment cannot be used for alpha numeric values
+In a table only one auto-increment is allowed
+
+
+
+mysql> insert into emp4 values(103,'Naveen');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into emp4(name) values('Kavya');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from emp4;
++-----+--------+
+| eid | name   |
++-----+--------+
+|   1 | Sunny  |
+|   2 | Ravi   |
+|   3 | Raju   |
+|   4 | Puneet |
+|   5 | Reshmi |
+|   6 | Aliya  |
+|   7 | Manu   |
+|   8 | Rubi   |
+|   9 | Pritam |
+|  15 | Roshni |
+|  16 | Surya  |
+|  17 | Mohit  |
+| 103 | Naveen |
+| 104 | Kavya  |
++-----+--------+
+14 rows in set (0.00 sec)
+***************************************************************************************************************************************
+
+
+mysql> create table emp5(eid int primary key auto-increment,name varchar(20) auto-increment);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'auto-increment,name varchar(20) auto-increment)' at line 1
+
+In a table only one auto-increment is allowed
+for multiple(composite) primary key where one is auto_increment than we have to use engine='MYISAM';
+
+
+mysql> create table batch(bid varchar(20),sid int auto_increment,primary key(bid,sid)) engine=MyISAM;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> drop table batch;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create table batch(bid varchar(20),sid int auto_increment,primary key(bid,sid)) engine=MYISAM;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.19 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B2');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B2');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch values('B2',101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B2');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B2');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch values('B1',201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch values('B3',101);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into batch(bid) values('B3');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from batch;
++-----+-----+
+| bid | sid |
++-----+-----+
+| B1  |   1 |
+| B1  |   2 |
+| B1  |   3 |
+| B1  |   4 |
+| B1  | 201 |
+| B1  | 202 |
+| B1  | 203 |
+| B1  | 204 |
+| B2  |   1 |
+| B2  |   2 |
+| B2  | 101 |
+| B2  | 102 |
+| B2  | 103 |
+| B3  |   1 |
+| B3  |   2 |
+| B3  | 101 |
+| B3  | 102 |
+| B3  | 103 |
+| B3  | 104 |
+| B3  | 105 |
++-----+-----+
+20 rows in set (0.00 sec)
+
+**********************************************************************************************************************************
+
+

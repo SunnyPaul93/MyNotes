@@ -1,0 +1,729 @@
+*************************************************************************************************************************************
+Views:View is a database object like table 
+View contain only the schema part it doesnot conatin the data physically
+When we perform any operation on view than updation will happen in the main table 
+View is mainly used to provide the restriction on column of a table to particular user  
+
+
+
+
+
+
+
+
+SQL> create table mainstu(sid int,name varchar(20),email varchar(20) NOT NULL,totfee float default 20000 NOT NULL ,feepaid float,feebal float,course varchar(20),city varchar(14),phone number);
+
+Table created.
+
+SQL> insert into mainstu values(101,'Sunny','sunny@gmail.com',22000,16000,6000,'Java','Silchar',8736527876);
+
+1 row created.
+
+SQL> insert into mainstu values(102,'Raju','raju@gmail.com',28000,20000,8000,'Hadoop','Kolkata',8172609656);
+
+1 row created.
+
+SQL> insert into mainstu values(103,'Arjun','arjun@gmail.com',22000,20000,2000,'Java','Bangalore',7878192540);
+
+1 row created.
+
+SQL> insert into mainstu values(104,'Praveen','praveen123@gmail.com',26000,22000,4000,'Python','Bangalore',7407823765);
+
+1 row created.
+
+SQL> insert into mainstu values(105,'Nabadita','naba99@gmail.com',28000,18000,10000,'Hadoop','Pune',9486408127);
+
+1 row created.
+
+SQL> insert into mainstu values(106,'Diya','diya94@gmail.com',22000,18000,4000,'Java','Kolkata',7896789876);
+
+1 row created.
+
+SQL> insert into mainstu values(107,'Arnab','arab@gmail.com',18000,18000,0,'Selinium','Pune',8746823097);
+
+1 row created.
+
+SQL> select * from mainstu;
+
+       SID NAME            EMAIL                   		 TOTFEE    FEEPAID     FEEBAL 	COURSE            	CITY           	PHONE
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       101 Sunny               sunny@gmail.com		22000      	16000       		6000 	Java              	Silchar   		8736527876
+       102 Raju                 raju@gmail.com		28000      	20000       		8000 	Hadoop            	Kolkata   		8172609656
+       103 Arjun               arjun@gmail.com		22000      	20000       		2000 	Java              	Bangalore         	7878192540
+       104 Praveen           praveen123@gmail.com      	26000      	22000       		4000 	Python            	Bangalore         	7407823765
+       105 Nabadita          naba99@gmail.com          	28000      	18000      		10000 	Hadoop            	Pune      		9486408127
+       106 Diya                 diya94@gmail.com          	22000      	18000       		4000 	Java              	Kolkata   		7896789876
+       107 Arnab               arab@gmail.com            	18000      	18000          	0 	Selinium          	Pune      		8746823097
+
+7 rows selected.
+
+
+
+
+
+
+
+Dynamic view:It is also called updatable view and with dynamic view we can read the data from then created table as well as we can insert ,delete or update 
+operation on view
+While creating view if we are not using order by or group by clause in select statement then created view will be dynamic view 
+This example is an example of dynamic view
+
+
+
+
+
+
+SQL> create view stuview as select name,email,phone,course from mainstu;
+
+View created.
+
+SQL> select * from stuview;
+
+NAME                 EMAIL                     PHONE COURSE
+-------------------- -------------------- ---------- --------------------
+Sunny                sunny@gmail.com      8736527876 Java
+Raju                 raju@gmail.com       8172609656 Hadoop
+Arjun                arjun@gmail.com      7878192540 Java
+Praveen              praveen123@gmail.com 7407823765 Python
+Nabadita             naba99@gmail.com     9486408127 Hadoop
+Arnab                arab@gmail.com       8746823097 Selinium
+Diya                 diya94@gmail.com     7896789876 Java
+
+7 rows selected.
+
+
+
+SQL> create view stuaccview as select sid,totfee,feepaid,feebal from mainstu;
+
+View created.
+
+SQL> select * from stuaccview;
+
+       SID     TOTFEE    FEEPAID     FEEBAL
+---------- ---------- ---------- ----------
+       101      22000      16000       6000
+       102      28000      20000       8000
+       103      22000      20000       2000
+       104      26000      22000       4000
+       105      28000      18000      10000
+       107      18000      18000          0
+       106      22000      18000       4000
+
+7 rows selected.
+
+SQL> create view stuadview as select course,feepaid,city from mainstu;
+
+View created.
+
+SQL> select * from stuadview;
+
+COURSE                  FEEPAID CITY
+-------------------- ---------- --------------
+Java                      16000 Silchar
+Hadoop                    20000 Kolkata
+Java                      20000 Bangalore
+Python                    22000 Bangalore
+Hadoop                    18000 Pune
+Selinium                  18000 Pune
+Java                      18000 Kolkata
+
+7 rows selected.
+
+Updating the view will update the main table as well as the other view releated to it
+
+SQL> update stuview set name='Sunny Paul' where name='Sunny';
+
+1 row updated.
+
+
+SQL> select * from stuview;
+
+NAME                 EMAIL                     PHONE COURSE
+-------------------- -------------------- ---------- --------------------
+Sunny Paul           sunny@gmail.com      8736527876 Java
+Raju                 raju@gmail.com       8172609656 Hadoop
+Arjun                arjun@gmail.com      7878192540 Java
+Praveen              praveen123@gmail.com 7407823765 Python
+Nabadita             naba99@gmail.com     9486408127 Hadoop
+Arnab                arab@gmail.com       8746823097 Selinium
+Diya                 diya94@gmail.com     7896789876 Java
+
+
+
+
+
+SQL> select * from mainstu;
+
+       SID NAME                 EMAIL                    TOTFEE    FEEPAID     FEEBAL COURSE            CITY           PHONE
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- -------------- ----------
+       101 Sunny Paul           sunny@gmail.com           22000      16000       6000 Java              Silchar   8736527876
+       102 Raju                 raju@gmail.com            28000      20000       8000 Hadoop            Kolkata   8172609656
+       103 Arjun                arjun@gmail.com           22000      20000       2000 Java              Bangalore         7878192540
+       104 Praveen              praveen123@gmail.com      26000      22000       4000 Python            Bangalore         7407823765
+       105 Nabadita             naba99@gmail.com          28000      18000      10000 Hadoop            Pune      9486408127
+       107 Arnab                arab@gmail.com            18000      18000          0 Selinium          Pune      8746823097
+       106 Diya                 diya94@gmail.com          22000      18000       4000 Java              Kolkata   7896789876
+
+7 rows selected.
+
+Updating stuview name  to Sunny Paul will effect all stuview ,mainstu
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> update stuaccview set totfee=24000 where sid=106;
+
+1 row updated.
+
+SQL> update stuaccview set feepaid=20000 where sid=106;
+
+1 row updated.
+
+
+SQL> select * from stuaccview;
+
+       SID     TOTFEE    FEEPAID     FEEBAL
+---------- ---------- ---------- ----------
+       101      22000      16000       6000
+       102      28000      20000       8000
+       103      22000      20000       2000
+       104      26000      22000       4000
+       105      28000      18000      10000
+       107      18000      18000          0
+       106      24000      20000       4000
+
+7 rows selected.
+
+SQL> select * from stuadview;
+
+COURSE                  FEEPAID CITY
+-------------------- ---------- --------------
+Java                      16000 Silchar
+Hadoop                    20000 Kolkata
+Java                      20000 Bangalore
+Python                    22000 Bangalore
+Hadoop                    18000 Pune
+Selinium                  18000 Pune
+Java                      20000 Kolkata
+
+7 rows selected.
+
+SQL> select * from mainstu;
+
+       SID NAME                 EMAIL                    TOTFEE    FEEPAID     FEEBAL COURSE            CITY           PHONE
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- -------------- ----------
+       101 Sunny Paul           sunny@gmail.com           22000      16000       6000 Java              Silchar   8736527876
+       102 Raju                 raju@gmail.com            28000      20000       8000 Hadoop            Kolkata   8172609656
+       103 Arjun                arjun@gmail.com           22000      20000       2000 Java              Bangalore         7878192540
+       104 Praveen              praveen123@gmail.com      26000      22000       4000 Python            Bangalore         7407823765
+       105 Nabadita             naba99@gmail.com          28000      18000      10000 Hadoop            Pune      9486408127
+       107 Arnab                arab@gmail.com            18000      18000          0 Selinium          Pune      8746823097
+       106 Diya                 diya94@gmail.com          24000      20000       4000 Java              Kolkata   7896789876
+
+7 rows selected.
+
+Updating the view will update the main table as well as the other view releated to it i.e updating stuaccview totpaid to 24000 and feepaid to 20000 will effect 
+all stuaccview,mainstu,stuadview also
+
+
+
+
+
+
+
+************************************************************************************************************************************
+
+
+
+Static view:It is also called read only view and with static view we cannot perform insert ,delete or update operation on view
+While creating view if we are using order by or group by clause in select statement then created view will be dynamic view 
+This example is an example of dynamic view
+
+SQL> create table mainstu2(sid int,name varchar(20),email varchar(20) not null,course varchar(20),fee int,feepaid int,city varchar(20) default 'Silchar' not null);
+
+Table created.
+
+SQL> insert into mainstu2 values(101,'Mohan','Mohanp@gmail.com','Java',20000,18000,'Silchar');
+
+1 row created.
+
+
+SQL> insert into mainstu2(sid,name,email,course,fee,feepaid) values(102,'Raj','raj90@gmail.com','Hadoop',30000,25000);
+
+1 row created.
+
+SQL> insert into mainstu2 values(103,'Mohit','mht92@gmail.com','Java',20000,15000,'Bangalore');
+
+1 row created.
+
+SQL> insert into mainstu2 values(104,'Ramesh','remesh@gmail.com','Spring',12000,8000,'Pune');
+
+1 row created.
+
+SQL> insert into mainstu2 values(105,'Rani','rani@gmail.com','Java',20000,19000,'Jaipur');
+
+1 row created.
+
+
+SQL> select * from mainstu2;
+
+       SID NAME                 EMAIL                COURSE                      FEE    FEEPAID CITY
+---------- -------------------- -------------------- -------------------- ---------- ---------- --------------------
+       101 Mohan                Mohanp@gmail.com     Java                      20000      18000 Silchar
+       102 Raj                  raj90@gmail.com      Hadoop                    30000      25000 Silchar
+       103 Mohit                mht92@gmail.com      Java                      20000      15000 Bangalore
+       104 Ramesh               remesh@gmail.com     Spring                    12000       8000 Pune
+       105 Rani                 rani@gmail.com       Java                      20000      19000 Jaipur
+
+
+
+
+SQL> create view stu2statview as select city,sum(fee) as "Collected Fee" from mainstu2 group by city;
+
+SQL> select * from stu2statview;
+
+CITY                 Collected Fee
+-------------------- -------------
+Jaipur                       20000
+Bangalore                    20000
+Silchar                      50000
+Pune                         12000
+
+
+SQL> create view stu2statview1 as select name,city,email  from mainstu2 order by city ;
+
+View created.
+
+
+
+SQL> select * from  stu2statview1;
+
+NAME                 CITY                 EMAIL
+-------------------- -------------------- --------------------
+Mohit                Bangalore            mht92@gmail.com
+Rani                 Jaipur               rani@gmail.com
+Ramesh               Pune                 remesh@gmail.com
+Raj                  Silchar              raj90@gmail.com
+Mohan                Silchar              Mohanp@gmail.com
+
+
+SQL> delete from stu2statview where city='Jaipur';
+delete from stu2statview where city='Jaipur'
+            *
+ERROR at line 1:
+ORA-01732: data manipulation operation not legal on this view
+
+We can only read view but cannot perform update,delete,insert operation on view
+*************************************************************************************************************************************
+
+Transiction:It is the process of performing set of DataBase operation as single unit
+If all the database operation of transictiom are successful than we have to save the transiction by using commit command
+If any single database operation of transictiom is  unsuccessful than we have to cancel  the entire transiction by issuing rollback command
+
+To Manage transiction we need to use following kkeyword:
+
+auto commit:-	If enabled than after executing the query commit will be issued
+	     	If disabled than after executing the query commit will not be issued
+
+commit:-		The query will be committed or saved and cannot be roll back
+			insert 
+			delete 
+			update
+
+roll back:-		Uncommitteed or unsaved query will be rolled back(cancelled)
+
+savepoint:-	Marking from where uncommitted or unsaved query will be rolled back(cancelled)
+
+
+
+Managing autocommit option:
+To see:		show autocommit
+To enable:		set autocommit ON
+To disabled:	set autocommit OFF
+By Default:	disabled i.e OFF
+
+
+
+SQL> show autocommit
+autocommit OFF				--OFF by default
+SQL> set autocommit ON
+SQL> show autocommit
+autocommit IMMEDIATE
+SQL> set autocommit OFF			--off i.e no longer check for commit command
+SQL> show autocommit
+autocommit OFF
+
+
+
+
+Note: to perform rollback,commit,savepoint always set autocommit=OFF
+
+
+
+SQL> create table transictiondemo(id int);
+
+Table created.
+
+SQL> insert into transictiondemo values(101);
+
+1 row created.
+
+SQL> insert into transictiondemo values(102);
+
+1 row created.
+
+SQL> insert into transictiondemo values(103);
+
+1 row created.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from  transictiondemo;
+
+no rows selected
+
+
+
+SQL> insert into transictiondemo values(101);
+
+1 row created.
+
+SQL> insert into transictiondemo values(102);
+
+1 row created.
+
+SQL> insert into transictiondemo values(103);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+
+
+
+
+
+SQL> update  transictiondemo set id=110 where id=103;
+
+1 row updated.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       110
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+
+
+
+
+
+SQL> insert into transictiondemo values(104);
+
+1 row created.
+
+SQL> insert into transictiondemo values(105);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+
+SQL> insert into transictiondemo values(106);
+
+1 row created.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+       106
+
+6 rows selected.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+
+
+
+
+
+SQL> delete from transictiondemo;
+
+5 rows deleted.
+
+SQL> select * from  transictiondemo;
+
+no rows selected
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from  transictiondemo;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> create table  transictiondemo1(id int);
+
+Table created.
+
+SQL> insert into transictiondemo1 values(101);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(102);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(103);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(104);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> insert into transictiondemo1 values(105);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(106);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(107);
+
+1 row created.
+
+SQL> savepoint mohan1;
+
+Savepoint created.
+
+SQL> insert into transictiondemo1 values(108);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(109);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(110);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(111);
+
+1 row created.
+
+SQL> savepoint mohan2;
+
+Savepoint created.
+
+SQL> insert into transictiondemo1 values(112);
+
+1 row created.
+
+SQL> insert into transictiondemo1 values(113);
+
+1 row created.
+
+SQL> select * from transictiondemo1;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+       106
+       107
+       108
+       109
+       110
+       111
+
+        ID
+----------
+       112
+       113
+
+13 rows selected.
+
+
+
+SQL> rollback to mohan2;
+
+Rollback complete.
+
+SQL> select * from transictiondemo1;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+       106
+       107
+       108
+       109
+       110
+       111
+
+11 rows selected.
+
+
+
+SQL> rollback to mohan1;
+
+Rollback complete.
+
+SQL> select * from transictiondemo1;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+       105
+       106
+       107
+
+7 rows selected.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from transictiondemo1;
+
+        ID
+----------
+       101
+       102
+       103
+       104
+
+
+Every time we exit Sql than if we open Sql software again than autocommit is by default i.e OFF
+**************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+

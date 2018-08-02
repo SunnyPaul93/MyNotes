@@ -1,0 +1,334 @@
+we use constructor to initilize the object not to create the object
+once we create object compulsary we perform initilization if we only create 
+object and no initilizatiion then every object will have the same value so it is 
+meaningless beacuse by default default constructor
+
+specially designed for initilization of a object
+whenever we are creating a object some piece of code will be executed 
+automaticalluy to perform initilization of obj. this piece of code is nothing
+but constructor hence main purpse of constructor is to [erform initilization 
+of a object
+
+main purpose of constr is  to perform initilization of an object but not to 
+create object
+but other than initilization if we want to perform any activity for every obj
+creation than we should go for instance block(like updatting one entry in
+database for every obj creation or increamting count value for every obj creation...etc)
+
+return type concept not applicable for constructor not even for void also
+
+
+modifer for constructor:public,private,protected,default
+
+if our class donot contain any constructor than only jvm will generate default
+constructor
+default and customized constructor cant exist both simultaneously
+
+default constr:
+it is always no arg constr
+access modifier of def constr is exactly same as access modifier of class
+it contains only one line super();
+it is no arg call to super class constr
+1st line of every constr shoult be either super or this but not both at a time
+if we are not writing anything than compiler will give super() constructor
+outside constructor if we write super(),this() than we will get compile time error
+we can call a constr from another constr only
+
+super() and this():
+these are constructor calls to call super class and current 
+class constructors
+we can use only in constructors as 1st line
+we can use only once in constructors 
+
+super and this:
+these are keywords  to refer super class or current class instance member 
+we can use anywhere except static area
+we can use any number of times
+
+
+psvm(String []as)
+{
+sop(super.hashcodde);
+}//error since super cannot be in static method(psvm)
+
+
+
+overloaded constructors:
+class tets{
+test(){
+this(10);
+sop("no arg");}
+
+test(int i){
+this(10.5);
+sop("int arg");
+
+test(double d){
+sop("double arg");}
+}
+}
+psnm(){
+test t1=new test(); o/p double arg
+			int arg
+			no arg
+test t2=new test(10);o/p double arg
+			int arg
+
+test t3=new test(10.5);o/p double arg
+
+test t4=new test(10l);o/p double arg(here priority go for double since no float arg constr)
+}
+
+
+withi a class we can declare multiple constructors and all these constr
+having same name but different type of args hence all these constr are considered 
+as overloaded constructors hence overloading concept applicable for constructor
+
+overriding not applicable for constructor since constructor do inheritate
+
+
+
+class p{
+p(){
+}
+}
+class c extends p{
+c(int i){
+super();
+}}
+class lab{
+psvm(){
+c c1=new c();//invalid since in child class no default constructor though
+	     properties of parent inherited to child
+c c2=new c(10);//valid
+}}
+
+class test{
+test()
+{
+}
+}//valid
+
+abstract class test{
+test()
+{
+}
+}//valid
+
+interface test{
+test()
+{
+}
+}//invalid
+
+
+interface do not contain constructor 
+
+
+class test{
+psv m1(){
+m2();}
+psv m2(){
+m1();}
+psvm(String []args){
+sop("hello");}
+}//o/p:hello
+
+
+class test{
+psv m1(){
+m2();}
+psv m2(){
+m1();}
+psvm(String []args){
+sop("hello");}
+}//o/p:hello since in main method we are not calling any method
+	for method we have to call the method explicitly
+
+
+class test{
+psv m1(){
+m2();}
+psv m2(){
+m1();}
+psvm(String []args){
+m1();
+sop("hello");}
+}//runtime error:stack overflow
+
+class test{
+test(){
+this(10);
+}
+test(int i){
+this();
+}
+psvm(String []arg){
+sop("hello");}
+}//invalid compile error:recursive constructor invocation
+	because jvm calls constructor explicitly
+
+
+constructor donot inherit but by default constructor have default super
+constructor
+
+
+
+class p{
+//internally: p(){super();}
+}
+class c extends p{
+//internally: c(){super();}
+}//valid
+
+class p{
+p(){
+super();
+}
+}
+class c extends p{
+//internally: c(){super();}
+}//valid
+
+
+class p{
+p(int i)
+{super();
+}
+}
+class c extends p{
+//internally: c(){super()}
+}//invalid: cannot find symbol constructor p in class p
+
+
+note:whenever we are writing any argument constructoe it is hichly recomended 
+to write no arg constr also
+
+return type concept applicable for constructors but only void
+compiler is responsible to generate default constructor if our class has 
+no constructor
+even compiler will not generate default constructor if we are writing no-arg
+constr 
+every no arg constructor is not a default constructor but every default 
+constructor is no arg constructor
+1st line inside any constructor is either super() or this() but if we are not 
+writing anything then compiler will always generates super()
+constructor donot have inheritance relation
+for constructors only overloading applicable but not overridding
+concrete as well as abstract class conatin contarctor 
+recusive constructor invocation is compile time cxcepton
+
+
+
+
+
+
+
+
+constructor purpose is to initilize object not to create object
+whenever we are creating child class object parent constr will be executed but parent object wont be 
+created
+
+
+
+
+
+
+purpose of new is to create an object and constructor is to initilize an object(provide initilization for 
+instance variable)
+ass a=new ass("Donkey");
+
+1st to create object with new than initilize with constructor
+
+
+need of creating parent class constructor whenever we are creating child class object ??????????
+
+class Person{
+String name;
+int age;
+Person(String name,int age)
+{
+this.name=name;
+this.age=age;
+}}
+class Student extends Person{
+int rollno;
+int marks;
+Student(String name,int age,int rollno,int marks)
+{
+super(name,age);
+this.rollno=rollno;
+this.mark=mark;
+}}
+
+
+Student s=new Student("sun",23,56,81);
+
+here initilization of name and age is performed by parent constructor
+here initilization of rollno and marks is performed by child constructor
+
+whenever we are creating child class obj automatically parent constr will be executed to perform
+initilization for the instance variable which are inheriting from parent
+
+
+
+abstract class Person{
+String name;
+int age;
+}
+class Student extends Person{
+int rollno;
+int marks;
+Student(String name,int age,int rollno,int marks)
+{
+this.name=name;
+this.age=age;
+this.rollno=rollno;
+this.mark=mark;
+}}
+
+
+Student s=new Student("sun",23,56,81);
+here all will be done by child constructor only since no parent constructor
+
+now suppose we created 100 properties of class Person and 1000 child class for this  now if no 
+constructor in parent class so every child class is responsible for initlization  of all these 100 properties
+in all 1000 child classes 100 properties are common so complex.
+
+Now jsut create constructor in abstract(parent) class
+
+abstract class Person{
+String name;
+int age;
+Person(String name,int age)
+{
+this.name=name;
+this.age=age;
+}}
+class Student extends Person{
+int rollno;
+int marks;
+Student(String name,int age,int rollno,int marks)
+{
+super(name,age);
+this.rollno=rollno;
+this.mark=mark;
+}}
+
+
+Student s=new Student("sun",23,56,81);
+here complexity reduces
+
+consluion:whenever we are creating child class object automatically parent constructor will be executed
+but parent object won't be crreated 
+
+
+
+interface intr1{
+int x =10;				//public static final variable
+}
+
+here no chance of instance variable because by default all variable are static  
+with  instance variable concept not there so there is no chance of initilization of instance variable that's
+why constructor concept not applicable for the interface
+

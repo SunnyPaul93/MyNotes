@@ -1,0 +1,2 @@
+for final value is taken at compile time
+for non-final value is taken at run time

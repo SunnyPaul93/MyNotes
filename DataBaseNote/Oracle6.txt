@@ -1,0 +1,236 @@
+A trigger is a PL/SQL block which invoked automatically by DBMS when insert,delete or update operation is executed on a database table 
+
+Syntax:
+	Create or replace trigger <trigger name>
+	Before or After 
+	Insert or Update or Delete 
+	ON <table name>
+	For each row 
+	Declare 
+	variable declaration 
+	Begin
+	//SQL statement
+	End;
+
+	We can access the information of table which is being modifed by using following variables :
+	
+	:Old <col name>
+	:New<col name>
+
+
+
+
+
+	trigger_name=name of trigger 
+	trigger_time=before or after 
+	trigger_event=insert,update,delete
+	trigger_statement
+
+generally statement is a single statement but the  is an exception which alow us to use store procdure type syntax to enable multiple statement by using begining and 
+ending clauses	
+
+
+
+
+
+
+
+SQL> create table emp9(eid int,ename varchar(20),phone number,email varchar(20));
+
+Table created.
+
+SQL> insert into emp9 values(101,'Sunny',8273564732,'mohan@gmail.com');
+
+1 row created.
+
+SQL> insert into emp9 values(102,'Ravi',7283546283,'ravi@gmail.com');
+
+1 row created.
+
+SQL> insert into emp9 values(103,'Diya',8293546758,'diya93@gmail.com');
+
+1 row created.
+
+SQL> insert into emp9 values(104,'Neetu',9485610293,'neetu90@gmail.com');
+
+1 row created.
+
+SQL> insert into emp9 values(105,'Rani',7892679463,'rani@gmail.com');
+
+1 row created.
+
+SQL> select * from emp9;
+
+       EID ENAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Sunny                8273564732 mohan@gmail.com
+       102 Ravi                 7283546283 ravi@gmail.com
+       103 Diya                 8293546758 diya93@gmail.com
+       104 Neetu                9485610293 neetu90@gmail.com
+       105 Rani                 7892679463 rani@gmail.com
+
+
+SQL> create table emp9_backup(oeid int,neid int,oename varchar(20),nename varchar(20),ophone number,nphone number,Dop date,opn varchar(20));
+
+
+Table created.
+
+SQL> ed;
+Wrote file afiedt.buf
+
+  1   create or replace trigger emptrig
+  2    before
+  3    insert or update or delete on emp9
+  4    for each row
+  5    declare
+  6    opn varchar(20);
+  7    begin
+  8    if(inserting) then
+  9    opn:='insert';
+ 10    elsif(updating) then
+ 11    opn:='update';
+ 12    else opn:='delete';
+ 13    end if;
+ 14    insert into emp9_backup values(:old.eid,:new.eid,:old.ename,:new.ename,:old.phone,:new.phone,sysdate,opn);
+ 15*   end;
+ 16  /
+
+Trigger created.
+
+
+Here we can only insert or update or delete 
+To get time when it get inserted we have to use sysdate
+
+
+
+
+
+SQL> select * from emp9_backup;
+
+no rows selected
+
+SQL> insert into emp9 values(106,'Nitin',8973499999,'nitin@gmail.com');
+
+1 row created.
+
+SQL> select * from emp9;
+
+       EID ENAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Sunny                8273564732 mohan@gmail.com
+       102 Ravi                 7283546283 ravi@gmail.com
+       103 Diya                 8293546758 diya93@gmail.com
+       104 Neetu                9485610293 neetu90@gmail.com
+       105 Rani                 7892679463 rani@gmail.com
+       106 Nitin                8973499999 nitin@gmail.com
+
+6 rows selected.
+
+SQL> set linesize 200;
+SQL> select * from emp9_backup;
+
+      OEID       NEID     OENAME               NENAME                   OPHONE     NPHONE 	DOP       	OPN
+---------- ---------- -------------------- -------------------- ---------- ---------- --------- --------------------
+                 	        106                                         Nitin                           	     8973499999 	01-DEC-17 insert
+
+
+
+
+
+
+
+SQL> update emp9 set ename='Mohan',phone=8759167520 where eid=101;
+
+1 row updated.
+
+SQL> select * from emp9;
+
+       EID ENAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Mohan                8759167520 mohan@gmail.com
+       102 Ravi                 7283546283 ravi@gmail.com
+       103 Diya                 8293546758 diya93@gmail.com
+       104 Neetu                9485610293 neetu90@gmail.com
+       105 Rani                 7892679463 rani@gmail.com
+       106 Nitin                8973499999 nitin@gmail.com
+
+6 rows selected.
+
+SQL> select * from emp9_backup;
+
+      OEID       NEID          OENAME               NENAME                   OPHONE     NPHONE	 DOP       		OPN
+---------- ---------- -------------------- -------------------- ---------- ---------- --------- --------------------
+                       106                                              Nitin                                                   8973499999 	01-DEC-17 	insert
+       101          101                 Sunny                   Mohan                       8273564732     8759167520 	01-DEC-17 	update
+
+
+
+
+
+SQL> delete from emp9 where eid=104;
+
+1 row deleted.
+
+SQL> select * from emp9;
+
+       EID ENAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Mohan                8759167520 mohan@gmail.com
+       102 Ravi                 7283546283 ravi@gmail.com
+       103 Diya                 8293546758 diya93@gmail.com
+       105 Rani                 7892679463 rani@gmail.com
+       106 Nitin                8973499999 nitin@gmail.com
+
+SQL> select * from emp9_backup;
+
+      OEID       	NEID 		OENAME               NENAME                   OPHONE     	NPHONE 		DOP       		OPN
+---------- ---------- -------------------- -------------------- ---------- ---------- --------- --------------------
+                  	106                      			Nitin                           			8973499999 	01-DEC-17 	insert
+       101        	101 		Sunny                	Mohan                	8273564732 	8759167520 	01-DEC-17 	update
+       104            			Neetu                                     		9485610293            			01-DEC-17 	delete
+
+
+
+
+*************************************************************************************************************************************
+
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+01-DEC-17
+
+SQL> select TO_CHAR(sysdate,'MM-DD-YYYY HH24:MI:SS') from dual;
+
+TO_CHAR(SYSDATE,'MM
+-------------------
+12-01-2017 18:58:28
+
+SQL> select TO_CHAR(sysdate,'MM-DD-YYYY HH24:MI:SS') "CURRENT TIME"from dual;
+
+CURRENT TIME
+-------------------
+12-01-2017 18:59:02
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ADVANTAGE OF ORACLE OVER MYSQL
+
+In MYSQL we can only write trigger for either insert or update or delete but in ORCALE(SQL) we can insert,delete or update with if else statement
+In MYSQL we can take backup of only new or modified record we cannot take backup of old record but in ORCALE(SQL) we can take backup of both old record 
+as well as new record

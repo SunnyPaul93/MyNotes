@@ -1,0 +1,1367 @@
+							SPRING
+
+
+clean code	:-code without any problem (either maintance or code duplication or no maintainance problem or  ...............................etc) 
+
+NOTE	:-If we are not storing any data in our class than better to write that class as Singleton Class
+
+
+If we know the design pattern than we can easily write clean code
+
+Now Spring implemented mainly for Design Patttern i.e When we are using Spring Farmework than no need to write design pattern, they are already be implemented 
+in Spring. So writing our code with Spring Framework means that our code is already clean.
+
+	 
+NOTE	:-Spring can be used in any layer of Enetrprise architecture
+
+
+For every Persistence Framework, Templete is already implemented or written by Spring
+Spring already has the support for DAO
+Spring design their own transictional model
+Spring has its own security model integration with Java Authentication and Authorization Service(JAAS)
+Spring container will do resource and lifecycle management
+Spring conatiner will manage Lifecycle  for every JAVA Class
+
+
+
+NOTE	:-Every class we are writing in Spring Application can be called Spring Bean
+
+Without Spring IOC	:-
+		
+	class A{
+	void m1(){..............}
+		
+	}
+
+	class B{
+	void m2(){..............}
+		
+	}
+	class Hello{
+	A aobj=null;
+	B bobj=null;
+
+	public Hello(){
+	aobj=new A();		//By Creating Object(eihter static or dynamic instance creataion) 
+	bobj=ctx.lookup("B-JNDI");	//By Lookup Registry
+	
+	void show(){
+
+	aobj.m1();
+	bobj.m2();
+
+	}
+	}
+	void m1(){..............}
+		
+	}
+
+ 
+With Spring IOC	:-
+
+	class A{
+	void m1(){..............}
+		
+	}
+
+	class B{
+	void m2(){..............}
+		
+	}
+	class Hello{
+	
+	@Autowired			//Spring IOC
+	A aobj=null;
+
+	@Resource			//Spring IOC
+	B bobj=null;
+
+	void show(){
+
+	aobj.m1();
+	bobj.m2();
+
+	}
+	}
+	void m1(){..............}
+		
+	}
+	
+
+	@Autowired and @Resource is the clue to Spring container that what to do
+
+
+
+	In the above Examples(With or Without IOC)	:-
+	Hello Bean needs A object and B object 
+	Hello Bean needs A resource and B resource
+	Hello Bean needs A Beanand B Bean
+
+
+	Hello Bean is depending on two beans called A bean and B bean
+	Hello Bean dependencies called A and B has to be initilized
+	Hello Bean dependencies called A and B has to be Injected
+
+
+	With Spring IOC, Spring Container Injects Hello Bean Dependencies called A and B
+
+	Spring Dependency Injection uses 3 ways to inject dependencies
+		Setter Injection (S.I)
+		Constructor Injection (C.I)
+		Field Injection(With Annotation) 
+	
+
+
+	EG:-
+		class Student{
+
+		Stirng sid;		S.I
+
+		String sName;	C.I
+
+		@Autowired	(Field Injection)Annotation
+		Address add;
+		
+		public void setSid(String sid){
+			this.sid=sid;			S.I
+		}
+
+		public Student(String sName){
+			this.sName=sName;			C.I
+		}
+		}
+
+	
+	Dependencies can be with Object,Resource or Bean
+
+
+
+
+
+
+		class Hello{
+
+		A ao;
+		B bo;
+
+		void m1(){
+		..............
+	...............................
+		}
+		}
+
+	Here Conatiner has to initilize or inject A and B
+
+
+	The Process where Spring Container has to identify dependencies and Spring Container has to inject that dependencies is called Dependency Injection
+	Every Java object will  be created by the Spring Container. We can even say Spring Conatiner can acts as a factory
+
+
+
+
+	*Best way to initilize is at field level
+
+	Beans can be configured in two ways	:-
+		1.XML Configuration(XXXXX.xml)
+		2.JAVA Configutation Class(XXXXX.class)	
+
+
+
+
+	Deafult Spring Confiuration file name is applicationContext.xml 		
+
+
+Bean Scope	:-
+		Bean Instances created by Spring Container can be in one of the following scope	:-
+			1.Singleton
+			2.Prototype 
+			3.Request			//For Service-Based Application
+			4.Session
+			5.Global-Session		//For Portlet-Based Application
+
+
+		Usage	:-
+			With XML Config:-
+                 				<bean id="......." class="........." scope="..................."/>
+
+			With Java Config:-
+				@Scope(value="......")
+
+
+		1.Singleton	:-
+			When Bean scope is Singleton the only one instances will be created for that bean and the same instance will be returned when we 
+			call getBean() method
+			singleton is default scope in the ApplicationContext container 
+			When sccope is singleton than default loading type is Aggressive Loading
+	
+
+		2.Prototype	:-
+			When bean scope is prototype than everytime a new instances will  be created when we call getBean() method 
+			Default loading type for prototype is LazyLoading since multiple instance can be created and multiple instance cannot be load at
+			container startup so default loading style is Lazy-Loading
+
+
+		3.Request		:-
+			Request scope is equal to HttpServletRequest in web application  
+
+
+		4.Session		:-
+			Session scope is equal to HttpSession in web application  
+		
+
+		5.Global-Session	:-
+			Global-Session is equal to session in portlet based web application
+
+
+
+
+
+		Latest Container used is ApplicationContextContainer
+		Old Container used is Bean Factory Container
+
+
+
+
+		NOTE	:-If my bean is prototype and aggressive than prototype takes the priority
+			  If my bean is singleton and lazy loading than lazy loading takes the priority
+
+		  			
+
+
+			
+
+Injection various type of Bean Properties	:-
+	Bean may contain th properties of following types	:-
+		1.Simple Types(Primitive,String,Wrapper Class,Date)
+		2.List of Simple Types
+		3.Set of Simple Types
+		4.Map of Simple Types
+		5.Properties of Simple Types
+		6.Other Bean types
+		7.Collection of other Bean Types
+
+
+
+
+
+
+
+Wiring	:-
+	It is the process of injecting Dependencies of the Bean
+	Wiring can be of two types	:-
+		Explicit Wiring 
+		Auto Wiring
+
+	
+
+	Explicit Wiring	:-
+		
+		<beans>
+			<bean id="ao" class="____________.A"/>
+			<bean id="bo" class="____________.B"/>
+			<bean id="hello" class="____________.Hello">
+				<property name="aobj" ref="ao"/>
+				<constructor-arg value="bo"/>
+			</bean>
+		</beans>
+
+		In case of explicit wiring we have to specify the Dependencies explicitly than only container will inject those dependencies
+
+
+
+	Auto Wiring	:-
+
+		<beans>
+			<bean id="ao" class="____________.A"/>
+			<bean id="bo" class="____________.B"/>
+			<bean id="hello" class="____________.Hello" autowire="xxxxxxxxx" />
+				
+		</beans>
+
+
+		In case of auto wiring Spring Container can detect the Bean dependencies automatically and injects those dependencies
+	 
+		Uisng Java Based Configuration	:-
+			@Bean(autowire=Autowire.xxxxxxxxx)
+
+
+	Following are the possible values(xxxxxxxxx) of autowire attribute
+		1.byName		---Use only S.I and instances created using the Default constuctor
+		2.byType		---Use only S.I and instances created using the Default constuctor
+		3.constructor	---Use only C.I and instances created using matching constructor
+
+
+
+	1.byName	:-
+		When autowire attribute is byName then Spring Container will do the following	:-
+			a.Checks the dependencies of a particular bean 
+			b.Checks whether any bean running in the container whose name(or id) is same as bean property(variable) name or not
+			c.If matching bean found than inject that bean property otherwise bean property remains uninjected
+			d.Bean will be instantiated using D.C
+			e.Dependent Bean Instances will be detected using bean name
+			f.Detected bean instances will be injected through setter injection
+
+	
+
+		NOTE	:-
+			Here bean instances created using DC 
+	 		Beans will be detected based on Bean Name
+			Beans will be injected using Setter Injection 
+
+
+
+
+
+	2.byType	:-
+		When autowire attribute is byName then Spring Container will do the following	:-
+			a.Checks the dependencies of a particular bean 
+			b.Checks whether any bean running in the container whose Type is same as bean property(variable) Type or not
+
+			c.In this case we may get three cases	:-
+				i.When exactly one bean found with matching Data Type than it will be injected sucessfully
+				ii.When no bean found with matching Data Type than it will remaind uninjected 
+				iii.When two or more bean found with matching data type than Exception Occur saying (Unsatisfied dependency Exception)
+
+			d.Bean will be instantiated using D.C
+			e.Dependent Bean Instances will be detected using bean data type
+			f.Detected bean instances will be injected through setter injection
+
+	
+
+		NOTE	:-
+			Here bean instances created using DC 
+	 		Beans will be detected based on Bean Data Type 
+			Beans will be injected using Setter Injection 
+
+
+	3.constructor	:-
+		a.When autowire attribute value is constructor then Spring Container checks whether any bean instance is running in the container whose Type
+		   is same as bean property(variable) Type or not 
+		b.Depending on the availability of Beans Instances Spring container identifies the matching constructor and invokes that constructor to inject 
+		   the bean dependencies
+		c.In this we may get three cases	:-
+			i.When no bean found with matching Data type then bean property will not be injected 
+			ii.When exactly one bean found with matching Data type then bean property will inject successfully
+ 			iii.When more than one bean found with matching Data type then 
+
+				Contsiner will pick one Bean from available multiple beans based on byName autowire process first				
+				When one bean is also not selected based on byName autowire process than ignore multiple beans found with that type  
+
+
+
+		d.Bean will be instantiated using matching Constructor 
+		e.Dependent Bean Instances will be detected using bean data type
+		f.Detected bean instances will be injected through constructor injection
+
+
+
+
+
+
+
+Injecting Sub Types into Super Type References	:-
+
+			When Spring Conatiner is detecting the bean with byType autowire process it will find super-type and also sub-type 
+
+
+
+
+
+eg.	class A {...............}
+	class B extends A {...............}
+	class C extends B {...............}
+
+	class Hello{
+		A aobj;
+	} 	
+
+
+	<bean id="hello" class="___________________.Hello" autowire="byType" />
+
+
+	1. A type=0 found	----null
+	2. A type=1 found	----Injects Successfully			//A aobj=new A();  
+	3. A type=2 found	----Unsatisfied Dependency Exception
+	4. B type=1 found	----Injects Successfully			//A aobj=new B();
+	5. B type=2 found	----Unsatisfied Dependency Exception	
+	6. C type=1 found	----Injects Successfully			//A aobj=new C();
+
+	7. A type=1,B type=1,C type=1	----Unsatisfied Dependency Exception as B subtype of A and C is sub type of B but C is indirect subtype of A 			
+
+
+
+
+Note	:-When no chance to get other bean or no bean is defined in future than use DC
+	  If there is a chance to get bean later than it will not use DC
+	  Depending on the dependencies and avilability of resource one or many argument constructor is created 
+
+
+
+
+
+Inject SubType into SuperType Reference	:-
+		When Spring Conatiner is detecting byType autowire proces than  it will find super type and also subtypes
+		
+		SpringLab43 to SpringLab48
+			
+	
+	Cyclic Dependencies	:-
+		SpringLab49 to SpringLab52
+
+
+
+Uisng P Namespace(Property Namespace)	:-
+	P-Namespace is designed to reduce the size of Spring Configuration Document
+
+	Property Namespace only for SetterInjection
+
+	Example:-
+
+		class Hello{
+			........................................................
+			}
+
+		class A{
+			int a;
+			String str;
+			Hello hello;
+			}
+
+		
+		Without P-Namespace	:-
+			<bean id="hello" class="___________________.Hello" />
+			<bean id="aobj" class="__________________.A">
+				<property name="a" value="111" />
+				<property name="str" value="I am class A" />
+				<property name="hello" ref="hello" />
+			</bean>
+
+
+
+		With P-Namespace		:-
+			<bean is="aobj" classs="________________.A" p:a="111" p:str="I am class A" p:hello-ref="hello" />
+
+		By default P-Namespace is disabled 
+		Now to use P-Namespace we must enable P-Namespace by adding following in Spring Configuration document	:-
+		
+			xmlns:p="http://springframework.org/schema/p"
+		Note	:-in xmlns:p, p is the the prefix and can be changed 
+		
+			Ex:-
+			xmlns:sunny="http://springframework.org/schema/p"
+			
+			<bean is="aobj" classs="________________.A" sunny:a="111" sunny:str="I am class A" sunny:hello-ref="hello" />
+				
+
+		Lab53 to Lab55
+			
+
+
+
+Annotation Based Autowiring	:-
+
+	Lab56
+ 
+	@Resource and @Inject arem given by some ThirdPraty 
+
+
+		When we want to use Annotations in XML File than 
+			1.We must enable context name space 
+			2.Add <context:annnotation-config>
+			
+			The name context can be any name
+
+
+
+	When we use @Autowired than bean will be detected based on byType process and inject them
+	By default fuctionality of @Autowire is same as autowire="byType"
+
+	When we want the beans to be detected based on byName process and inject then than we need to add @Qualifier Annotation along with @Autowire
+	
+	When we use autowire="byType" than beans will be detected based on DataType and injects using Setter Method but 	when we use @Autowireed than 
+	beans will be detected based on DataType and injects without Setter Method	   
+	
+	When we use autowire="byName" than beans will be detected based on Bean Name and injects using Setter Method but when we use @Autowireed and
+	@Qualifier than beans will be detected based on Bean Name and injects without Setter Method	   
+	   
+
+
+	The above is also called Field injection
+
+
+
+	Annotation Process is Disabled by Default while using with XML configuration than 
+	while using @Autowire i.e we are using annotation than we must Enable Annotation 
+	process 
+	
+	<context:annotation-config />
+	
+	and in beans i.e
+	<beans 
+
+		xmlns:context="http://www.springframework.org/schema/context"
+
+
+		xsi:schemaLocation="
+		
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	
+				"
+	>
+	
+	In JavaConfiguration By Default Annotation Processing is Enabled 
+	
+	When We use annotation-config than at any point we can use Field Injection in
+	XML Based Configuration
+	
+
+
+
+	In Java Based Configuration all the verification like bean name,bean type ,bean is byName or byType ........................etc are done with annotation only 
+	or in other words annotations are required for all kind of varification so Annotation Processing is made mendatory or we can say Annotation Processing 
+	is enabled by default
+
+
+
+NOTE	:-
+	For Java Based Configuration
+	Conatiner donot have the option to create instances so they donot have a option whether to choose Default Constructor or Argumented Constructor so 
+	they donot provide Autowire for constructor only Autowire is byName or byType but not constructor
+
+
+
+   
+	Field Injection can be using
+		@Autowire
+		@Resource
+		@Inject
+
+
+	@Autowire :-
+
+		XML Based	:-Lab57 to Lab61
+
+		Java Based	:-Lab62 to Lab64
+
+
+		@Required	:-
+			With @Require means it is required to invoke that here setAobj and setBobj i.e @Required indirectly forcing the dependency
+ 				Lab65 
+
+
+
+
+	@Resource	:- 
+			Lab66 and Lab67
+			
+			When we use @Resource than beans detect either by byName or byType and injects them 
+		
+			When use @Resource(name="xxxxxxxx") i.e name attribute is specified with @Resource then detect byName 
+			When use @Resource then detect byType which is default 
+			
+			There is no option for @Required
+
+	@Inject		:- 
+			For using @Inject we must have 		
+						javax.inject-1.jar file 
+								in class path
+
+
+			Purpose is same as @Autowire and @Resource
+
+			There is no option for @Required
+
+			When use @Inject(name="xxxxxxxx") i.e name attribute is specified with @Resource then detect byName 
+			When use @Inject then detect byType which is default 
+
+			
+			Lab68 and Lab69	
+			
+
+	@Import		:-
+			
+
+	Note	:-I can write multiple Spring Configuration class
+		  I can write both XML and JavaConfiguration file in my project with @Import Resource annotation
+
+		  I can import XML file to JavaConfiguration file but cannot import JavaConfiguration file to XML file
+		  I can import XML file to XML
+		  I can import JavaConfiguration file to JavaConfiguration file 
+
+
+		SpringLab70	:-Here I import one XML file to another XML file
+		SpringLab71	:-Here I import one JavaBased Annotation file to another Annotation file
+		SpringLab72	:-Here I import one XML file to Annotation file
+ 
+		To import XML FILE in JAVABASEDANNOTTATION FILE we need @ImportResource
+
+
+
+
+
+Using JSR-250 Annotation	:-
+		Following annnotations provided in javax.annotation package 
+			1.@PostConstruct		//init()
+			2.@PreDestroy		//destroy()
+			3.@Resource
+
+
+	NOTE	:- 
+		When we want to use JSR-250 Annotation than we must add javaee.jar file to project build path
+
+
+
+
+	1.	@PostConstruct	:-
+			We can make any method as @PostConstruct Annotation to call mehod after creating instances 
+			Method which are mark with @PostConstruct Annotation contain code for initilizing bean instances with required resources	
+
+
+
+	2.	@PreDestroy	:-
+			We can make any method as @PreDestroy Annotation to call mehod before destroying instances 
+			Method which are mark with @PreDestroy Annotation contain code for cleaning the resource initilized with the bean isntance	
+	
+	
+
+
+	3.	@Resource	:- 
+			Lab66 and Lab67
+			
+			When we use @Resource than beans detect either by byName or byType and injects them 
+		
+			When use @Resource(name="xxxxxxxx") i.e name attribute is specified with @Resource then detect byName 
+			When use @Resource then detect byType which is default 
+			
+			There is no option for @Required
+	
+
+
+
+
+
+
+
+					Spring Conatiner CallBacks or LifeCycle Methods:-
+	
+		1.Initialization CallBacks	:-
+				We can initilize the Resource required for our bean by using wiring process
+				Sometimes we may get the requirement to initilize the Resource require for our bean explicitly or we may want to verify
+				the resources injected by the Spring Container or not 
+				In such case we need to write Resource initialization code or verification code inside the Initilization Callbacks
+		
+		Spring supports following ways for Initilization
+
+			a.Write our own initilization method and mark that with @PostConstruct annotation
+					eg.@PostConstruct
+					   public void init(){
+						//Initilization Code
+						}
+			b.Implement InitilizingBean interface and override the following 	method
+				i.public void afterPropertySet() 
+	
+					eg. Bean Class implement InitilizingBean and override
+					   public void afterPropertySet(){
+						//Initilization Code
+						}
+	
+				
+
+			c.
+				i.Write our own Initilization method and specify the method name in bean definaton(in XML)
+					eg. public void sunnyInit(){
+						//Initilization Code
+						}
+					XML:-					
+					<bean id="hello" class="_______________.Hello" init-method="sunnyInit" />
+				ii.Write our own Initilization method and specify the method name in @Bean uisng initMethod atribute
+					eg. public void sunnyInit(){
+						//Initilization Code
+						}
+					JAVABASED CONFIGURATION:-
+					@Bean(name="hello" , initMethod="sunnyInit" )			
+
+
+
+		2. Disposable Callbacks	:-
+				We may get requirement to cleanup the Resources which are initialized at the time of creating instances.So we can write 
+				resource cleanup code inside Disposable callback 
+			
+		Spring supports following ways for Cleanup
+
+			a.Write our own cleanup method and mark that with @PreDestroy annotation
+					eg.@PreDestroy
+					   public void cleanup(){
+						//Cleanup Code
+						}
+			b.Implement DisposableBean interface and override the following method
+				i.public void destroy() 
+	
+					eg. Bean Class implement InitilizingBean and override
+					   public void destroy{
+						//Cleanup Code
+						}
+	
+				
+
+			c.
+				i.Write our own Cleanup method and specify the method name in bean definaton(in XML)
+					eg. public void sunnyCleanup(){
+						//Cleanup Code
+						}
+					XML:-					
+					<bean id="hello" class="_______________.Hello" destroy-method="sunnyCleanup" />
+				ii.Write our own Cleanup method and specify the method name in @Bean uisng initMethod atribute
+					eg. public void sunnyCleanup(){
+						//Cleanup Code
+						}
+					JAVABASED CONFIGURATION:-
+					@Bean(name="hello" , destroyMethod="sunnyCleanup" )			
+
+
+
+
+		3.Knowing who we are and where we are:-
+				Sometimes Beans wants to know what is its name and where it is running 
+				For this we need to use following three aware interface	:-
+					a.BeanNameAware
+					b.BeanFactoryAware
+					c.ApplicationContextAware
+
+Application Context container is a kind of Decarator for Bean Factory container. Application Context container internally creates Bean Factory container
+
+
+		NOTES	:-
+			When Bean want to know its Name than Bean class has to implement BeanNameAware interface and has to override the following
+			 methods:-
+				public void setBeanName(String bname)
+
+			When Bean want to get the BeanFactory reference than Bean class has to implement BeanFactoryAware and has to override the 
+			following methods:-
+				public void setBeanFactory(BeanFactory factory)
+			   	 
+			When Bean want to get the ApplicationContext reference than Bean class has to implement ApplicationContextAware and has to
+			override the following methods:-
+				public void setApplicationContext(ApplicationContext ctx)
+			   	 
+
+			
+			BeanFcatory and ApplicationContext objects can be injected in two ways:-
+				a. Using AWARE INTERFACES
+				b. Using @Autowire 
+
+
+
+		4.Extending Container Functionality	:-
+			We can extend the Spring Conatiner Functionality using BeanPostProcessor interface
+			Extending the container functionality was not implemented by Spring Conatiner
+
+
+			Steps For Extending the Conatiner Functionality :-
+				i.Write owr own Custom class by implementing BeanPostProcessor interface and override the following two methods	:-
+					public Object postProcessorBeforeInitilization(Object bean,String bn)
+					public Object postProcessorAfterInitilization(Object bean,String bn)
+ 
+				ii.Regsiter the BeanPostProcessor( i.e Defining the Bean ) with Spring Conatiner
+
+
+
+
+
+
+
+
+
+
+						SPRING CONTAINER
+
+	There are two types of container provided
+		1.ApplicationContext Container 
+		2.BeanFactory Container 
+		
+
+	1.ApplicationContext Container :-
+		AppplicationContext interface has 4 concrete implementation
+			a.ClassPathXmlApplicationContext
+			b.FileSystemXmlApplicationContext
+			c.XmlWebApplicationContext
+			d.AnnotationConfigApplicationContext
+
+		a,b and c uses XML Configuration
+		d uses JavaBasedConfiguration(Annotation)	
+
+		
+		We can create ApplicationContext as follows :-
+			oApplicationContext ac=new ClassPathXmlApplicationContext("myConfiiguration.xml");
+			oApplicationContext ac=new FileSystemXmlApplicationContext("E:/Spring/SpringLab73/src/myConfiiguration.xml");
+
+			oApplicationContext ac=new AnnotationConfigApplicationContext(MyConfiiguration.class);
+
+
+		Difference between FileSyatem and ClassPath is in FileSystem we have to give the fullyqualified XML name as constructor parameter as a 
+		string but in FileSystem we have to give only XML name as constructor parameter as a string
+
+
+
+
+
+
+	LIFE OF BEAN IN APPPLICATIONCONTEXT CONATINER	:-
+		1.Container loads the Bean Class in the memory 
+		2.Container creates Bean instances using corrsoponding constructor(Constructor Injection)		
+		3.Bean dependencies will be injected in the following ways 
+			a.Annoation Based AutoWiring(Field Injection)	
+			b.XML Based Explicit Wiring(SetterInjection)		
+			c.XML Based AutoWiring(SetterInjection)
+
+		4.If Bean class is implementing BeanNameAware interface than only setBeanName() will be called by conatiner 
+
+			Note:-Even if I write setBeanName() method in my class but not implementing BeanNameAware inetrface than container will not 
+			          call setBeanName() method		
+
+
+
+		5.If Bean class is implementing BeanFactoryAware interface than only setBeanFactory() will be called by conatiner 
+
+			Note:-Even if I write setBeanFactory() method in my class but not implementing BeanFactoryAware inetrface than container will not 
+			          call setBeanFactory() method		
+
+
+
+		6.If Bean class is implementing ApplicationContextAware interface than only setAppplicationContext() will be called by conatiner 
+
+			Note:-Even if I write setAppplicationContext() method in my class but not implementing AppplicationContextAware inetrface than
+			          container will not call setAppplicationContext() method		
+
+		7.When BeanPostProcessor is registered then only postProcessBeforeInitilialization() will be called by conatiner
+		
+		8.When any method found with @PostConstruct annotation then that method will be called 
+		
+		9.When bean class is implement Initialization interface then afterPropertySet() will be called  
+			
+			Note:-Even if I write afterPropertySet() method in my class but not implementing Initialization interface than
+			          container will not call afterPropertySet() method		
+		
+		10.When bean defination contains init-method(XML or JAVABasedConfiguration(Annotation) ) attribute then that specified method will be 
+		     called
+
+			
+		11.When BeanPostProcessor is registered then only postProcessAfterInitilialization() will be called by conatiner
+
+		12.Fully initilized Bean instance will be ready to use in the ApplicationContext conatiner
+
+
+
+
+
+
+		At Conatiner ShutDown Time, it will destroy all the Beans running in the container	
+		
+		When container is destroying one bean instances than it will do following tasks:-
+			
+		1.When any method found with @PreDestroy annotation then that method will be called 
+		
+		2.When bean class is implement Disposable interface then destroy() will be called  
+			
+			Note:-Even if I write destroy() method in my class but not implementing Disposable interface than
+			          container will not call destroy() method		
+		
+		3.When bean defination contains dsetroy-method(XML or JAVABasedConfiguration(Annotation) ) attribute then that specified method will be 
+		     called
+
+
+
+		Lab74 to Lab77
+
+
+
+
+	2.BeanFactory Container :-
+
+			We can create ApplicationContext as follows :-
+			oResource res=new ClassPathResource("myConfiiguration.xml");
+			BeanFactory fact=new XmlBeanFactory(res);
+			
+
+			oResource res=new FileSystemResource("E:/Spring/SpringLab73/src/myConfiiguration.xml");
+			BeanFactory fact=new XmlBeanFactory(res);
+
+
+
+
+
+
+	LIFE OF BEAN IN APPPLICATIONCONTEXT CONATINER	:-
+		1.Container loads the Bean Class in the memory 
+		2.Container creates Bean instances using corrsoponding constructor(Constructor Injection)		
+		3.Bean dependencies will be injected in the following ways 
+			a.XML Based Explicit Wiring(SetterInjection)		
+			b.XML Based AutoWiring(SetterInjection)
+
+		4.If Bean class is implementing BeanNameAware interface than only setBeanName() will be called by conatiner 
+
+			Note:-Even if I write setBeanName() method in my class but not implementing BeanNameAware inetrface than container will not 
+			          call setBeanName() method		
+
+
+
+		5.If Bean class is implementing BeanFactoryAware interface than only setBeanFactory() will be called by conatiner 
+
+			Note:-Even if I write setBeanFactory() method in my class but not implementing BeanFactoryAware inetrface than container will not 
+			          call setBeanFactory() method		
+
+
+
+		
+		6.When bean class is implement Initialization interface then afterPropertySet() will be called  
+			
+			Note:-Even if I write afterPropertySet() method in my class but not implementing Initialization interface than
+			          container will not call afterPropertySet() method		
+		7.When bean defination contains init-method(XML or JAVABasedConfiguration(Annotation) ) attribute then that specified method will be 
+		     called
+
+		
+		8.Fully initilized Bean instance will be ready to use in the ApplicationContext conatiner
+
+
+
+
+
+
+		At Conatiner ShutDown Time, it will destroy all the Beans running in the container	
+		
+		When container is destroying one bean instances than it will do following tasks:-
+			
+		
+		1.When bean class is implement Disposable interface then destroy() will be called  
+			
+			Note:-Even if I write destroy() method in my class but not implementing Disposable interface than
+			          container will not call destroy() method		
+		
+		2.When bean defination contains dsetroy-method(XML or JAVABasedConfiguration(Annotation) ) attribute then that specified method will be 
+		     called
+
+
+
+
+		Lab79 
+
+
+
+
+
+
+
+
+
+Bean Defination Inheritance :-
+			This allows us to reuse the various common properties of varous bean 
+
+
+		Without Bean Defination Inheritance:-
+			
+			getBean("h1");
+		
+			<bean id="h1" class="_______________.Hello">
+					<property name="x" value="10"/>
+					<property name="y" value="20"/>
+					<property name="str" value="Hello Guys"/>
+					<property name="msg" value="Hai Guys"/>
+			</bean>
+
+			<bean id="h2" class="_______________.Hello">
+					<property name="x" value="10"/>
+					<property name="y" value="30"/>
+					<property name="str" value="Good Morning"/>
+					<property name="msg" value="Hai Guys"/>
+			</bean>
+
+
+
+
+		With Bean Defination Inheritance:-
+			
+			getBean("h1");
+
+
+			<bean id="baseHello" class="__________.Hello" abstract="true>
+					<property name="x" value="10"/>
+					<property name="msg" value="Hai Guys"/>
+			<bean>
+		
+			<bean id="h1" parent="baseHello">
+					<property name="y" value="20"/>
+					<property name="str" value="Hello Guys"/>
+			</bean>
+
+			<bean id="h2" parent="baseHello">
+					<property name="y" value="30"/>
+					<property name="msg" value="Happy Day"/>
+			</bean>
+
+
+
+
+		Externalizing Bean Prooperties	:-	
+			This allows us to place bean in property value in a seperate property file instead of hardcoding values in Spring Configuration 
+			Documents(XML BASED or ANNOTATIONBASED) 
+			
+			
+
+		Lab 80 to Lab86
+
+	
+
+
+
+
+
+Accessing Message Bundles	:-
+		When we develop any web based application than we need to write various message bundles to suppport multiple languages
+		
+		When we want to access properties from Mesage Bundles with Spring than we need to do following :-
+			1.Write our own message bundle to support multiple languages
+				Name of message bundle can be anything but 
+				basename		messages.properties
+
+			Syntax	:-
+				basename_LanguageCode_CountryCode.properties
+				basename_LanguageCode.properties
+			
+
+			messages.properties(English)	:-
+				un.required=Username is Required(English)	
+				errors.required={0} is Required(English)
+				errors.range={0} length must be between {1} and {2}(English)			
+							
+			messages_hi.properties(Hindi):-
+				un.required=Username is Required(Hindi)	
+				errors.required={0} is Required(Hindi)
+				errors.range={0} length must be between {1} and {2}(Hindi)			
+							
+			2.Access the properties of message bundles using methods of ApplicationContext
+				getMesage(String key,Object []args,Locale)
+				getMesage(String key,Object []args,String defaultMessages,Locale)
+
+
+
+			3.Register the bean called ResourceBundleMessageSource with Spring Container by Specifying following in SpringConfigurationDocument
+				
+				<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource >
+					<property name="basename" value="messages"/>
+				</bean>
+
+
+
+
+
+
+Using PropertyEditor		:-
+			Property editor are use to edit property values 
+			We can do following using PropertyEditors		:-
+				Convert the value from one datatype to another datatype 
+				Convert the value from one format to another format 
+
+ 
+
+
+
+
+
+
+
+
+
+
+Events and Listeners	:-
+		Event Handling mechanism is provided with SpringContainer called Application context
+		Event Handling mechanism cannot be done with BeanFactory 
+		Application Context Container can handle two types of events	:-
+			1.Standard or System Events
+			2.Custom or Application Events	
+				
+		1.Standard or System Events	:-
+			Spring provides the following standard events	:-
+				a.ContextStartedEvent
+				b.ContextRefreshedEvent
+				c.ContextStoppedEvent
+				d.ContextClosedEvent
+		
+
+
+	
+		a.ContextStartedEvent will published when Application Context is started using start() method onConfigurableApplicationContext interface
+
+		b.ContextRefreshedEvent will published when Application Context is initilized or refreshed using refresh() method on ConfigurableApplicationContext 
+		   interface
+
+		c.ContextStoppedEvent will published when Application Context is stopped using stop() method on ConfigurableApplicationContext interface
+
+		d.ContextClosedEvent will published when Application Context is closed using close() method on ConfigurableApplicationContext interface
+
+		
+	
+	Now I want to listen the event and perform some tasks and let the Container create and publish SystemEvent.So for listening some tasks Listener is used
+
+
+		2.Custom or Application Events	:-
+			We can create or publish our own Application events 
+			eg. FeePaidEvent,WorkshopEvent...................................etc			
+
+			Application event handling is provided through 
+				oApplicationEvent class
+				oApplicationListener interfcae	
+			
+
+
+
+
+NOTE	:-
+	Every Listener in Spring must be Sub-Type of ApplicationListener
+	Any Event raised in Application will come to ApplicationListener 
+	We can write one or more listener for different different tasks. Eg.Send mail using one listener,Send SMS using another Listener..................etc and 
+	register them in Configurable Class(XML or JavaConfiguration)
+
+
+
+
+
+
+
+
+
+
+
+Spring Aspect Oriented Programming(AOP)	:-
+	When we are developing Enterprise Application we need the following services commonly	:-
+		1.Low Level Services
+		2.Middle Level Services
+		3.High Level Services
+
+
+
+	1.Low Level Services		:-Some Low Level Services are IO, Threading, Networking ....etc which will be supplied by servers freely
+	2.Middle Level Services	:-Some Middle Level Services are Transiction, Security, Logging, Messaging ...............etc which will has to be 
+				  implemented by us	
+	
+	3.High Level Services	:-High Level Services of Enterprise Application are nothing but Buisness Logic where we are writing our Buisness operation
+	
+
+	Normally when we implement Buisness Operation we need to write the code for Middle level services and Buisness Loigic  
+
+	Without AOP we write middle level services and business operation all together.Now suppose later for one Buisness Operation we need to change our 
+	middle level services. So for that we need to change the entire code.
+	So to overcome such problems AOP model is being introduced
+
+	AOP is Aspect Oriented Programming 
+	AOP is a new kind of programming which is mainly used to saperate Buisness Logic from Middle Level Services
+	Transiction, Security, Logging, Messaging are middle level services which are also called as cross-cutting concern 
+	
+	Just Like OOP model is given with C++,Java and C#, AOP are also given for different frameworks like Spring AOP, AspectJ, JBoss
+	Spring2.0 AOP is integrated with AspectJ
+
+
+
+
+	Spring AOP Terminology	:-
+		1.Aspect 
+		2.Advice
+		3.JoinPoint
+		4.PointCut
+		5.Advisor
+		6.Target
+		7.Proxy 
+		8.Weaving 
+
+
+
+	1.Aspect 		:-
+			Commonly required for Middle Level Services which we are implementing for our Enterprise Application are called Aspect	
+			Security,Transiction,Logging,Mesaging are Aspects
+	
+	
+	2.Advice		:-
+			Implementation of a Middle Level Service is called as Advice
+			Implementation of an Aspect is called Advice i.e Advice is a class which contain code for Aspects like Security,Transiction,Logging
+			..................................................etc 		
+			eg.
+			class TxService{........................................................}	
+			class SecurityService{........................................................}	
+			class LogService{........................................................}	
+				
+
+	3.JoinPoint	:-
+			JoinPoint is a Point in the program execution where we want to apply Advices.
+			JoinPoint is a Point in the program execution where we want to run middle level service code. 
+			
+			Spring AOP supports following JoinPoints
+				a.MethodBefore	:-Beforing invoking Method
+				b.MethodReturning 	:-When Method return the control successfully 
+				c.MethodThrowing 	:-When Method throws an Exception
+				d.MethodAfter	:-When Method return the control in any way 
+	
+		
+	4.PointCut	:-
+			Collection of JoinPoints is called PointCut
+			By Default Advices will be applied for all the Buisness operations of all the Buisness Services
+			When we want to apply Advices for some specified Buisness Operations of some Specified Business Services then we define
+			PointCut with required AspectJ expression
+
+			eg.
+			execution(* com.sunny.*Service(-----))	
+				then advices will be applied for 
+				getBal() of AccountService
+				myDeposit() of AccountService
+				myWithdraw() of AccountService
+				addCustomer() of CustomerService
+				updateCustomer() of CustomerService
+		
+			
+			execution(* com.sunny.AccountService.my*(-----))	
+				then advices will be applied for 
+				myDeposit() of AccountService
+				myWithdraw() of AccountService
+		
+			execution(* com.sunny.CustomerService.update*(-----))	
+				then advices will be applied for 
+			updateCustomer() of CustomerService
+		
+		(-----)	:-Means parameter can be anything
+
+
+NOTE		:-To Define PointCut we need following	
+			a.JDK Regular Expression
+			b.AspectJ Expression
+
+	
+	5.Advisor		:-Advisor is combinition of Advice and PointCut
+
+
+NOTE		:-
+		interceptorNames are list of advices or advisors
+		When we use list of advices the advices will be applied to all method of all buisness service
+		When we use list of advisors the advices will be applied to only for method which are matching with PointCut Expresion
+
+
+	6.Target		:-Target is an Object of our buisness service before applying Advices or Advisor
+	
+
+	7.Proxy 		:-Proxy is an Object of our buisness service after applying Advices or Advisor		
+
+
+	8.Weaving 	:-It is process of applying Advices or Advisor to target object as given pointcut to get Proxy Object
+
+
+
+
+Note		:-The advices(say mba,mra,mta) will check whether to use before(), afterThrowing() or afterReturning() mtd by checking which class is 
+		implementing MethodBeforeAdvices,AfterReturningAdvices,ThrowsAdvices.....................etc (i.e which Advices) 
+
+
+
+
+	Spring Provides three ways to implement AOP	:-
+		1.Using SpringAPI based AOP(Available from Spring 1.0)
+		2.Using Annotation based AOP(Available from Spring 2.0)
+		3.Using Schema based AOP(Available from Spring 2.0)
+
+	Best way to implement AOP is Annotation based AOP
+
+
+
+
+
+AutoProxying	:-
+		It is process of creating proxy object for our buisness services automatically without configuring the proxy objects explicitly using 
+		ProxyFactoryBean
+		AutoProxying is disabled by default 
+		To enable AutoProxying we need to do following	:-
+			a.Enable the aop namespace(it is like context namespace)
+			b.Write following tag in SpringConfigurationDocument(XML)
+				<aop:aspectj-autoproxy>
+
+		
+		1.Explicit Proxying	:-
+			When we configure Proxy object with the type ProxyFactoryBean with following 3 properties
+				interceptorNames
+				target
+				targetClass/proxyInterfaces   
+
+			then it is called Explicit Proxying
+		
+
+		2.Autoproxying	:-
+			Here Proxy object will be created by container for every buisness services object(target Object ) by detecting the List of Advisors 
+			configures by us in SpringConfiguration Document
+			
+			AT CONTAINER STARTUP SPRING CONTAINER WILL SCAN ALL THE ADVISORS AND PREPARES THE LIST OF 
+			ADVISORS
+ 
+	
+
+
+
+
+
+
+//Error	:-Advice object [com.sunny.spring.MRAAdvice@145f66e3] is neither a supported subinterface of [org.aopalliance.aop.Advice] nor an 
+	  [org.springframework.aop.Advisor]
+	If Advices implement AfterAdvice with AutoProxy 
+
+	No Effect 
+	If Advices implement AfterAdvice with AOP  using API Based Configuration
+	
+
+Q.	How to implement MethodAfter (i.e returning anyway in XML)
+	
+
+
+
+	Using Annotation Based AOP:-
+		1.@Aspect
+		2.@PointCut
+		3.@Before			//Same as MethodBefore
+		4.@AfterReturning			//Same as MethodReturning
+		5.@AfterThrowing			//Same as Exception
+		6.@After				//Successful or Failure by any means
+		7.@Around			//(Combination of Before and AfterReturning)
+
+
+
+
+
+
+
+
+
+XML Schema based AOP(from 2.0):-
+		1.<aop:config>
+		2.<aop:aspect>
+		3.<aop:pointCut>
+		4.<aop:before>			
+		5.<aop:after-returning>		
+		6.<aop:after-throwing>			
+		7.<aop:after>				 
+		8.<aop:Around>			//(Combination of Before and AfterReturning)
+		
+		
+
+		Lab103,104
+
+
+Uisng @Around	:-
+		When we specify @Around dor any method than 
+			The method has to take ProceedingJoinPoint as Parameter 
+			ProceedingJoinPoint has to call proceed() method to invoke the buisness operation
+
+
+
+		Lab105,106
+
+
+
+XML Schema based AOP using <aop:Around>
+	
+		Lab107,108
+

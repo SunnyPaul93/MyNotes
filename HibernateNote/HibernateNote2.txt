@@ -1,0 +1,1175 @@
+
+Hibernate Query Languages	:-
+
+	There are 4 method defined in Session for CURD operation
+		session.save()
+		session.update()
+		session.load()
+		session.delete()
+
+Hibernate supports variious Query languages to select the record based on various criteries
+		HQL(Hibernate Query Languages)
+		QBC(Query Based Criteria)
+		Native Queries 
+		Named Queries
+
+HQL(Hibernate Query Languages)	:-
+		
+HQL is Structured and Object Oriented Query Language
+HQL is same as SQL 
+HQL is Object Oriented Query Language which uses Java Class names and field as query
+
+HQL is using table name,column  name
+SQL is using Persistance class name
+
+In HQL no placeholder or no  parameter so no need to set the parameters also 
+
+JDBC doesnot support any Named parameter but support Positional parameters but Hibernate support both Named and Positional parameters 
+
+Steps to HQL :-
+	1.Write HQL Query
+	eg1.	String hql="form Customer cust where cust.city=? and cust.cardBal=?";
+	eg2.	String hql="select * form Customer cust where cust.city=? and cust.cardBal=?";
+		
+		cust is an ALIAS	
+		In HQL we can write queries with or without select (i.e select * )
+	2.Create Query Object using HQL query
+		Query q=session.createQuery(hql);
+
+	3.Set the value of Placeholders(parameter)
+	
+		A.Using corrosponding DataType setters
+			q.setString(0,"Agra");
+			q.setInteger(1,2722);
+			q.setDouble(2,727.122);
+
+	Note :-Here Position Start from 0
+		
+		B.	q.setParameter(0,"Agra");
+			q.setParameter(1,2722);
+			q.setParameter(2,727.122);
+
+
+
+
+	4.call list() or uniqueResult() methods
+		
+		query.setString(0,"sunny@gmail.com");	
+		List<Customer> list=query.list();			//here two or more have sunny@gmail.com
+		
+		query.setString(0,"alu@gmail.com");	
+		Customer cust=(Customer)query.uinqueResult();		//here only one have alu@gmail.com
+
+	5.Process the result
+		for(Customer cust:list);
+		sop(cust);
+
+
+
+NOTE	:-For Unique we can either use list or uniqueResult
+
+
+
+QBC(Query Based Criteria)	:-
+
+QBC  is Pure Object Oriented Query Language which uses Java Class and Fields and methods (Here complete implimentation is with method call only so no 
+syntax for SQL(like groupby,orderby ..etc is used ))
+		
+Steps to QBC	:-
+		1.Create Query Object using persistanec class
+			Criterial ct=session.createCriterial(Customer.class)		
+		
+		Here no query is required directly we can create Query Object with Persistance class
+			inernally 	(select * from customer)
+		
+		2.Add the Criterian/Restriction/Condition to the Criteria Object 
+			This step is required or used when we want to filter the recor
+
+
+
+		3.call list() or uniqueResult() methods
+				
+			query.setString(0,"sunny@gmail.com");	
+			List<Customer> list=query.list();			//here two or more have sunny@gmail.com
+			
+			query.setString(0,"alu@gmail.com");	
+			Customer cust=(Customer)query.uinqueResult();		//here only one have alu@gmail.com
+	
+		4.Process the result
+			for(Customer cust:list);
+			sop(cust);
+
+
+Native Query	:-
+		Native Query is direct SQL
+			From Hibernate directly SQL query using Native Query 
+			Here no process to convert HQL to SQL and ..............
+
+		Here also list,unique mtd is calling SQL Query
+
+	
+	addEntity(Customer.class)	:-Please connect ResultSet to entity call customer
+
+
+	For multiple value fetch(say id,email,............) we donot need to write entity 
+
+	When we want to fetch two or more specific column or one record then other value(column) will be loaded so memory problem 
+
+Steps to Native Query	:-
+
+Note	:-Uses SQL Queries directly
+
+
+
+	1.Prepare the SQL Query
+		String sql="select * from Customer where city=?";
+
+	2.Create the SQL Query object using SQL Query 
+		SQLQuery sq=session.createSQLQuery(sql);
+
+
+	3.Specify the Entity Class
+		sq.addEntity(customer.class);
+
+	4.Set the Value to Parameter(Positional or Named) 
+		sq.setString(0,"Silchar");
+
+	5.call list() or UniqueResult();
+		List<Customer> list=q.list();
+
+	6.Process the result
+
+
+In Native when we use from Customer than no O/P will be Displayed
+
+
+Named Query	:-
+		This is also usses NativeQueries with some name assigned for it.	i.e NativeQueries also uses NamedQueries but without any name
+			String sql="select * from Customer";
+			String AllCustomer="select * from Customer";		 
+	
+		This uses SQLQueris with XML Mapping and HQLQueries with Annotation
+
+
+Steps to NamedQuery	:-
+		
+		1.Define SQLQuery along with mapping and provide some name for SQLQuery
+			
+			a.With XML:-
+				<sql-query name="AllCustomer" />
+				<return Class="Customer" />
+				select * from customers;
+				</sql-query>
+				
+
+
+				<sql-query name="CustByCity" />
+				<return Class="Customer" />
+				select * from customers where city=?;
+				</sql-query>
+				
+
+
+			b.With Annotation:-
+				@NamedQueries({
+				
+					@NamedQuery(name="AllCust",query="from Customer cust");
+					@NamedQuery(name="CustByCity"query="from Customer where city=?")
+				
+				})
+
+
+		2.Create the Query Object using Name of Query
+			Query q=sesion.getNamedQuery("CustByCity");
+
+
+		3.Set value to parameter(Positional or Named )
+
+			q=q.setString(0,"Banhalore");
+		//	q=q.setParameter(0,"Banhalore");
+
+
+		4.call list() or uniqueResult()
+			
+			List<Customer> list=q.list();
+
+
+		5.Process the result
+
+
+
+We cannot fetch one,two or more column but not all column by NamedQueries
+
+
+For Oracle	:-
+		If we use <generator class="increment"> than we do not have to (Lab3)
+
+		If we use <generator class="sequence"> than we have to 1st create sequence in DB table as follows (Lab46)	:-
+ 
+		//Create this in Oracle 1st 
+		SQL> create sequence contactId_seq
+		  2  start with 101
+		  3  increment by 1;
+
+		Sequence created.
+
+		If we generate P.K using sequence than we must have to Create Table in Oracle Hibernate will not create table autopmatically i.e cannot use
+		
+		SQL> create table contacts(contactId NUMBER(6) primary key,firstName VARCHAR(10),lastName VARCHAR(10),phone NUMBER(10),
+			dob VARCHAR(10),status VARCHAR(10));
+
+		Table created.
+
+		Or 
+
+		Tell Hibernate to Generate table in Hibernate Configuration file
+		<property name="hibernate.hbm2ddl.auto">create</property>
+
+
+	In XML for Id(P.K) Generation we can use increment or sequence since sequence is also supported by Oracle
+
+		Here I use Sequence so
+
+		i.e <genertor class="sequence">
+			<parameter name="sequence"> sequence_name</parameter>
+		    </generator>
+		
+
+select contactId_seq.nextval from dual
+
+	ORACLE AND PROCEDURE	:-
+	
+	LAB47
+		create or replace procedure getAllContacts(cts_cursor out SYS_REFCURSOR)
+			AS
+			BEGIN 
+			OPEN cts_cursor FOR
+			SELECT * FROM contacts;
+			END;		
+			/
+
+			create or replace procedure getAllActiveContacts(cts_cursor out SYS_REFCURSOR,st in char)
+			AS
+			BEGIN 
+			OPEN cts_cursor FOR
+			SELECT * FROM contacts where status=st;
+			END;		
+			/
+
+
+		By default callable statement is false
+
+
+
+
+
+Pagination	:-
+		It is mainly used if we have large number of records.With pagination we can get some amount of record(say some 5 records) at a time
+			
+			Next	:-1st result value is incresed
+			Previous	:-1st result value is decresed
+			
+
+			It has 2 methods 
+				setFirstResult(index from where we need the records)
+				setMaxResult(number of records we need at a time)	
+				
+
+
+
+
+Polimorphic Queries	:-
+		Hibernate supports the polymorphic queries. Polymorphic means the polymorphism i.e an object that has a IS-A relation with their own type 
+		class object. Hibernate query doesn't only returns the instance of parent class, it returns the instances of subclasses also i.e a query will return
+		all those persistent classes instance which extends that class or an interface is implemented.
+
+
+
+
+Hibernate Connection Management	:-
+
+
+		ConnectionProvider is an interface availbale in org.hibernate.connection package and has following concreate implementations
+			DriverManagerConnectionProvider  
+			C3P0ConnectionProvider
+			DatasourceConnnectionProvider
+
+Note 	:-Connections can be specified by any one of above 
+	
+	Hibernate will use DriverManagerConnectionProvider as default 
+
+	If these built-in ConnectionProvider are not suitable for our requirement than we can  write our own ConnectionProvider class by implementing 
+		org.hibernate.connection.ConnectionProvider interface
+
+
+	We can specify the Custom ConnectionProvider in hibernate.cfg.xml as follows	:-
+		<property name="hibernate.connection.provider_class">
+			com.sunny.connection.SunnyConnectionProvider
+		</property>
+		 
+
+	Built-in ConnectionProvider:-
+		A.DriverManager Connections
+		B.C3P0 Connections
+		C.DataSourceConnections
+
+
+
+	Default Connection Pool size is 20
+
+
+Note	:-DriverManager ConnectionProvider by default open connection pool and take 20 connection
+	But we can have our desired pool size by specifying property in hibernate.cfg.xml	
+		<property name="connection.pool_size">99</property>		//here pool size is 99
+
+
+Note 	:-Hibernate internally have Connection Pooling 
+
+	A.DriverManager Connections	:-
+		We can specify following properties in Hibernate configuration document
+
+	For Oracle	:-
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521/XE</property>
+		<property name="hibernate.connection.username">system</property>
+		<property name="hibernate.connection.password">system</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+		<property name="connection.pool_size">99</property>		//Optional
+		<property name="show_sql">true</property>			//Optional
+		<property name="hibernate.hbm2ddl.auto">update</property>		//Optional
+
+		
+	For MySQL	:-
+			<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/myhibernate</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.pool_size">99</property>		//Optional
+		<property name="show_sql">true</property>			//Optional
+		<property name="hbm2ddl.auto">update</property>			//Optional
+
+
+
+	
+
+	B.C3P0 Connections	:-
+		C3P0 is a Third-Party ConnectionPooling techinque which can be used in any kind of Application 
+		
+		When we want ot use C3P0 Connection than we have to do the following:-
+			Add c3p0-0.9.1,jar to project build path
+			We need to specify following properties on Hibernate Configuration Document
+
+Note	:-C3P0 connection is not releated to hibernate
+
+
+	For Oracle	:-
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521/XE</property>
+		<property name="hibernate.connection.username">system</property>
+		<property name="hibernate.connection.password">system</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+		<property name="hibernate.c3p0.max_size">99</property>		
+		<property name="hibernate.c3p0.min_size">9</property>
+		<property name="hibernate.c3p0.timeout">10</property>		//max time for which connection is there (in Minute)
+			
+		
+	For MySQL	:-
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/myhibernate</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.c3p0.max_size">99</property>		
+		<property name="hibernate.c3p0.min_size">9</property>
+		<property name="hibernate.c3p0.timeout">10</property>		//max time for which connection is there (in Minute)
+		
+
+	NOTE	:-Here automatically use C3P0 ConnectionProvider to supply connection 
+
+	
+
+
+	C.DataSourceConnections	:-
+		1.To Use DataSourceConnnection our Hibernate must run in CME(Container Manager Environment)	i.e either in EJB or SPRING container
+		2.We need to specify following properties in Hibernate Configuration document 	
+			
+
+		For Weblogic Application Server	:-
+
+		<property name="connection.datasource">MySQLDataSource</property>
+		<property name="jndi.class">weblogic.jndi.WLInitialContextFactory</property>
+		<property name="jndi.url">t3://localhost:7001</property>
+		<property name="connection.username">sunny</property>
+		<property name="connection.password">sunny</property>
+		
+
+
+		For JBoss Application Server		:-
+		<property name="connection.datasource">MySQLDataSource</property>
+		<property name="jndi.class">org.jnp.interfaces.NamingContextFactory</property>
+		<property name="jndi.url">localhost:1099</property>
+		<property name="connection.username">sunny</property>
+		<property name="connection.password">sunny</property>
+		
+
+
+Transiction	:-
+		Transiction is the process of performing multiple database operation as one Atomic Unit with All or Nothing
+			When all DatabaseOperation in unit are successful than transiction is successful and should be commited and if any one Operations 
+			falis than entire application should be Rollback
+
+		When we implement transictions properlyin our Application than it gurantees ACID property 
+
+		A-Atomicity 
+		C-Consistency
+		I-Isolation
+		D-Durability	
+
+
+From Java Side EJB manage Distributed Transiction
+	For Distributed Transiction we must have EJB
+
+.
+
+ATOMICITY	:-
+		When all Operation in a DB is successful than only Transictions is Commited
+
+CONSISTENCY	:-Data is in a consistent state when a transaction starts and when it ends.
+		For example, in an application that transfers funds from one account to another, the consistency property ensures that the total value of funds
+		in both the accounts is the same at the start and end of each transaction.
+
+ISOLATION	:-When we run multiple transictions concurrently.Than concurrently running multiple transictions should not distrub other transictions i.e 
+		Transictions must be run isolately without effecting each other
+		EG:-If say Account 101 and 102 perform so Fund Transfer at a time and 101 has some problem while doing DB operation .Than that should not 
+		effect the Account 102 
+
+When different user accessing Different account at a time than  no problem but if  different user accessing Same account than may be there is a chance to occur 
+problem 
+
+
+The problem coming when multiple transiction running concurrently are called as Transictional Concurrency Problem
+
+
+Three Transictional Concurrency Problems	:-
+	Dirty Read Problem
+	Reptable Read Problem 
+	Phantom Read Problem 
+
+
+
+To avoid these Transictional Concurrency we have to apply one of following required Transictional Isolation Levels
+
+				Constants
+	1.Read_Uncomitted		      1	
+	2.Read_Comitted		      2
+	3.Repetable_Read		      4
+	4.Serializable 		      8
+
+
+NOTE	:- The above are Different with I/O Serilization  
+
+
+Durability	:-
+	Our Enterprise Data should be available for long time i.e as long as our Enterprise application is running
+	We have to protect our data from crashes,failure ...etc 
+	We have to implement proper backup and we can make enterprise data durable with recovery mechanism and proper Loging Mechanism
+
+		eg.
+		Every one minute enterprise data backup is scheduled 
+			at 10:00 AM 1st Backup done 
+				i.e some 1000 DB operation happened 
+				at 10:01:32 we have to deposite some 10L Rupees to some accound
+				Update accounts setBalance=10L where acccno=99;
+			at 10:01:38 my server crashed 	//Here all data is lost but we can get this by Logging to some appender and can read the deleted 
+						data from the appender
+			at 10:05:00 next bacckup
+
+
+
+	BY LOGGING MECHANISM WE CAN PROTECT OUR DATA  	
+
+
+
+		Transictional Concurrency Problems	:-
+			Dirty Read Problem		:-
+				When Transiction reads the Dirty Value(i.e modified but not committed) than we may get some Inconsistency problem
+				To avoid this we need to lock the cell(Column)
+				To lock Column we have to apply isolation level as Read_Committed
+				
+			Reptable Read Problem	:-
+				When Transiction is reading the same (one) row repeatedly we may get different set of values in different reads.This kind 
+				of problem is called Repetable Read
+				To avoid this we need to lock the Row	
+				To lock Row we have to apply isolation level as Repetable_Read
+				
+			Phantom Read Problem	:-
+				When Transiction is reading the sets of rows repeatedly we may get different set of rows in different reads.This kind 
+				of problem is called Phantom Read
+				To avoid this we need to lock the Entire table	
+				To lock Row we have to apply isolation level as Serializable 				
+
+
+Note	:-Read_Committed is default for MySQL and Oracle
+
+Types of Transictions	:-
+		1.Local Transictions	:-
+				When single DB is participating in transiction operation(i.e DB operation) than it is called LocalTransiction
+				eg.fund transfer b/w accounts in same bank or same DB
+
+
+		2.Distributed Transictions:-
+				When two oe more DB are participating in transiction operation(i.e DB operation) than it is called Distributed Transiction
+				eg.fund transfer b/w accounts in different bank or diferent DB
+
+
+
+		3.Flat Transcitions	:-
+				eg.
+					Begin Tx1
+						OP1
+						OP2
+						OP3
+					End Tx1
+			Here Multiple Flat transictions running will not distrub other concurrently running Transictions
+
+
+		4.Nested Transictions	:-
+				eg.
+					Begin Tx1
+						OP1
+						OP2
+
+					Beging Tx2
+						OP3
+						OP4
+					End Tx2
+						OP5
+
+					Beging Tx3
+						OP6
+						OP7
+					End Tx3
+						OP8
+					End Tx1				
+ 	
+			Here when inner transictions (Tx2 and Tx3) is failed than outer Transictions(Tx1) also will be failed
+
+
+
+
+NOTES	:-
+		Isolation level are used to solve concurrency problem
+		Default_AutoCommit is true in JDBC
+		Default_AutoCommit is false in Hibernate
+
+
+
+Hibernate Transiction Management	:-
+		Transiction is an inetrface available in org.hibernate package and has following concreate implementation	:-
+			JDBCTransiction
+			JTATransiction
+			CMTTransiction 
+		TransictionFactory is an inetrface available in org.hibernate.transiction package and has following concreate implementation	:-
+			JDBCTransictionFactory
+			JTATransictionFactory
+			CMTTransictionFactory
+
+
+		These TransictionFactory implementation classes are responsible for providing the corrosponding Transiction depending on the property 
+		written by us in hibernate.cfg.xml file 
+
+			JDBCTransictionFactory provides JDBCTransiction
+			JTATransictionFactory provides JTATransiction
+			CMTTransictionFactory provides CMTTransictionFactory
+
+
+
+	1.JDBDTransictions	:-
+		By default hibernate uses JDBCTransictionFactory which provides HDBCTransictions i.e default transiction management used by hibernate
+		system is JDBCTransictoion
+		
+		To use JDBCTransictions Connection Pooling must be DriverManagerConnnectionProvider or C3P0ConnectionProvider
+
+	2.JTATransictions	:-
+		When we want to use JTATransictions we must check the following	:-
+			A.Our HibernateApplication must run  in CME(Connection Managed Environment)
+			B.Connection must be DatasourceConnnectionProvider
+
+		To use JTA we need to write following properties in hibernate.cfg.xml
+
+			Weblogic Appplication Server	:-
+			
+			<property name="transiction.factory_class">
+				org.hibernate.transiction.JTATransictionFactory		//Name of TransictionFactoty used Default is TranscitionFactory to use other specify like this
+			</property>
+
+			<property name="transiction.manager_lookup_class">
+				org.hibernate.transiction.WeblogicTransictionManagerLookup
+			</property>			
+			
+			<property name="jta.UserTransiction">
+				java:comp/UserTransiction	
+			</property>			
+			<property name="hibernate.current_session_context_class">
+			jta
+			</property>			
+
+
+
+
+	3.CMTTransiction	:-	
+			When we want to use CMATransictions we must check the following	:-
+			A.Our HibernateApplication must run  in CME(Connection Managed Environment)
+			B.Connection must be DatasourceConnnectionProvider
+
+		To use CMT we need to write following properties in hibernate.cfg.xml
+
+			JBoss Appplication Server	:-
+			
+			<property name="transiction.factory_class">
+				org.hibernate.transiction.CMTTransictionFactory		//Name of TransictionFactoty used Default is TranscitionFactory to use other specify like this
+			</property>
+
+			<property name="transiction.manager_lookup_class">
+				org.hibernate.transiction.JBossTransictionManagerLookup
+			</property>			
+			
+			<property name="jta.UserTransiction">
+				java:comp/UserTransiction	
+			</property>			
+			<property name="hibernate.current_session_context_class">
+			jta
+			</property>			
+
+
+
+NOTE	:-
+		JDBCTransictionFactory is responsible to create instances of JDBCTransiction
+		JTATransictionFactory is responsible to create instances of JTATransiction
+		JDBCTransiction is default used by Hibernate
+
+
+
+
+
+
+
+HIBERNATE ARCHITECTURE	:-
+		
+	NOTE	:- 
+		Hibernate internally has code for procesing the XML or Annotation  
+		JDBC is standard API to contact DB
+
+
+	When we are working with Hibernate we are not responsible to write the code using JDBC API,JTA API,JNDI API.
+	Hibernate Runtime System is Collection of Various Objects running in the system
+		The Object are of two types	:-
+			High Level Object 
+			Low Level Object
+
+
+		High Level Object :-
+			Object used by us in Hibernate Client Code are called High Level Objects
+			High Level Objects in Hibernate Runtime System
+				1.Configuration
+				2.Session
+				3.SessionFactory
+				4.Transiction
+
+		Low Level Object :-
+			Object used by High Level Objects internally are called Low Level Objects 
+			Low Level Objects in Hibernate Runtime System
+				1.Connections
+				2.ConnectionProvider 
+				3.TransictionFactory
+
+
+
+
+
+Types of ObjectStates	:-
+	Transient State:=When Persistance class Object is newly created and not participitated in any sesion opertion then that object is called Transient Object
+		State of that object is called Transient State 
+		Transient Object donot contain any identity or primary key
+		
+	Persistence State:=When Persistance class Object is  participitated in any sesion opertion then that object is called Persistance Object
+		State of that object is called Persistence State 
+		Transient Object contains identity or primary key 		
+		Any modification happens in Persistence object will be reflected to DB
+	
+
+
+
+	Detatched State:=When Persistance class Object is  participitated in any sesion opertion but removed from SessionCache then that object is called 
+		Detatched Object
+		State of that object is called Detatched  State 
+		Detatched Object contains identity or primary key 		
+		Any modification happens in Persistence object will not be reflected to DB
+
+		
+
+
+	 
+
+
+
+
+Hibernate Cache	:-
+		
+		If DataBase records is not changing frequently (i.e Records may change in month or week ...etc) than we can maintain Query Cache
+		Copy of DB data is being maintain in QueryCache and the data is read type
+
+		Cache representation of DB near to Application
+		When we Cache the Read-mostly data(data which donot change frquently) than we can reduce the number of round trips b/w applications
+		server and DB server which increases the performance of our application
+		i.e By keeping the data in QueryCache we can reduce the round trip between Application Server and DataBase Server thus increasing the 
+		performance of our application 
+
+		In General we have 3 types of cache scopes	:-
+			1.Transictional Scope Cache
+			2.Process Scope Cache
+			3.Clustere Scope Cache
+		 
+
+	1.Transictional Scope Cache	:-This kind of cache will be created whenever the transiction is being started and runs as long as the transictions is running 
+				Transiction Scope Cache will be destroyed whenever transictions ends, either by rollback or by commit
+				Hibernate Session Cache is Transictional session scope
+			
+	2.Process Scope Cache	:-This kind of cache can be accessed by multiple Transictions running in the Application or process
+				Hibernate Query cache is Process Scope Cache
+
+
+
+	3.Cluster Scope Cache	:-When our enterprise application is large-scale application than we must use cluster environment where multiple 
+				server will be clustered and intrigated with LBS for routing the request
+				In case of cluster scope cache when one node caches the data than same data can be replicated to other node automatically
+				Hibernate Query cache is Cluster Scope Cache
+
+
+
+		 
+  
+
+First Level Cache:-
+	1st level is implemented in two way:-
+		a.SessionFactory Cache
+		b.Session Cache 
+
+
+
+	a.SessionFactory Cache	:-
+		At time of creating SessionFactory,Caches various Queries Generated for various tables used in Persistence class mapping 
+		Session Factory is enabled by default and should not be disabled 
+
+	b.SessionCache		:-
+		SessionCache is called 1st level cache
+		SessionCache is a Transictional Scope Cache
+		SessionCache is enabled by default and should not be disabled 
+		Whenever we insert,delete or update records than those Persistance objects will be placed in session cache
+			session.save()
+			session.update()		
+			session.delete()
+			session.load()
+
+	We can remove Persistence object from Session Cache using 
+		clear()	:-clear all object from SessionCache but not effect DB
+		evict(obj)	:-remove particular object from SessionCache
+
+
+Note	:-
+	Session can use object only for Insert,Update,Delete,Load 
+	With Disabling sesion-factory generates SQLQuery for every query
+	Session-Factory conatins default data for n number of parameters  
+	
+	If session-cache is disabled and if we try to call session.save() than records will be inserted in DB and if use session.save() every time than every time it 
+	will interect with DB but if session-cache is enabled than for every time we use sesion.save() than data will be save in session-cache and after commit 
+	data will be inserted as a batch
+Second Level Cache:-
+	Query Cache is Second Level Cache 
+	Query Cache can be Process scope or Cluster Scope cache
+	Query Cache is disabled by default we have to enabled it explicitly
+	Whenever we execute HibernateQueries(HQL,QBC,.....etc Select SQL Statement) than all records returned by Select Statement will be placed in Query Cache		
+	
+
+
+Cache Supported By Hibernate are	:-
+		HashtableCacheProvider	(just for developing but not for production level)
+		EhCacheProvider		(small scale application)
+		OhCacheProvider
+		SwarmCacheProvider
+		TreeCacheProvider(JBossCacheProvider)
+
+
+
+Steps to Implement QueryCache	:-
+
+1.	Enable QueryCache by writing following properties in configuration document
+		<property name="hibernate.cache.use_query_cache">true</property>		//Enable At Application Level
+
+2.	Specify Cache Property
+
+		<property name="hibernate.cache.provider_class">
+		org.hibernate.cache.EhCacheProvider
+		</property>
+
+
+3.	Enable at Class level,Collection,Association Level
+		<cache usage="xxxxx">
+		
+		Usage values can be any one of following
+			a.ReadOnly
+			bNonStict-Read-Write
+			c.Read-Write 
+			d.Transictional
+
+
+4.	Enable at QueryLevel
+		Call setCacheable() method with true value on Query or Criteria or SQLQuery
+		
+			HQL:=
+				Query q=session.createQuery(from Customer);	
+				q.setCacheable(true);
+				List li=q.list();
+			QBC:=
+				Criteria ct=session.createCriteria(Customer.class);	
+				q.setCacheable(true);
+				List li=q.list();
+				
+
+
+5.	Specify the Storage Implimentation and Expiration Policies
+
+NOTE	:-This will change from Cache Provider to Provider
+
+
+
+
+Caching Concurrency Stratergies
+		There are 4 Caching Concurrency Stratergies
+			a.ReadOnly	(no Lock and no Updation)
+			bNonStict-Read-Write(no Lock but updation is allowed)
+			c.Read-Write 	(column lock)
+			d.Transictional	(row lock)
+
+
+	These stratergies will allow us to apply required locking mechanism for persistence object which are available in QueryCache
+	In case of Process Scope or Cluster Scope One Persistence Object can be accessed by multiple transictions running concurrently.This may lead to some 
+	Concurrency Problem like Dirty Read,Phantom Read or Repetable Read 
+	To avoid this problem we have to apply required transictional isolation level  		
+
+
+Object can contain detail of one row in a DB So max we can lock row we can even lock a particular cell(column) but one Object cannot take whole table data so 
+Table lock is not possible
+
+
+
+Working With Primary Key	:-
+
+	Hibernate supports both type of Primary Key
+		1.Simple Primary Key 
+		2.Composite Primary Key
+
+	When we use single column as Primary Key than it is called as Simple Primary Key
+	Use <id> tag or @Id Annotation to configure Simple Primary Key
+	When we use combinition of two or more columns as Primary Key than it is called as Composite Primary Key
+	Use <composite-id> tag or @Embedde or @Embeddable to configure Simple Primary Key
+
+
+
+
+	Simple Primary Key	:-
+		Hibernate provides various Built-In Simple Primary Key Generator		(XML Approach)
+			1.increment	-IncrementGenerator(org.hibernate,id)
+			2.hilo
+			3.sequence	-Oracle	-SequenceGenerator
+			4.seqhilo		-Oracle	-SequenceHiloGenerator
+			5.uuid
+			6.guid
+			7.identity
+			8.native
+			9.assigned
+			10.select
+
+
+	Above Names are called short-cut names for Generator classes
+	All Generator classes are sub-class of IdentifierGenerator and overriding generate() method
+
+
+Generally Generator Class has something like below
+	
+	package org.hibernate.id;
+	class IncrementGenerator implements IdentifierGenerator {
+		public serilizable Generate(_,_){
+			//Logic to generate PK is implemented 
+		}
+		}
+
+	Using increment:-
+		<id name="sid" column="sid" type="int">
+			<generator class="increment"/>	
+		</id>
+
+			or 
+
+
+		<id name="sid" column="sid" type="int">
+			<generator class="org.hibernate.id.IncrementGenerator"/>	
+		</id>
+
+
+	Note	:-
+		We can use either shortcut name or fully qualified class name of generator class but batter to use fully qualified class name
+		Use only for integer type columns
+		starts with 1 and increment by 1
+
+	Using uuid		:-
+		
+		<id name="sid" column="sid" type="string">
+			<generator class="uuid"/>	
+		</id>
+
+	Note	:-
+		If PK is if character type or string type than only use generator class as uuid
+		uuid generator collects the IP address and timestamp of our system and than converts to hexadecimal and than convert to string 		
+		
+
+
+	Using sequence	:-(Only For Oracle)
+		
+		create or replace SID_SEQ strats with 101 increment by 1;
+			insert into Students value("SID_SEQ.NEXTVAL",'sunny','sunny@gmail.com')
+
+		<id name="sid" column="sid" type="int">
+			<generator class="sequence">
+
+				<param name="sequence">SID_SEQ</param>
+
+			</generator>	
+		</id>
+	Note	:-
+		Use only for integer type P.K
+
+
+	
+	Using hilo	:-
+		<id name="cid" column="cid" type="int">
+			<generator class="hilo">
+				<param name="table">hi_value</param>
+				<param name="column">next_value</param>
+				<param name="max_lo">10</param>		//here 10 is difference (Max_Value)
+			</generator>
+		</id>
+
+		specifying <param name="max_lo">10</param>  P.K is generated as ((Max_Value*x)+x) and x the the value
+
+		Note	:-Use only for integer type column
+
+
+
+
+
+
+
+	Using hilo	:-
+		<id name="cid" column="cid" type="int">
+			<generator class="seqhilo">
+				<param name="sequence">SIQ_SEQ</param>
+				<param name="max_lo">100</param>		
+			</generator>
+		</id>
+
+		specifying <param name="max_lo">100</param>  P.K is generated as ((Max_Value*x)+x) and x the the value
+
+		Note	:-Use only for integer type column
+
+
+
+
+
+
+
+Lab 51	:-		HILO
+
+		After Running the lab
+			
+		In DataBase use query as	:-
+			select * from customers;
+		
+
+	+-----+-------+-----------------+------------+-------+-------+
+| cid | cname | email           | phone      | city  | bal   |
++-----+-------+-----------------+------------+-------+-------+
+|   1 | Rajiv | Mohit@gmail.com | 8272655152 | Surat | 59000 |
++-----+-------+-----------------+------------+-------+-------+
+1 row in set (0.00 sec)
+
+
+		select * from high_value;
++------------+
+| next_value |
++------------+
+|          1 |
++------------+
+1 row in set (0.00 sec)
+				
+	
+Now Run Second time with Different Set of Values in LabA
+
+select * from customers;
++-----+-------+-----------------+------------+---------+-------+
+| cid | cname | email           | phone      | city    | bal   |
++-----+-------+-----------------+------------+---------+-------+
+|   1 | Rajiv | Mohit@gmail.com | 8272655152 | Surat   | 59000 |
+|  11 | Mohan | sunny@gmail.com | 8272766171 | Silchar | 90000 |
++-----+-------+-----------------+------------+---------+-------+
+2 rows in set (0.00 sec) 
+
+
+select * from high_value;
++------------+
+| next_value |
++------------+
+|          2 |
++------------+
+1 row in set (0.00 sec)
+
+In Programe max_value is 10 which is fixed so in customer table cid is generated as (max_value*x)+x
+	
+	here x is next value generated
+
+	here (10*1)+1
+
+--------------------------------------------
+Now we change the max_value as 100
+
+select * from customers;
++-----+-------+-----------------+------------+---------+-------+
+| cid | cname | email           | phone      | city    | bal   |
++-----+-------+-----------------+------------+---------+-------+
+|   1 | Rajiv | Mohit@gmail.com | 8272655152 | Surat   | 59000 |
+|  11 | Mohan | sunny@gmail.com | 8272766171 | Silchar | 90000 |
+| 202 | Pooja | aditi@gmail.com | 7383777373 | Silchar | 80000 |
++-----+-------+-----------------+------------+---------+-------+
+3 rows in set (0.00 sec)
+
+
+ select * from high_value;
++------------+
+| next_value |
++------------+
+|          3 |
++------------+
+1 row in set (0.00 sec)
+
+
+Here next value is 3 but we change max value as 100
+	here (10*2)+2
+
+
+
+
+Lab52:- For Oracle 			SeqHilo
+	
+	if i use seqhilo in mysql than error occur saying	org.hibernate.dialect.MySQLDialect does not support sequences
+
+
+
+	Same Concept as Hilo
+
+
+
+select * from customer;
+
+       CID CNAME      EMAIL                     PHONE CITY                        BAL
+---------- ---------- -------------------- ---------- -------------------- ----------
+       101 Pooja      aditi@gmail.com      7383777373 Silchar                   80000
+
+
+
+select SID_SEQ.nextval from dual;
+
+   NEXTVAL
+----------
+         2
+
+
+
+select * from customer;
+
+       CID CNAME      EMAIL                     PHONE CITY                        BAL
+---------- ---------- -------------------- ---------- -------------------- ----------
+       101 Pooja      aditi@gmail.com      7383777373 Silchar                   80000
+       303 Sunny      sunny@gmail.com      8.3738E+10 Silchar                   93000
+
+select SID_SEQ.nextval from dual;
+
+   NEXTVAL
+----------
+         4
+
+
+
+
+Lab53	:-uuid
+
+	Hibernate will generate CID using integer number but here I specify CID explicitly as String type(through constructor) and Take another variable 
+	CustomerId and that CustomerId is generated by collecting IP Address and timestamp and convert to Hexadecimal and thus converting to string 
+
+
+
+select * from customer;
++----------------------------------+-------+-------+-----------------+------------+
+| customerId                       | cid   | cName | email           | phone      |
++----------------------------------+-------+-------+-----------------+------------+
+| 402881836200e872016200e875680000 | C-103 | sunny | sunny@gmail.com | 9292888822 |
++----------------------------------+-------+-------+-----------------+------------+
+
+
+
+
+
+
+
+
+
+Custom Primary Key:-
+
+
+		We cannot give shortcut name for Custome PK generator class we have to give fully qualified class name
+		The Custom PK Generator class must implements IdentifierGeenrator and has to override generate mtd
+
+
+Lab 54.
+
+ select * from customer;
++-------+-------+---------------+------------+
+| cid   | cName | email         | phone      |
++-------+-------+---------------+------------+
+| C-001 | Sunny | sun@gmail.com | 7363666363 |
++-------+-------+---------------+------------+
+1 row in set (0.00 sec)
+
+select * from customer;
++-------+-------+---------------+------------+
+| cid   | cName | email         | phone      |
++-------+-------+---------------+------------+
+| C-001 | Sunny | sun@gmail.com | 7363666363 |
+| C-002 | Raju  | raj@gmail.com | 7282777272 |
++-------+-------+---------------+------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+NOTE	:-When we want to use the transiction again in one client code than donot close sesion better to flush the session
+
+
+
+Composit Primary Key	:-
+		Combination of two or more as P.K
+
+
+	We cannot use Generator Tag for Composite PK generation as there is not Built-in type for generating Custom Key in Hibernate

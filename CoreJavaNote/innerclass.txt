@@ -1,0 +1,36 @@
+class outer{
+	class inner{
+	public void m1(){
+	sop("inner class mtd");
+		}
+		}
+	public void m2(){
+	inner i=new inner();
+	i.m1();
+		}
+	psvm(String [] arg){
+	outer o=new outer();
+	o.m2();
+	}
+	}
+
+
+
+class outer{
+	class inner{
+	public void m1(){
+	sop("inner class mtd");
+		}
+		}
+	}
+	
+class test{
+	psvm(String [] arg){
+	outer o=new outer();
+	outer.inner i=o.new inner();
+	i.m1();
+	or
+	outer.inner i=new outer().new inner();
+	i.m1();
+	}
+	}

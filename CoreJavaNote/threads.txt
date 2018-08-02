@@ -1,0 +1,1887 @@
+Multi tasking:
+
+Executing several tasks simultaneously is concept of multitasking 
+there are two types of multitasking
+1.procesed based multitasking
+2.thread based multitasking
+
+1.procesed based multitasking:executing several tasks simultaneously where each task is a separate 
+independent program (process) is called process based multitasking
+eg,vlc player to listen songs,java program,use chrome to use facebook or download a file,utorrent
+This multitasking best suitable for OS level
+
+
+2.thread based multitasking:exccuting several tasks simultaneously where each task is a seperate indepent 
+part of same programe is called thread based multitasking(multi threading) and each independent part is 
+callled a thread
+This is best sitable for programmatic level
+
+when compared with old languages developing multithreaded applications in java is very easy because 
+java provides inbuilt support for multithreading with rich API()[thread runnable,thread group.......]
+
+Thread:It is a seperate flow of execution for every thread seperate independent job is there
+
+Thread can be defined in two ways:
+1.By extending thread class 
+2.By implementing runnable interface
+
+
+1.By extending thread class 
+class MyThread extends Thread{
+	public void run(){
+
+	for(int i=0;i<10;i++){
+	Sop("ChildThread");			executed by child thread
+	}
+	}
+}
+class ThreadDemo {
+psvm(String []aas){
+	//here one thread main thread
+
+	MyThread t=new Mythread();		//thread instaltiation	main thread creates child class object
+	t.start();	//starting of thread		main thread start child thread
+	//t.run();
+	//here two thread main and child thread
+		for(int i=0;i<10;i++){
+	Sop("main Thread");			executed by main thread
+	}
+	
+}} 
+
+thread scheduler:it is the part of JVM and is responsible to schedule threads i.e. if multiple threads are
+waiting to get a chance of execution than in which order threads will be executed is decided by thread
+scheduler. we can't except exact algo. followed by thread schduler it is varied from JVM to JVM 
+hence we can't except thread execution order and exact o/p
+hence whenever situation comes to multithreading there is no gurantee for exect o/p but we can provide
+several possible o/p
+
+Thread t=new Thread();
+Difference b/w t.start() and t.run()
+In case of t.start() new thread will be ceated which is responsible for execution of  run method 
+o/p is not fixed
+
+but In case of  t.run() new thread won't be created and run mtd. will be executed just like normal
+mtd. call by main thraed hence in above if we repace t.start with t.run then 
+o/p is child thread 10 times follwed by main thread  10 times
+this o/p willl be produced by only main thread
+
+Note:start mtd invoke run method intenally
+
+Importance of Thread class start mtd:
+Thread class start mtd is responsible to register the thread with threadschudler 
+and all other mendatory activities hence without executing thread class start mtd there 
+is no chance of starting a new thread in java due to this thread class start mtd
+is considered heart of multithreading
+
+
+
+Overloading of run method is possible but thread class start mtd can invoke no arg run method only
+ the other overloaded method we have to call explecitly like a normal method call
+
+class MyThread extends Thread{
+ public viod run(){
+	sop("No arg run");
+	}
+ public viod run(int i){
+	sop("1 arg run");
+	}
+
+}
+
+class ThreadDemo{
+psvm(String []str){
+Mythread t=Mythread();
+t.start();
+}
+}
+
+if we are not overriding run mtd:
+
+class MyThread extends Thread{
+				
+ public viod run(){
+	}
+}
+class ThreadDemo{
+psvm(String []str){
+Mythread t=Mythread();
+t.start();
+}
+}//no o/p
+
+thread class run method has empty implititation 
+if MyThread class donot contain start mtd than super class (Thread class) start() will be executed and 
+Thread class start methods calls run method than Jvm will check if MyThread class conatin run method 
+or not if it is not there than thread class run method will be executed and thread class run method have
+empty implementation so no o/p
+
+highly recomended to override run method otherwise donot go for multithreading
+
+
+
+
+
+overrriding of start mtd:
+
+class MyThread extends Thread{
+	 public viod start(){
+	sop("Start");		here no new thread created 
+	}
+	 public viod run(){
+	sop("Run");
+	}
+}
+class ThreadDemo{
+psvm(String []str){
+Mythread t=Mythread();
+t.start();
+Sop("main");
+}
+}
+
+if we override start start mtd than our Start mtd will be executed just like a method mtd call and main
+thread won't be created
+
+
+
+class MyThread extends Thread{
+	 public viod start(){
+	super.start();		here new thread created 
+	//here 2 thread main and child
+	sop("Start");
+	}
+	 public viod run(){
+	sop("Run");
+	}
+}
+class ThreadDemo{
+psvm(String []str){
+Mythread t=Mythread();
+t.start();
+Sop("main");
+}
+}//we cannot expect possible o/p
+
+after starting a threat if we restart the same threat than error occur saying Illegalthreatstateexeception
+
+Mythread t=Mythread();
+t.start();
+...............
+..............
+.............
+t.start();
+...............
+
+
+2.defining a threat by implementing runnable interfae
+
+we can define a thread by implementing runnable interface
+runnable intraface present in java.lang package and it contains only one method i.e run() mtd
+public void run(){}
+
+class MyRunnable implements Runnable{
+	public void run(){
+	for(int i=0;i<10;i++){
+	sop("child thread");
+	}
+	}
+}
+class Test{
+psvm(String []arr){
+
+MyRunnable r=new MyRunnable();
+Thread t1=new Thread(r);
+t1.start();		//thread class start and this start internally called MyRunnable run mtd
+	
+	for(int i=0;i<10;i++){
+	sop("main thread");
+
+}}
+
+
+
+
+class MyRunnable implements Runnable{
+	public void run(){
+	for(int i=0;i<10;i++){
+	sop("child thread");
+	}
+	}
+}
+class Test{
+psvm(String []arr){
+
+MyRunnable r=new MyRunnable();
+Thread t1=new Thread();
+t1.start();		//thread class start and this start internally called Thread class run mtd which is empty
+	
+	for(int i=0;i<10;i++){
+	sop("main thread");
+
+}}
+
+
+
+
+MyRunnable r=new MyRunnable();
+Thread t1=new Thread();
+Thread t2=new Thread(r);
+case 1:	t1.start();		new threat craeted and that threat reponsible to create thread class run mtd which have empty implenentation
+case 2:	t1.run();		no new threat craeted and that threat class run mtd will be like normal mtd call
+case 3:	t2.start();		new threat craeted and that threat reponsible to MyRunnable run mtd 
+case 4:	t2.run();		no new threat craeted and that MyRunnable run mtd will be like normal mtd call
+case 5:	r.start();		compile error 
+case 6:	r.run();		MyRunnable run mtd will be taken just like normal mtd call	
+
+
+class Test{}
+class MyThread extends Test,Thread{		//invalid
+	run(){
+	}
+}
+
+class MyRunnable exctends Test implements MyRunnable{		//valid
+	run(){
+	}
+}
+
+
+so recomended to use Runnable interface because of nature to support multiple inherritance
+
+
+Thread class Constructor:
+1.Thread t1=new Thread();
+2.Thread t2=new Thread(Runnable r);
+3.Thread t3=new Thread(String name);
+4.Thread t4=new Thread(Runnable r,String name);
+5.Thread t5=new Thread(ThreadGroup g,String name);
+6.Thread t6=new Thread(ThreadGroup g,Runnable r);
+7.Thread t7=new Thread(ThreadGroup g,Runnable r,String name);
+8.Thread t8=new Thread(ThreadGroup g,Runnable r,String name,long stacksize);
+
+
+
+
+
+class MyThread extends Thread{
+	public void run(){
+	Sop("Child thread");
+	}
+
+}
+class ThreadDemo{
+psvm(String str[]){
+	MyThread t=new MyThread ();
+	Thread      t1=new Thread (t);
+	t1.start();
+	Sop("Main Thread");
+}
+}
+
+
+
+
+sop(Thread.currentThread());
+
+
+
+
+
+
+class MyThread extends Thread{
+}
+
+class Test{
+psvm(String str[]){
+sop(Thread.currentThread());
+sop(Thread.currentThread().getName());
+MyThread t=new MyThread();
+sop(t.getName);
+
+Thread.currentThread().setName("Mohan");
+sop(Thread.currentThread.getName());
+
+
+}
+}
+
+
+
+every threat in java has some name it may be default name generated by JVM or customized name 
+provided by programmer 
+we can get and set name of a threat by using following two mtds od threat class::::
+public final String getName()
+public final void setName(String name)
+
+
+
+
+
+
+
+class MyThread extends Thread{
+	public void run(){
+	Sop("Child Thread:"+Thread.currentThread().getName());
+	}
+}
+
+class Test{
+psvm(String str[]){
+MyThread t=new MyThread();
+t.start();
+Sop("Main Thread:"+Thread.currentThread().getName());
+
+
+}
+}
+
+
+
+ThreadPriorities:::
+valid range of thread priority::1 to 10
+thread scheduler will use priorities while allocating processor 
+thread having high priority will get chance 1st than next priority thread
+
+if both thread are equal then depend on object creation
+
+
+public final int getPriority()
+public final int setPriority(int p)
+
+default priority only for main thread is 5 and for all remaining threads default priority will be inherited  
+from parent to child i.e whatever priority parent threat has the same priority will be there for child threat
+
+class MyThreat extends{}
+class test{
+psvm(String arg[]){
+sop(Thread.currentThreat().getPriority);
+Threat.currentThread().setPriority(7);
+MyThread t=new Thread();			
+
+sop(t.getPriority)
+}}
+
+
+
+
+
+class MyThreat extends{
+public void run(){
+for(int i=0;i<10;i++){
+sop("child");
+}
+}}
+class test{
+psvm(String arg[]){
+sop(Thread.currentThreat().getPriority);
+MyThread t=new Thread();			
+t.setPriority(10);
+t.start();
+for(int i=0;i<10;i++){
+sop("main");
+}
+}}
+
+
+if a thread donot want to perform any operation for a particular amount of time than we should go for
+sleep method
+public static native void sleep(long ms) throws Interupted Exception
+public static void sleep(long ms,int ns) throws IE
+
+Note:every sleep mtd throws IE ,which is a checked exception hence whenever we are using sleep mtd
+compulsary we should handle IE either by try catch or by throws keyword otherwise we will get 
+compile time error
+
+
+
+
+class SlideRotator{
+	psvm(String []str) throws IE{
+	for(int i=0;i<10;i++){
+	sop("slide"+i);
+	Thread.sleep(5000);
+}
+}
+}
+
+
+How a thread can interruprt another thread ?????
+Ans:thread contain interrupt method
+
+A thread can interrupt a slleping or waiting thread by using interrupt method of thread class 
+
+public void interrupt()
+
+class MyThread extends Thread{
+	public void run(){
+	try{
+	for(int i=0;i<10;i++){
+	sop("I am Lazy Thread");
+	Thread.sleep(1000);		//here exception occurs
+	}
+	}catch(IE e){
+	sop("i get interupted");
+	}
+	} 
+}
+
+
+class ThreadInterruptedDemo{
+psvm(String []str){
+MyThread t=new MyThread;
+t.start();
+t.interrupt();		//by main thread
+sop("end of main");
+}
+
+}
+
+Here main thread interrupt child thread
+
+
+class MyThread extends Thread{
+	public void run(){
+	
+	for(int i=0;i<10000;i++){
+	sop("I am Lazy Thread");
+	}
+	sop("I want to sleep");
+	try{
+	Thread.sleep(1000);		//here exception occurs
+	}
+	}catch(IE e){
+	sop("i get interupted");
+	}
+	 
+}
+
+
+class ThreadInterruptedDemo{
+psvm(String []str){
+MyThread t=new MyThread;
+t.start();
+t.interrupt();		//by main thread
+sop("end of main");
+}
+
+}
+
+***whenever we are calling interrupt mtd if target threat not in sleeping state or waiting state than
+there is no impact of interupt call immediately interupted call will be waited until target threat entered 
+into sleeping or waiting state
+if target threat enter into sleeping or waiting state than immediately interrupt call will interrupt 
+the target threat 
+
+if target threat never entered into waiting or sleeping state in its lifetime than there is no impact of 
+interrupt call this is the only case where intrrupt call will be wasted
+
+Thread group:
+Based on functionality we can group threads into a single unit which is called
+thread group i.e thread group contains a group of threads in addition to threads
+thread group can also contain sub thread grooups
+The main advantage of maintaining threads in the form of thread group is 
+we can perform common operations very easily 
+Every threads in java belong to some thread group only
+main thread belongs to main group
+class Thread{
+	psvm(String []arg){
+	sop(Thread.currentThread().getThreadGroup().getName());
+	sop(Thread.currentThread().getThreadGroup().getParent()	      .getName());	
+		main thread           mainthreadgroup  systemthreadgroup        System
+	}
+}
+
+Every thread group is child group of system group either  directly or indirectly 
+hence system group acts as root for all thread groups in java 
+System grps contains several system level threads like
+Finalizer, Referance Handler, Signal Dispatcher, Attach Listener.....................
+
+Thread Group is a java class present in java.lang package and it is direct 
+child class of object
+
+Constructors::
+1.ThreadGroup g=new ThreadGroup(String gname);
+eg:ThreadGroup g=new ThreadGroup("First Group");
+class Thread{
+	psvm(String []arg){
+	ThreadGroup g1=new ThreadGroup("My 1st Group");
+	sop(g1.getParent().getName());	
+	}
+}
+creats a new thread grp with specified grp name the parent of this new grp is
+the thread grp of currently executing thread
+
+
+2.ThreadGroup g=new ThreadGroup(ThreadGroup pg,String Groupname);
+
+eg:ThreadGroup g=new ThreadGroup(g,"Second Group");
+
+	psvm(String []arg){
+	ThreadGroup g1=new ThreadGroup("My 1st Group");
+	sop(g1.getParent().getName());	
+	ThreadGroup g1=new ThreadGroup(g1,"My 2n Group");
+	sop(g1.getParent().getName());	
+	}
+}
+
+creats a new thread grp with specified grp name the  parent of this new thread
+group is specified parent group
+
+ThreadGroup g1=new ThreadGroup("tg");
+Thread t1=new ThreadGroup(g1,"1st Thread");
+Thread t2=new ThreadGroup(g1,"2nd Thread");
+g1.setMaxPriority(3);
+Thread t3=new ThreadGroup(g1,"3rd Thread");
+
+g1.setMaxPriority(8);
+Thread t4=new ThreadGroup(g1,"4th Thread");
+
+sop(t1.getPriority());
+sop(t2.getPriority());
+sop(t3.getPriority());
+sop(t4.getPriority());
+
+Threads in the threads grp that have already have higher priority won't be 
+effected but newly added threads this MaxPriority is applicable 
+
+
+to copy all active threads of this thread grp into provided thread array in this
+case subthreads grp threads also will be considered
+int enumerate(ThreadGroup[] g): -to copy all active subthread grps into thread 
+grp array 
+
+activeCount:no. of active threads
+activeGroupCount:no. of active threads group
+
+class MyThread extends Thread{
+	MyThread(ThreadGroup g,Sttring name){
+	super(g,name);
+	}
+	public void run(){
+	sop("child thread");
+	try{
+	Thread.sleep(5000);		//thread sleep for 5 seconds
+	}catch(IE e){}
+	}
+}
+class ThreadGrpDemo{
+	psvm(String[] arg) throws Exception{
+	ThreadGroup pg=new ThreadGroup("ParentGrp");
+	ThreadGroup cg=new ThreadGroup(pg,"ChildGrp");
+	
+	MyThread t1=new MyThread(pg,"ChildThread1");
+	MyThread t2=new MyThread(pg,"ChildThread2");
+	t1.start();
+	t2.start();
+	sop(pg.activeCount());
+	sop(pg.activeGroupCount());
+	pg.list();		//information about this group
+	Thread.sleep(10000);	//meanwhile within 10 seconds both the threads (t1,t2) gets terminated because every thread can sleep max 5 second within 5 sec both threads going to be dead because run mtd got completed
+	sop(pg.activeCount());
+	sop(pg.activeGroupCount());
+	pg.list();
+	}
+}
+
+
+
+
+
+Synchronization::::
+
+synchronize is modifier apllicable only for  method and block but not for classes and variables 
+if multiple threads are trying to operate simultaneously on same java object than there may be a chance
+of data incostincy problem so to overcome this problem we shol dgo for synchranized keyword
+if a mtd or block declared s synchronized than at a time only one thread is allowed to exceute that
+mtd or block on given object so that data incosistancy problem will be resolved 
+
+
+the main advantages of synchronized keyword is we can reserve data incosistancy problems but the
+main disadvantages of synchronized keyword is it increases waiting time of threads and creates 
+performance problems hence if there is no specific requirement than it is not recomended to use 
+synchronized keyword
+
+ internally synchronization concept is implemented by using lock every object in java has a unique lock
+whenever we are using synchronized keywod than only lock concept will come into the picture 
+if a threat wants to execute synchronized mtd on the given object 1st it has to get lock of that object
+once threat get the lock than it is allowed too executed any synchronized mtd on that object
+once mtd  execution complete automatically threat releases the lock
+aquirirng and releasing lock internally takes care by JVM and programmer  not responsible for this 
+
+while a threat execute synchronize d mtd on the given object 
+the remaining threats are not allowed to execute any synchronized mtd simultaneously on same object
+but remaining threads are allow to execute non-synchronized mtds simultaneously
+
+
+lock concept is implemented  based on object but not based on method 
+
+synchronized check for locking but non-synchronized checks based on avalibility of objects but not on 
+locking
+
+
+1st case:::
+
+class Display{
+	public void Wish(String name){
+	for(int i=0li<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+
+class Test{
+psvm(String str[]){
+Display d=new Display();		//since instance mtd
+d.Wish("Sunny")
+}}
+
+
+2nd case::
+class Display{
+	public void Wish(String name){
+	for(int i=0li<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d=new Diplay();
+MyTHread t1=new MyThread(d,"Sunny");
+t1.start();
+}
+}
+
+
+
+3rd case::
+class Display{
+	public void Wish(String name){
+	for(int i=0li<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d=new Diplay();
+MyThread t1=new MyThread(d,"Sunny");
+MyThread t1=new MyThread(d,"Mohan");
+t1.start();
+t2.start();
+}	//irregular o/p
+}
+
+
+
+4th case::
+class Display{
+	public synchronized void Wish(String name){
+	for(int i=0li<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d=new Diplay();
+MyThread t1=new MyThread(d,"Sunny");
+MyThread t1=new MyThread(d,"Dad");
+t1.start();
+t2.start();
+}	
+}
+
+
+
+
+Note::If we declare wish mtd as synchronized than at a time only one threat is allowed to 
+execute wish mtd and given display object hence we will get regular o/p
+
+
+5th case::
+class Display{
+	public synchronized void Wish(String name){
+	for(int i=0;i<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d1=new Diplay();
+Display d2=new Diplay();
+MyThread t1=new MyThread(d1,"Sunny");
+MyThread t1=new MyThread(d2,"Dad");
+t1.start();
+t2.start();
+}	
+}
+
+
+6th case::
+class Display{
+	public static synchronized void Wish(String name){
+	for(int i=0li<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+}
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d1=new Diplay();
+Display d2=new Diplay();
+MyThread t1=new MyThread(d1,"Sunny");
+MyThread t1=new MyThread(d2,"Dad");
+t1.start();
+t2.start();
+}	
+}
+
+since static here threat required class level or default object lock
+instance here threat required only current class object or object level lock
+if a threat wants to execute a static synchronized mtd than thread required class level lock 
+once threat got class level lock than it is allowed to execute any static synchronized mtd og that 
+class
+once mtd execution completes automatically thread releases the lock
+
+class X{
+	static Sync m1()
+	static Sync m2()
+	static  m3()
+	 Sync m4()
+	m5()
+}
+
+while threat excuting static synchronized mtd the remaining threat are not allowed to execute any static
+synchronized mtd of that class simultaneously but remaining threats are allowed to execute the following 
+methods simultaneously
+normal static mtds
+synchronized instance mtds 
+normal instance mtds
+
+
+
+
+class Diaplay {
+public void display1(){
+	for(int i=1;i<=10;i++){
+	sop(i);
+	try{
+	Thread.sleep(2000);
+	}catch(IE e){}
+}
+public void display2(){
+	for(int i=65;i<=75;i++){
+	sop((char)i);
+	try{
+	Thread.sleep(2000);
+	}catch(IE e){}
+}
+
+}
+
+class MyThread1 extends Thread{
+	Display d;
+	MyThread1(Display d){
+	this.d=d;
+	}
+
+	public void run(){
+	d.display1();
+	}
+}
+
+class MyThread2 extends Thread{
+	Display d;
+	MyThread2(Display d){
+	this.d=d;
+	}
+
+	public void run(){
+	d.display2();
+	}
+
+	}
+
+class SyncDemo{
+	psvm(String []arr){
+	Display d=new Display();
+	MyThread1 t1=new MyThreat1(d);
+	MyThread2 t2=new MyThreat2(d);
+	t1.start();
+	t2.start();
+	}
+}
+
+
+class Diaplay {
+public synchronized void display1(){
+	for(int i=1;i<=10;i++){
+	sop(i);
+	try{
+	Thread.sleep(2000);
+	}catch(IE e){}
+}
+public synchronized void display2(){
+	for(int i=65;i<=75;i++){
+	sop((char)i);
+	try{
+	Thread.sleep(2000);
+	}catch(IE e){}
+}
+
+}
+
+class MyThread1 extends Thread{
+	Display d;
+	MyThread1(Display d){
+	this.d=d;
+	}
+
+	public void run(){
+	d.display1();
+	}
+}
+
+class MyThread2 extends Thread{
+	Display d;
+	MyThread2(Display d){
+	this.d=d;
+	}
+
+	public void run(){
+	d.display2();
+	}
+
+	}
+
+class SyncDemo{
+	psvm(String []arr){
+	Display d=new Display();
+	MyThread1 t1=new MyThreat1(d);
+	MyThread2 t2=new MyThreat2(d);
+	t1.start();
+	t2.start();
+	}
+}
+
+
+
+Synchronized Block
+If very few lines of code reqd. synchronization than it is not recommended to 
+declare entire method as synchronized we have to enclose those few lines of code
+by using synchronized block
+Main advantage of synchronized block over synchronized method is it reduces
+waiting time of threats and improves performance of system or application
+
+1.To get lock of current object:
+synchronized(this){
+//if threat got lock of current object than only it is allowed to execute this area
+}
+
+2.To get lock of particular object:
+synchronized(b){
+//if a threat got lock of particular object 'b' than only it is allowed to execiute  
+this area
+3.To get class level lock :
+synchronized(this.getClass()){
+//if threat got class level lock of display class then only it is allowed to execute 
+this area
+}
+
+
+
+class Display{
+	public  void Wish(String name){
+	//;;;;;;assume 1lakh line are there
+	synchronized(this){
+	for(int i=0;i<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+	}
+	}
+
+	//;;;;;;assume 1lakh line are there
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d=new Diplay();
+MyThread t1=new MyThread(d,"Sunny");
+MyThread t1=new MyThread(d,"Dad");
+t1.start();
+t2.start();
+}	
+}
+}
+
+//here instead of writing whole method as synchronize just provide thar part of 
+code we need to be synchronized in a synchronized block
+
+
+class Display{
+	public  void Wish(String name){
+	//;;;;;;assume 1lakh line are there
+	synchronized(this){
+	for(int i=0;i<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+	}
+	}
+
+	//;;;;;;assume 1lakh line are there
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d1=new Diplay();
+Display d2=new Diplay();
+MyThread t1=new MyThread(d1,"Sunny");
+MyThread t1=new MyThread(d2,"Dad");
+t1.start();
+t2.start();
+}	
+}
+}//concurrent o/p
+
+class Display{
+	public  void Wish(String name){
+	//;;;;;;assume 1lakh line are there
+	synchronized(this.getClass()){
+	for(int i=0;i<10;i++){
+	sop("Happy Birthday:");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e)
+	sop(name);
+	}
+	}
+
+	//;;;;;;assume 1lakh line are there
+}
+
+}
+
+class MyThread extends Thread{
+	Display d;
+	String name;
+	MyThread(Display d,String name){
+	this.name=name;
+	this.d=d;
+	}
+	public void run(){
+	d.wish(name);
+	}
+}
+
+class SyncDemo{
+psvm(String []arr){
+Display d1=new Diplay();
+Display d2=new Diplay();
+MyThread t1=new MyThread(d1,"Sunny");
+MyThread t1=new MyThread(d2,"Dad");
+t1.start();
+t2.start();
+}	
+}
+}//one by one o/p
+
+
+int x=10;
+Sunchronized(x){
+...........
+..............
+}//error unexpected type found: int required reference(object or class)
+lock concept applicable for object and class types but not for primitives hence 
+we cannot pass primitive type as a argument to synchronized block otherwise
+we will get compile time error 
+
+
+if multiple threats are operating simultaneously on same java object than there
+may be a chance of data inconsistancy problem  this is called race condition 
+we can overcome this problem by using synchronized keyword
+
+class X{
+	public synchronized void m1(){
+	//here threat has lock of X object	
+	Y y=new Y();
+	synchronized(y){
+	//here threat has lock of X and Y object	
+	
+	Z z=new Z();
+	synchronized(Z){
+	//here threat has lock of X,Y and Z object	
+	}
+	}
+	}
+}
+
+
+X x=new X();
+x.m1();
+
+thread can aruire multiple lock simultaneously but from different objects
+
+InterThread Communication:
+Two thearts can co municate with each other by using wait(),notify() and notify all()
+mtds
+The threat which is excepting updatation is responsible to the wait mts than 
+immediately threat will enter into waiting state 
+The threat which is responsible to perform updation after performiing updation 
+it is responsible to call notify mtd than waiting threat will get that notification 
+and continuing its execution with those updated items
+
+wait(),notify() and notify all() mtds present in object class 
+
+wait(),notify() and notify all() mtds used only for synchronized area(locking concept)
+
+if a threat call wait on any object it releases the lock of that object immediately
+and entered into waiting  state
+
+if a threat call notify on any object it releases the lock of that object but maynot 
+immediately becauses in noify may be some operation is going on
+
+except wait(),notify() and notify all() mtds there is no other mtd
+where threat releases the lock
+
+
+public final void wait() throws IE
+public final native void wait(long ms) throws IE
+public final native void wait(long ms,int ns) throws IE
+
+public final native void notify() 
+public final native void notifyall() 
+
+
+note:every wait mtd throws IE which is checked exception hence 
+whenever we are using wait mtd compulsary we should handle this 
+IE either by try catch or by throws keyword otherwise we will get compile
+time error
+
+
+class ThreatA{
+psvm(String []arr){
+	Threadb t=new Threadb();
+	t.start();
+
+	sop(b.total);
+}
+}
+
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+	}
+}o/p:0  if main threat 1st 5050,.4767,...1623..etc if child threat execute 1st
+4767,1623 are intermade value(middle)
+main thread excepting updation child thread responsible for updation
+
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+	t.start();
+//	Threat.sleep(10000);
+//	Threat.sleep(100);
+//	Threat.sleep(10);
+//	Threat.sleep(0,1);
+//	t.join();
+
+	sop(t.total);
+}
+}
+
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+	}
+}
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+	t.start();
+//	Threat.sleep(10000);
+//	Threat.sleep(100);
+//	Threat.sleep(10);
+//	Threat.sleep(0,1);
+//	t.join();		here join mtd is not recomended
+
+	sop(t.total);
+}
+}
+
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+	//1core lines 
+	}
+}
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+//	t.start();
+	t.wait();	//Illegal monitorstackException
+
+	sop(t.total);
+}
+}//error:Illegal monitorstackException
+
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	} 
+	this.notify();	//Illegal monitorstackException
+	//1core lines 
+
+	}
+}
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+//	t.start();
+	synchronized(t){
+1.	sop("mian threat trying to call the wait() mtd")
+	
+	t.wait();	
+4.	sop("main threat get notification");
+5.	sop(t.total);
+	}
+}
+}
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	synchronized(this){
+2.	sop("child threat starts calculation");
+	}
+
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+3.	sop("child threat trying to give notification") 
+	this.notify();	
+	//1core lines 
+
+	}
+}
+//here numbering is when main threat got the chance
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+//	t.start();
+	Threat.sleep(10000);	here main threat sleep
+	synchronized(t){
+3.	sop("mian threat trying to call the wait() mtd")
+	
+	t.wait();	
+	sop("main threat get notification");
+	sop(t.total);
+	}
+}
+}
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	synchronized(this){
+1.	sop("child threat starts calculation");
+	}
+
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+2.	sop("child threat trying to give notification") 
+	this.notify();	
+	//1core lines 
+
+	}
+}
+//here numbering is when child threat got the chance
+//here main threat went for sleeping and child threat executed and after
+10000 milisecond child threat start but there is no child threat to notify 
+
+
+class ThreatA{
+psvm(String []arr) throws IE{
+	Threadb t=new Threadb();
+//	t.start();
+	Threat.sleep(10000);	here main threat sleep
+	synchronized(t){
+	sop("mian threat trying to call the wait() mtd")
+	
+	t.wait(10);	
+	sop("main threat get notification");
+	sop(t.total);
+	}
+}
+}
+class Threadb extends Thread{
+	int total=0;
+	public void run(){
+	synchronized(this){
+	sop("child threat starts calculation");
+	}
+
+	for(int i=0;i<=100;i++){
+	total=total+i;
+	}
+	sop("child threat trying to give notification") 
+	this.notify();	
+	//1core lines 
+
+	}
+}
+//here wait for 10sec if no notification than remaining part execute
+
+class ConsumerThreat
+{
+	consume(){
+	synchronized (q)
+	{
+	if(q is empty)
+	q.wait();
+	else 
+	consume items
+}}
+
+class ConsumerThreat
+{
+	produce(){
+	synchronized (q)
+	{
+	produce items to queue
+	q.notify();
+	}
+	}
+}
+	
+producer threat is reponsible to produce items to the queue and consumer threat
+is responsible to consume items from the queue
+if queue is empty than consumer threat will call wait mtd and entered into waiting 
+state after producing items to the queue producer threat is responsible to call 
+notify mtd than waiting consumer will get that notification and continue its executiion
+with updated items
+
+
+notify: if multiple threats are waiting one threat will be notify but which threat 
+will be notify but which threat will be notify we can't expect it depends on JVM
+and remaining threat has to wait for further notification
+eg:obj.notify();
+
+notifyall:we can use notifyall to give the notification for all waiting threats of a 
+particular object even though  multiple threats notify but execution will be 
+performed one by one threats required lock and only one lock is available
+
+Stack s1=new Stack();
+Stack s2=new Stack();
+synchronized(s1){
+.............
+.................
+......
+s2.wait();
+
+}//invalid	
+
+synchronized(s1){
+.............
+.................
+......
+s1.wait();
+
+}//valid	
+
+
+note:on which object we are calling wait mtd threat require lock of that particular
+object
+eg.if we are calling wait mtd of s1 than we have to get lock of s1 object but not 
+s2 object
+ 
+DeadLock:
+If two threads are waiting for each other forever than deadlock arises 
+synchronized keyword is only reason for deadlock situation hence while using 
+synchronized keyword we have to take special care 
+there are no resolution techniques for deadlock but several prevention techniques 
+are available
+
+class A{
+	d1(B b){
+	b.last();
+	}
+	last(){
+
+	}
+}
+
+
+class B{
+	d2(A a){
+	a.last();
+	}
+	last(){
+
+	}
+}
+
+
+class A{
+	synchronized d1(B b){
+	b.last();
+	}
+	last(){
+
+	}
+}
+
+
+class B{
+	synchronized d2(A a){
+	a.last();
+	}
+	last(){
+
+	}
+}
+
+
+class A{
+	synchronized d1(B b){
+	b.last();
+	}
+	synchronized last(){
+
+	}
+}
+
+
+class B{
+	synchronized d2(A a){
+	a.last();
+	}
+	synchronized last(){
+
+	}
+}//here dead lock arises
+
+class A{
+	public synchronized void d1(B b){
+	sop("Thread1 start execution of d1 mtd");
+	try{
+	thread.sleep(1000);
+	}catch(IE e){
+	}
+	sop("Thread1 trying to call B's last mtd");
+	b.last();
+	}
+	public synchronized void last(){
+	sop("Inside A,last() mtd");
+	
+}
+
+class B{
+	public synchronized void d2(A a){
+	sop("Thread2 start execution of d2 mtd");
+	try{
+	thread.sleep(1000);
+	}catch(IE e){
+	}
+	sop("Thread2 trying to call A's last mtd");
+	a.last();
+	}
+	public synchronized void last(){
+	sop("Inside B,last() mtd");
+	
+}
+
+class MyThreads extends Thread{
+	A a=new A();
+	B a=new B();
+	p v m1(){
+	this.start();		//t.start
+	a.d1(b);			//executed by main threat
+	}
+	public void run(){
+	b.d2(a);			//executed by child threat
+	}
+	psvm(String []arg){
+	MyThreat t=new MyThread();
+	t.m1();
+	//a and b are instance variable and we cannot call from static
+	}
+}//deadlock
+
+class A{
+	public  void d1(B b){
+	sop("Thread1 start execution of d1 mtd");
+	try{
+	thread.sleep(1000);
+	}catch(IE e){
+	}
+	sop("Thread1 trying to call B's last mtd");
+	b.last();
+	}
+	public  void last(){
+	sop("Inside A,last() mtd");
+	
+}
+
+
+class B{
+	public  void d2(A a){
+	sop("Thread2 start execution of d2 mtd");
+	try{
+	thread.sleep(1000);
+	}catch(IE e){
+	}
+	sop("Thread2 trying to call A's last mtd");
+	a.last();
+	}
+	public  void last(){
+	sop("Inside B,last() mtd");
+	
+}
+
+class MyThreads extends Thread{
+	A a=new A();
+	B a=new B();
+	p v m1(){
+	this.start();		//t.start
+	a.d1(b);			//executed by main threat
+	}
+	public void run(){
+	b.d2(a);			//executed by child threat
+	}
+	psvm(String []arg){
+	MyThreat t=new MyThread();
+	t.m1();
+	//a and b are instance variable and we cannot call from static
+	}
+}//
+
+we can prevent a thread execution by using following mtds
+yeild mtd
+join mtd 
+sleep mtd
+
+yield mtd:
+yeild mtd causes to pass current executing threat to give the chance for waiting 
+threats of same priority if there is no waiting threat or all waiting threats
+have low priotity than same threat can continue its execution 
+if multiple threats are waiting with same priority than which waiting threat will get 
+the chance we cannot except it depends on threat scheduler 
+the thread which is yeilded ,when it will get the chance once again it depends 
+on thread scheduler 
+the threat which is yeilded, when it will get the chance once again it depends on 
+thread scheduler and we cannot expect exactly 
+
+public static native void yeild() 
+
+
+class MyThread extends Thread{
+p v run(){
+for(int i=10;i<10;i++){
+sop("child threat");
+Thread.yeild();
+}
+}
+
+}
+
+class ThreadYeild{
+p s v m(String []arr){
+	MyThreat t =new MyThreat();	
+	t.start();
+	for(int i=10;i<10;i++){
+	sop("child threat");
+	}
+}
+}
+in above programming if we are commenting Thread.yeild(); than both threads
+will be executed simultaneously and we cannot expect which threat will complete 
+1st 
+if we are not commenting Thread.yeild(); than child thread always calls yeild
+mtd because of that main threat chance more number of times and chance 
+of completing main threat 1st is high 
+
+join:
+if a threat wants to wait until completing some other thread than we should go
+for join mtd 
+eg: if a thread t1 wants to wait until completing t2  than t1 has to call t2.join()
+if t1 executes t2.join than immediately t1 will be entered into waiting state 
+until t2 competes once t2 competes than t1 can continue its execution 
+
+
+public final void join() throws IE
+public final void join(long ms)  throws IE
+public final void join(long ms,int ns)  throws IE
+
+
+Note:every join mtd throws IE which is checked Exception hence compulsary 
+we should handle this exception either by using try catch or by throws keyword
+other we will get compile time error  
+
+
+class MyThread extends Thread{
+	p v run(){
+	for(int i=0;i<10;i++){
+	sop("Mohan Thread");
+	try{
+	Thred.sleep(2000);
+	}catch(IE e){}
+	
+	}
+	}
+}
+
+class ThreadJoinDemo{
+	psvm(String []arr){
+	MyThread t=new MyThread();
+	t.start();
+	t.join();
+	//t.join(10000);
+	for(int i=0;i<10;i++){
+	sop("Sunny Thread");
+	
+
+	}
+}
+
+case:waiting of child threat until completing main thread
+
+class MyThreat extends Thread{
+	static Thread mt;
+	p v run(){
+	try{
+	mt.join();	//main thread
+	}catch(IE e){}
+	for(int i=0;i<10;i++){
+	sop("Child thread");
+	}	
+	}
+}
+
+
+class ThreadJoinDemo{
+	psvm(String []str)	throws IE{
+	MyThreat.mt=Thread.currentThread();	//main thread
+	MyThreat t=new MyThreat();
+	t.start();
+	for(int i=0;i<10;i++){
+	sop("main threat");
+	Thread.sleep(10000);
+}
+}
+}
+
+
+in above example child thread calls join mtd on main thread object hence 
+child thread has to wait until completing main threat in this case 
+
+class MyThreat extends Thread{
+	static Thread mt;
+	p v run(){
+	try{
+	mt.join();	//main thread
+	}catch(IE e){}
+	for(int i=0;i<10;i++){
+	sop("Child thread");
+	}	
+	}
+}
+
+class ThreadJoinDemo{
+	psvm(String []str)	throws IE{
+	MyThreat.mt=Thread.currentThread();	//main thread
+	MyThreat t=new MyThreat();
+	t.start();
+	t.join();
+	for(int i=0;i<10;i++){
+	sop("main threat");
+	Thread.sleep(10000);
+}
+}
+}
+//somthing like deadlock because child waiting for main and main waiting for 
+child
+
+
+
+class Test{
+	psvm(String []arr) throws IE{
+	Thread.currentThread().join();	//main thread calls join mtd on main thread object i.e main thread wants to wait until completing main thread
+	}
+}
+
+Demon Threads:
+Thread which depend on other thread are called demon thread 
+main objective of demon thread is to provide support for non-demon threads(eg main thread)
+eg:if main thread runs with low memory than JVM runs GC to destroy useless
+objects so that number of bytes of free memory will be improved ;with this 
+free memory  main thread can continue its execution 
+
+usually demon thread runs with low priority but based on ouur requirement demon 
+threads can run with high priority also 
+
+we can check demon nature of a thread by using isDemon() mtd of thread clas
+1.public boolean isDemon() 
+
+we can change demon nature of a thread by using setDemon() mtd
+2.public void  setDemon(boolean b) 
+
+but changing demon nature is possible before strting of a thread only aafter starting 
+a thread  if we are trying to change demon nature than we will get runtime
+exception saying illegal thread state exception 
+
+Default nature of a thread:
+By default main thread is always Non-Demon and for all remaining threads 
+demon nature will be inherited from parent to child i.e if parent thread is demon 
+than automatically child thrread is also demon and if parent thread is non-demon
+than child thread is also non-demon
+
+
+Note:it is imposible to change the Demon nature of main thread because it is already 
+started by JVM at begining 
+
+
+
+class Test{
+	psvm(String str[]){
+	Sop(Thread.currentThread().isDemon());
+//	Thread.currentThread().setDemon(true)	illegal thread state exception
+	MyThread t=new MyThraed();
+	sop(t.isDemon);	since main thread is excuting child thread
+	t.setDemon(true);
+	sop(t.isDemon);
+
+
+	}
+}
+
+whenever last non-demon terminated automatically all demon threads will be 
+terminated irrespctive of their position 
+
+class MyThread extends thread{
+	public void run(){
+	for(int i=0;i<10;i++){
+	sop("Child");
+	try{
+	Thread.sleep(1000);
+	}catch(IE e){
+	}
+	}
+}
+
+class Test{
+	psvm(String str[]){
+	
+	MyThread t=new MyThraed();
+	t.setDemon(true);
+	t.start();
+	sop("end of main thread");	
+}}
+//here may be one time child thread but there is no gurantee(execute multiple time)
+
+Thread Pools (Executor Framework):
+creating a new thread for every job may create performance on memory problems
+to overcome this we should go for thread pool 
+thread pool is a pool  of already crrated threads ready to do our job
+Java 1.5 introduces thread pool frame work to implement thread pools 
+thread pool framework also known as executor framework 
+we a create a thread pool as follows:
+ ExecutorService service=Executers.newFixedThreadPool(3);
+
+
+we can submit a runnable job by using submit mtd
+srevice.submit(job);
+
+we can shutdown executer service by using shutdown mtd
+srevice.shutdown();
+
+import java.util.concurent.*;
+class MyJob implements Runnable{
+	String name;
+	MyJob(String name){
+	this.name=name;
+	}
+	
+	public void run(){
+	sop(name+"Job Started By Thread:"+Thread.currrentThread().getName());
+	try{
+	Thread.sleep(5000);
+	}catch(IE e){}
+	sop(name+"Job Completed By Thread:"+Thread.currrentThread().getName());
+	}
+}
+class ExecutorDemo{
+	psvm(String []arg ){
+	MyJob[] jobs={new MyJob("Kshiti"),new MyJob("Mohan"),new MyJob("Paul"),new MyJob("Sunny"),new MyJob("Argun"),new MyJob("Doremon")};
+	ExecutorService service=Executers.newFixedThreadPool(3);
+	//3 threads 6 jobs
+	//3 jobs started each thread reponsible to perform 2 jobs 
+	for(MyJobs job:jobs){
+	srevice.submit(job);
+	}
+	srevice.shutdown();
+
+	}
+}
+
+in above example 3 threads are responsible to execute 6 jobs so that a single
+thread can be reuse for multiple jobs
+note:while designing web and applications servers we can use thread pool 
+concept 
+
+Default thread pool size is 60
+
+
+

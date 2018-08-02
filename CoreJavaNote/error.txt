@@ -1,0 +1,2 @@
+logical mistake:runtime
+synthetical error:compile time

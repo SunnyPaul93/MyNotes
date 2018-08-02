@@ -1,0 +1,67 @@
+int x=10;
+int y=0101;
+int z=0X0101;
+sop(x+""+y+""+z);
+
+by default jvm takes sop decimal so jvm convert octal and hexa to decimal
+10l, 010l, 0x10l is long type i.e we specify explecitly as long but
+by default they are int type
+
+by default floating is double
+int x=0b 111;valid
+float f=123.222;--------invalid
+float f=234.55d;----invalid
+double d=111.33;-------valid
+double d=0123.345;-----valid--decimal but not octal----even though it 0 at starting is octal but it is treated as a decimal
+double d=0x123.22;---invalid ---malformed floating point literal  
+double d=0x123.33p0;---valid
+binary floating point is invalid
+double d=0789;--octal(0-7)--invalid--it is int so integer no. too large
+double  d=10;-----valid--10.0;
+int i=10.0;----invalid--we cant assign floating literal to integral types 
+double d=0373.0;----valid
+double d=0x1fce.0;----invalid
+double d=0777;---valid
+double d=1.2e3;---valid
+float f=1.2e3;invalid ---loss of data
+float f=1.2e3f;valid
+boolean b=true;valid 
+boolean b=True;invalid
+boolean b=false;valid
+boolean b="false";invalid
+boolean b=0;invalid
+condition is of boolean
+x=0;if(x)--invalid--condition must of boolean
+while(1)--invalid--condition must boolean
+char ch='a';valid
+char ch=a;invalid
+char ch="a";invalid---since string cannot be in char 
+char ch='ab';invalid--unclosed char literal-- not a statement
+char ch=97; sop(ch);  valid---but range(0-65535)
+char ch=0xfac1; valid
+char ch=0777;valid
+char ch=65535;valid
+char ch=65526;invalid
+? in ascii char 1.corrosponding char not available or defined 2.corrosponding char available but in this system font not available
+
+unicode:'\uxxxx'
+char ch='\u0061'; sop(ch);----valid
+escape char is char literal only
+char ch='\n';valid
+char ch='\t';valid
+char ch='\m';invalid
+sop("tis is ' symbol");invalid
+sop("tis is \' symbol");valid
+sop("tis is " symbol");invalid
+sop("tis is \" symbol");valid
+sop("tis is \charcter symbol");invalid \c is invalid escape char
+sop("tis is \\character symbol");valid
+sop("f:\\sunny-my");valid
+sop("f:\sunny-my");invalid
+char ch=0xbeef;valid
+char ch=0xbeer;invalid--r not range of hexadecimal
+char ch=\uface;invalid;-------no '
+char ch='\uface';valid
+10_34_55_7    use:_ b/w digits of numeric literal
+double d=1_22_____33_6.7_4___4___7; vlalid
+float f=10l; sop(f); ---10.0---only because of exponential 

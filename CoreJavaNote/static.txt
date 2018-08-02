@@ -1,0 +1,111 @@
+1st static blocks and variable then main method executed
+inside a static block if we are trying to read a variable that read operation 
+is called direct read
+if we are calling a mtd and within that mtd if we are trying to read a variable
+that read operation id called indirect read
+class test{
+static int i=10;
+static {
+m1();sop(i);//direct read
+}
+public static void m1(){
+sop(i);//indirect read
+}
+}
+
+if a variable just declared (identified by jvm) and value not initilize
+then the variable is said to be in read indirectly write only state(riwo)
+if a variable in read indirectly write only state than we cant perform direct 
+read but we can perform indirect read
+if we are trying to read directly than we will get compile error:illegal 
+forward reference
+
+
+
+
+
+class test {
+psvm(String []qee){
+sop("String");
+}			//these methods is overloaded methods 
+psvm(int []qee){
+sop("int");
+}
+}//o/p: string 
+	since jvm will always going to call String main method and the other main method will be 
+	normal method
+
+overloading concept applicable for static methods including main method but jvm will always going to call 
+String[] main method  
+
+class p{
+psvm(String []aaa)
+{
+sop("parent main");
+}					//save the file as p.java
+}					//java p:o/p:parent main
+
+class c extends p{}				//java p:o/p:parent main
+
+inheritance relation applicable for static method including main method
+
+
+
+
+class p{
+psvm(String []aaa)
+{
+sop("parent main");
+}					//save the file as p.java
+}					//java p:o/p:parent main
+
+class c extends p{
+psvm(String []aaa)
+{
+sop("child main");
+}}					//java p:o/p:child main
+it is method hiding but not overridding
+
+
+overriding concept not applicable for static method but if we do override method than it is not 
+overridding it is method hiding
+
+for static methods overloading in inheritance concepts are applicable but not overridding and instead of
+overridding method hiding cooncept is applicable
+
+m1(){
+int a;
+} //instance method
+
+inside mtd implementation if we are using atleast one instance variable than that method talks about a particular
+object hence we should declare method as instance method
+inside mtd implementation if we are not using any instance variable than this method no where related to
+a  particular object hence we have declare method as static  method irrespective of whether we are using 
+static variables or not
+
+
+
+
+
+class student 
+{
+String name;
+int rollno;
+int marks;
+static String cname;
+
+getstudentInfo(){
+return name+"\t\t"+marks;	since we are using only instance variable so mtd is instance mtd
+}
+
+getcollegeInfo(){
+return cname;		since we are using only static variable so mtd is static mtd
+}
+
+getaverage(int x;int y){
+return x+y/2;		since we are not  using any variable of class so mtd should be static mtd
+}
+getcompleteInfo(){
+return name+"\t\t"+rollno+"\t\t"+marks+"\t\t"+cname;	since we are using both instance variable and static variable so mtd should be static mtd
+}
+}

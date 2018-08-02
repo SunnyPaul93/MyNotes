@@ -1,0 +1,12 @@
+outside person can't access our internal data directly or our internal data 
+should not go out directly
+
+class student{
+datamember
++			//binding of data 
+behaviour}		//encapsulation
+
+every java class is a example of encapsultion
+
+encapsulation=data hiding+abstraction
+

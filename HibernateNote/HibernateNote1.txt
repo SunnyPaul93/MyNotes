@@ -1,0 +1,753 @@
+							HIBERBNATE
+
+
+
+Hibernate is a perisitence framework which is used to implement persistence operation to interact with the database 
+
+A persistence framework is a middleware that assists and automates the storage of program data into databases, especially relational databases. It acts as a layer of
+abstraction between the application and the database, typically bridging any conceptual differences between the two.
+
+Hibernate framework is implemented by RedHat
+
+Architecture of the Hibernate is GavinKing(founder of Hibernate)
+
+Hibernate is an ORM(Object Relational Mapping) tool and is best among the all other presistance framework like IBatis,JPA etc
+
+ORM framework is written in an object oriented language (like PHP, Java, C# etc…) and it is designed to virtually wrap around a relational database. If we look at
+the name (ORM), it basically translates into: mapping objects to relational tables   
+
+Hibernate can be implemented either with XML approach(Hibernate Core ) or with Annotation(Hibernate Annotation )
+
+JDBC Specification is given by SUN and is implemented by various Database Vendors
+
+Hibernate is implemented on the top of JDBC technology i.e we can use Hibernate API which is internally uses JDBC to contact DataBase
+
+
+Hibernate Features:-
+	~Hibernate system is responsible for taking the cconnections,creating statements and releasing resources 
+		
+	a.	Customer cus=new Customer("sunny","sunny@gmail.com");
+			session.save(cus);
+
+	b.	Customer cus=session.load(Customer.class,101);
+
+
+	~Hibernate system is responsible for generating SQL queries which are well tuned in terms of performance
+	
+	~Hibernate system is responsible for generating the values required for primary key columns
+	
+	~Hibernate provide the built-in Primary key generation algorithm and also supports to implements Custom Primary key generation algorithm
+	i.e Primary key will be automatically generated or we can generate our own primary key (starting number,increment value, ending value etc)
+
+	~Hibernate supports various mapping styles(Mapping between Object  and Table)	:-
+		Simple Mapping
+		
+		Collecting Mapping 
+		
+		Inheritance Mapping 
+			Table per sub class mapping 	
+ 			Table per class mapping 
+			Table per concrete  class mapping 
+
+		Associated Mapping 
+			One-to-One Mapping
+			One-to-Many Mapping
+			Many-to-Many Mapping
+
+		Other Mapping
+
+
+
+	~Hibernate provide various Query Languages like	:-
+		HQL
+		QBC
+		Native SQL
+		Names SQL 
+		
+
+	~Hibernate supports two ways to manage connection 
+		DriverManager connections
+		DataSource connections
+
+	~Hibernate supports two ways to manage Transictions
+		JDBC Transiction	=>Local  Transictions
+		JTA Transictions	=>Distributed Transictions
+	
+
+	~Hibernate has build-in support for Batch Update 
+
+
+
+
+Dialect	:-Hibernate dialect property tells Hibernate to generate the appropriate SQL statements for the chosen database, hibernate.dialect property makes 
+	  Hibernate to generate the appropriate SQL statements for the chosen database. 
+	
+	Database relative information is centralized in Dialect class
+
+	For connecting any hibernate application with the database, you must specify the SQL dialects. 
+
+	Based on Dialect Hibernate Generate the SQL Statement
+
+	RDBMS					Dialect
+	
+	Oracle (any version)				org.hibernate.dialect.OracleDialect
+	Oracle9i					org.hibernate.dialect.Oracle9iDialect
+	Oracle10g					org.hibernate.dialect.Oracle10gDialect
+	MySQL					org.hibernate.dialect.MySQLDialect
+	MySQL with InnoDB				org.hibernate.dialect.MySQLInnoDBDialect
+	MySQL with MyISAM			org.hibernate.dialect.MySQLMyISAMDialect
+	DB2					org.hibernate.dialect.DB2Dialect
+	DB2 AS/400				org.hibernate.dialect.DB2400Dialect
+	DB2 OS390				org.hibernate.dialect.DB2390Dialect
+	Microsoft SQL Server			org.hibernate.dialect.SQLServerDialect
+	Sybase					org.hibernate.dialect.SybaseDialect
+	Sybase Anywhere				org.hibernate.dialect.SybaseAnywhereDialect
+	PostgreSQL				org.hibernate.dialect.PostgreSQLDialect
+	SAP DB					org.hibernate.dialect.SAPDBDialect
+	Informix					org.hibernate.dialect.InformixDialect
+	HypersonicSQL				org.hibernate.dialect.HSQLDialect
+	Ingres					org.hibernate.dialect.IngresDialect
+	Progress					org.hibernate.dialect.ProgressDialect
+	Mckoi SQL				org.hibernate.dialect.MckoiDialect
+	Interbase					org.hibernate.dialect.InterbaseDialect
+	Pointbase					org.hibernate.dialect.PointbaseDialect
+	FrontBase					org.hibernate.dialect.FrontbaseDialect
+	Firebird					org.hibernate.dialect.FirebirdDialect
+
+
+
+	In ________.configure.xml 
+			To configure simple primary key use the tag called id
+			To configure non- primary key use the tag called property 
+			  
+
+
+
+
+	Mapping can be done either with xml or with annotation
+
+	Hibernate configuration is one time configuration per database
+ 	
+	In one Hibernate we can write only one DB configuration document 
+
+
+
+
+	~hbm2ddl.auto
+
+	hbm2ddl.auto is a property which is given by hibernate. If we want to make use it, we need to pass the values to it and configure the same in 
+	hibernate.cfg.xml(say by default)
+
+	Here Hibernate will automatically do create or update or delete 
+
+	~hbm2ddl.auto Create :
+	If the value is create then hibernate first drops the existing table, then creates a new table and then executes operation on newly created table.
+		<property name="hibernate.hbm2ddl.auto">create</property>
+
+
+	~hbm2ddl.auto Validate :
+	If the value is validate then hibernate only validates whether the table and columns are exist or not. If the table doesn’t exist then hibernate throws an
+	 exception. Validate is the default value for hbm2ddl.auto.
+		<property name="hibernate.hbm2ddl.auto">validate</property>
+	
+		
+
+	~hbm2ddl.auto create-drop :
+	If the value is create-drop then hibernate first checks for a table and do the necessary operations and finally drops the table after all the operations are
+	completed.
+		<property name="hibernate.hbm2ddl.auto">create-drop</property>
+
+
+
+
+	~hbm2ddl.auto update :
+	If the value is update then hibernate checks for a table and if table there it won't create but just update the data  
+
+
+
+NOTE	:-At Session factory creation time an Object (say here Customer Object ) is created(i.e One instance created in persistence class) so Default Constructor
+	 will be executed
+
+
+
+
+NOTE	:-When we call configure() i.e for default xml hibernate.cfg.xml or configure("String ") i.e for user defined xml (say sunny.cfg.xml which is String type) than 
+	
+	a.Identifies the Hibernate configuration Document 
+
+		=>cfg.configure();	->uses default name called hibernate.cfg.xml 
+
+		If we chnage our xml configuration file say mysql.cfg.xml than 
+		=>cfg.configure("mysql.cfg.xml");	
+	 
+
+
+	b.If Hibernate configuration document is not found than session creation will be failed 
+
+
+	c.If Hibernate configuration document is found than 
+		Reads all the Mapping resources(if using XML file) or classes(if using Annotation is class) from configuration document 
+
+	d.If mapping Resource not found than session Factory creation will be failed 
+	
+	e.If mapping Resource or Class found than 
+		Reads the mapping information for all the resources
+		
+	f.Data taken from mapping resource or classes will be stored in Configuration object 
+
+
+
+NOTE	:-Hibernate System is responsible for generating Primary Key in XML configuration when we specify 
+		<generator class="increment" /> 
+	Here increment will be Hibernate specific algorithm
+
+
+
+NOTE	:-Database(MySQL,Oracle,Sybase,DB2......etc) will generate Primary Key with Annotation configuration when we specify 
+		@Id
+		@Generated value(stratergy=GenerationType.AUTO)
+		@Column(anme="cid")
+	  
+
+
+
+Persistance Class	:-Java classes whose objects or instances will be stored in database tables are called persistent classes in Hibernate.
+		Hibernate works best if these classes follow some simple rules, also known as the Plain Old Java Object (POJO) programming model.
+
+		According to the rule :-
+		1.All Java classes that will be persisted need a default constructor.
+		2.All classes should contain an ID in order to allow easy identification of your objects within Hibernate and the database. This property maps
+		   to the primary key column of a database table.
+		3.All attributes that will be persisted should be declared private and have getXXX and setXXX methods defined in the JavaBean style.
+		4.Persistent class should be either non-final or the implementation of an interface that declares all public methods.
+
+
+		Session factory sf=null;
+			
+
+		Customer c1=null;
+		Customer c2=null;
+
+		Transiction tx=null;
+		................................
+		..........................
+		try{
+		sf=HibernateUtil.getSessionFactory();	=>must be existing sesion factory object 
+		session=sf.openSession();
+		
+
+		tx=session.beginTransiction();			//session cache is created where persistance object will be stored 
+			With the above statement 	
+				a.Session Cache will be created 
+				b.Connection will be taken from pool 
+				c.Transiction started
+		NOTE	:-Internally Hibernate will open one Connection andConnnection is given to sesion()
+			  Internally Hibernate will  create connection pooling 
+
+
+			c1=new Customer("sun","sun@gmail.com",111);			 			
+			here c1 is called Transiction Object 
+
+			session.save(c1);	=>Persistance Object 
+			
+			c2=new Customer("raj","raj@gmail.com",222);			 			
+			here c2 is called Transiction Object 
+
+			session.save(c2);	=>Persistance Object 
+			
+			tx.commit()
+
+		}
+		catch(Exception e){
+			tx.rollback();
+		}
+
+
+		
+		
+
+	When transiction is commited than following will happen :-
+		1.Picks persistance object from sesion 
+		2.Generate SQL statement(insert in this example )
+		3.Add SQL to the Batch 
+		4.Repeat from step 1 to 3
+		5.Submit batch to DB(using connection)
+		6.Issue commit to DB 
+		7.Destroy session cache 
+		8.Release connection from DB
+
+	
+	When transicton is rollback than following will happen :-
+		1.Destroy session cache
+		2.Release connection of DB
+	
+	Object just created but not participating in the session is called Transiction Object and donot have primary key
+	
+
+NOTE	:-If save only one record than also go to session cache then after commit go to DB
+
+	Default Mechanism :-Update
+
+	Either one or many records are done by Batch Updates  
+
+
+
+
+	flush()	:- Forces the session to flush. It is used to synchronize session data with database.
+			When you call session.flush(), the statements are executed in database but it will not committed.
+			If you dont call session.flush() and if you call session.commit() , internally commit() method executes the statement and commits.
+			So commit()= flush+commit.
+			So seesion.flush() just executes the statements in database (but not commits) and statements are NOT IN MEMORY anymore. 
+			It just forces the session to flush.
+		
+
+		When we call flush() than :-
+			1.Picks the object from session cache 
+			2.Generates the SQL for Object 
+			3.Add to the Batch 
+			4.Repeats from step 1to 3
+			5.Submit batch to DB
+
+
+	session.load():-
+		It will always return a “proxy” (Hibernate term) without hitting the database. In Hibernate, proxy is an object with the given identifier value,
+ 		its properties are not initialized yet, it just look like a temporary fake object.
+		If no row found , it will throws an ObjectNotFoundException.
+
+
+Persistance class object can be in three different states :-
+	Transient State 
+	Persistance State
+	Detatched State
+
+
+
+	1. Transient : This instance is never been associated with any one of the persistence process. This does not have persistent identity like primary key value. 
+			Transient object will not have primary key  
+	 
+	2. Persistent : A persistent context is made to associate with the current instance. It has persistent identity like primary key value and a corresponding 
+	row of a table in the data base. Hibernate guarantees the persistent identity is equivalent to the java Identity [object], for a particular persistence context
+			Persistance object may have primary key 
+
+	3. Detatched : This instance association with a persistence context is only once and the context was closed or serialized to another process. 
+	The persistent identity is retained and it can be a corresponding row in a database.
+			Detatched object with primary key
+	
+
+
+
+
+
+
+Collection mapping :-
+		When we want to map our Hibernate Persistence Class with Collection data-type like Array,List,Set,Map than we have to use collection mapping
+		If in a table we have Collection Data-Type than that collection should be persisted in seperate table 
+		Collection should not be included in master table only simple mapping will be there
+
+		If we want to get all the data at a time than we can use JOINS or else we can retrive data ONE-BY-ONE i.e select one by one SQL Query
+		Than Here Comes The Concept OF Foreign Key 
+
+		
+NOTE	:-Foreign Key can be same or different with primary key i.e Foreign Key name and Primary Key name can be same or diffferent 
+NOTE	:-Foreign Key can one or more but there is only one Primary Key
+
+WHILE MAPPING :-
+		Property default type is String 
+		Element has no default type 
+		Index has default type interger
+	
+	So in Index and Property we can change the type and if we donot change the type than their default Data-Type will be taken 
+	Since Elemnet donot have a default Data-Type we must have to specify data type while mapping and if we donot do that we get ERROR
+
+
+NOTE	:-Order is an keyword in SQL (i.e OrderBy ......................ect) so we cannot write Order as Column Name(let say we change to myorder)
+
+NOTE	:-In List we must specify key,index and element 
+
+Now Suppose a situation comes like we need only key and donot need order i.e index is not required only key and column is required for that we cannot do with 
+list we need to go for bag
+
+
+NOTE	:-Bag is a tag in XML used only for list type element 
+
+NOTE	:-For Array we must have to use key ,index and element
+
+NOTE	:-For Set we need only element and key we donot need index as SET donot represent with index
+
+NOTE 	:-For MAP we must need key,index and element as MAP is key value combination and index is for key and element is for value
+
+
+
+
+
+
+	HIBERNATE uses two loading type	:-
+
+		Aggresive Loading   
+		Lazy Loading
+
+
+LAZY is default loading(fetch) type in Hibernate
+
+
+
+	AGGRESSIVE: Convenient, but slow
+	LAZY: More coding, but much more efficient
+
+
+
+	In case of lazy loading all the records will be loaded only when we use that data by calling getter method 
+	In case of aggresive loading all the records will  be loaded at a time irrespective of whther using that data or not
+
+
+
+Default laoding type is lazy loading but if we want to use aggressive loading we can enable aggresive and disable lazy loading and this we can do as following:-
+		<class name="student" table="mystudent" lazy="false">
+
+	deafult is lazy="true" but we may or may not write this 
+	
+	The above lazy or aggresive coding is done at class level(i.e only for main table and array )  
+
+	To specify for aggressive loading for set,list,bag,map we have to enable aggresive loading and disable lazy loading saperately
+
+
+Default laoding either at class level or set,list,bag,map is lazy loading
+
+
+NOTE	:-If master is lazy than array is lazy and if master is aggrassive than array is aggrassive 
+
+
+
+LAB1	:-
+	mysql> create table customers(cid int primary key,cname varchar(20),email varchar(20), phone bigint,city varchar(10),bal double);
+	Query OK, 0 rows affected (0.79 sec)
+
+
+Inheritance Mapping	:-
+		When persistance class are in inheritance relationship then use Inheritance relationship 
+		We can implement inheritance in three ways
+			1.Table per Subclass(JOINED)
+			2.Table per class mapping(SINGLE_TABLE)
+			3.Table per Concrete Class(TABLE_PER_CLASS) 
+
+
+
+
+	1.Table per Subclass(JOINED/joined-subclass)			:-
+						In this strategy, tables are created as per class but related by foreign key. So there are no 
+						duplicate columns.
+
+	2.Table per class mapping(SINGLE_TABLE/subclass)		:-
+						In table per hierarchy mapping, single table is required to map the whole hierarchy, an extra
+						column (known as discriminator column) is added to identify the class. But nullable values are
+						stored in the table .
+
+	3.Table per Concrete Class(TABLE_PER_CLASS/class) 	:-
+						In case of table per concrete class, tables are created as per class. But duplicate column is 
+						added in subclass tables.
+						In this mapping we need to take only one table for one concrete class
+						
+
+
+Table per Concrete Class with XML since in mapping file (____.hbm.xml) we create or specify seperate table(class) so in client code each object will have same 
+primary key and also this will not create problem as tables are independent i.e no relation b/w them 
+But With annotation we specify inheritance type as Table_Per_Class so one table depend on other so in client code if we save all different table object than because 
+of relationship between tables we get error so we make saperate client code for all respective tables .Since no auto generated primary key so we have to set the 
+value of primary key for each table otherwise primary key will be 0
+
+
+
+
+table is created by hibernate so name,email....etc size will be given by Hibernate which may be 255 so we can change in hibernate configuration by setting length to 
+some value 
+
+In Oracle we get some problem while displaying records so for that following is done
+
+	eg.<property name="cname" type="string" column="cname" length="15"/>
+
+
+
+NOTE	:-In table per concrete class 
+		Concrete class is considered as separate class though we have inheritance reletaion 
+		Here primary key is generated saperately for every class 
+		While generating primary key we can use different algorithm for generating primary key or we can use same algorithm also
+	With annotation :-
+	We need different client code for saving into session cache for different table but if all client code is in same class then when we use session.save(.....)
+	than diffferent table may have same primary key be stored in one session cache but in one sesion cache primary key with same value is not allowed so 
+	we get error so we need different client code 
+
+Association Mapping		:-
+	If we want to estlablish the relationship among different persistance class than we have to us Association Mapping 
+	Depending on Cardinality there are three(3) types of Associaton Mapping	:-
+		One to One Mapping
+		One to Many Mapping
+		Many to Many Mapping
+	
+	Depending on the Directionality there are two type of Relationship	:-
+		Uni-Directional Relationship
+		Bi-Directional Relationship
+		
+
+	Cardinality represent the number of objects participating in Relationship on both the side(Number of entities participating in relation)
+	Directionality represent represents whether we can access the data in One Direction only or in Both Direction
+
+
+ONE-TO-ONE	:-
+	
+			1st Relation is One-to-One
+			2nd Relation is also One-to-One		
+
+
+Since One-to-One so here Foreign Key should be at MasterTable
+
+
+NOTE	:-
+	
+	1.Loading Type Used with One-to-One 1st Relation is
+		XML--------------->Lazy
+		Annotation------->Aggressive
+	
+	2.Fetching Type Used with One-to-One 1st Relation is
+		XML--------------->Select
+		Annotation------->Select
+	
+	3.Loading Type Used with One-to-One 2nd Relation is
+		XML--------------->Aggressive
+		Annotation------->Aggressive
+	
+	4.Fetching Type Used with One-to-One 2nd Relation is
+		XML--------------->Join
+		Annotation------->Join
+
+	5.Fetching Type Used with Aggressive Loading is Join or Select Fetch 
+	
+	6.Fetching Type Used with Lazy Loading is Select Fetch
+	
+	7.Loading Type Used with Select Fetch is Lazy or Aggressive 
+	
+	8.Loading Type Used with Join Fetch is Aggressive
+	
+
+
+ONE-TO-MANY	:-
+				
+		
+			1st Relation is One-to-Many
+			2nd Relation is  One-to-One		
+
+Since One-to-Many so here Foreign Key should be at ChildTable
+
+
+
+
+
+
+Without Default Constructor The Below Error will Take place
+
+INFO: HHH000327: Error performing load command : org.hibernate.HibernateException: Javassist Enhancement failed: com.sunny.hibernate.Customer
+
+
+
+Update Query will be generated when we call update or when we call setter method
+
+
+
+One-to-Many	:-
+
+
+	Customer:-
+		Since One to Many mapping so foreign key should be in child table
+ 		Here we must supply value for primary key as DB and Hibernate will not generate 
+ 		if not using @GeneratedValue
+ 		
+ 		GenerationType.AUTO---> if we want auto increment process(Here Hibernate will supply Primary Key Value)  
+ 		Here 1st relation is One-to-Many
+ 		@OneToMany(mappedBy="customer")	:-It says already information for F.K is taken in Request class just simply map this
+ 	
+	Request:-
+		Here 2nd relation is 1-1 relation
+		@JoinColumn	:-Join Column 1st verify F.K or add FK in request 
+		name="mycid"	:-Here we can take anything or same name of Customer(P.K)
+		referencedColumnName="cid":-Corresponding P.K of Customer(Here) which we cannot change
+		referencedColumnName="cid":-Here we have F.K
+ 
+	Note	:-Join Column means only F.K  
+ 
+
+
+Note	:-Most of Enterprise application uses One-to-Many
+ 
+NOTE	:-While loading From 1st side(Customer to Request) is Lazy Loading and From 2nd side(Request to Customer) Aggressive because 
+	One P.K have many child so use Lazy since for One Customer it is not mandatory to load every Request but If loading Child Table(Here Request) we must 
+	have to Load information for Master Table so using Aggressive or else we can say while providing child table data we must required master table data and
+	also master table have very less data so Aggressive   
+
+
+	1.Loading Type Used with One-to-Many 1st Relation is
+		XML--------------->Lazy
+		Annotation------->Lazy
+	
+	2.Fetching Type Used with One-to-Many 1st Relation is
+		Select Fetch
+	
+	3.Loading Type Used with One-to-Many 2nd Relation is
+		XML--------------->Aggressive
+		Annotation------->Aggressive
+	
+	Because of Less number of Record in Master Table and Need of Master Data 
+	
+	4.Fetching Type Used with One-to-Many 2nd Relation is
+		XML--------------->Join
+		Annotation------->Join
+
+
+
+
+
+
+
+MANY-TO-MANY	:-
+
+		1st Relation	:-One-To-Many
+		2nd Relation	:-One-To-Many
+
+Since Both Have One-To-Many so we take seperate Table for both tables and there we can make relation 
+
+For Many Records always use Lazy Loading
+ 
+In case of Many-to-Many Setter Mtd is Inserting into 3rd table but for One-to-Many and One-to-One Setter Mtd is Updating respective tables with F.K
+
+With Annotation 3rd table will be created automatically
+
+
+	1.Loading Type Used with Many to-Many 1st Relation is
+		XML--------------->Lazy
+		Annotation------->Lazy
+	
+	2.Fetching Type Used with Many to-Many 1st Relation is
+		Select Fetch
+	
+	3.Loading Type Used with Many to-Many 2nd Relation is
+		XML--------------->Lazy
+		Annotation------->Lazy
+	
+	Because of Less number of Record in Master Table and Need of Master Data 
+	
+	4.Fetching Type Used with Many to-Many 2nd Relation is
+		XML--------------->Select 
+		Annotation------->Select 
+
+
+
+
+
+Version-Mapping	:-
+		Version Mapping is used to versioning the data or record of the table 
+		This allows us to track the updation happen on various records of table
+		When we insert a new record than version value will be 0
+		Whenever we update then record then version will be increased by one automatically 
+	
+NOTE		:-Version number will be provided by Hibernate system automatically so donot include version related variable in Constructor  	
+
+NOTE		:-If using lazy loading than Object will be lloaded only when we use that Object 
+
+NOTE		:-Both Version Check and Dirty Check uses Select before Update  
+
+When we us COMMIT than following will happen	:-
+	1.Takes persistance object from Session Cache
+	2.If operation required is Update then 
+		a.Performs Dirty Check(select before update)
+		b.If Versions are different then only prepare/generate the update SQL and adds to Batch and increase the version number 
+	3.If operation is insert or delete then prepare/generate Insert or Delete SQL queries and add to batch
+	4.Submit Batch to DB
+
+
+In case of Dirty-Check it will check all the variable values with all the DB values
+
+In Version-Check it will check only version number
+
+Note	:-After Commit Version-Check will check version number 
+
+Insert,Update,Delete will submit Commit to DB
+Select --->when we use Operation 
+
+
+Note	:-Based on Dirty Check Hibernate will decide whether to Update Record or not 
+
+	After Dirty check only Hibernate will decide whether to increase version or not 
+
+Transiction is require only while Insert,Update or Delete 
+For Select(i.e while loading(session.load(........))) no need to Begin Transiction It will simply select so no use to Begin my transiction
+
+Note	:-Session Cache is created when trasiction begins 
+
+Note	:-Object created for Persistance Class at time of creating SessionFactory is
+		3(Hibernate 3)
+		1(Hibernate 4)
+ 
+	Code Generated API used in 
+		Hibernate 3 is CGLIB
+		Hibernate 4 is JAVASSIST
+
+
+
+
+Timestamp Mapping:-
+		It is used to Time stamping the data i.e we can track when the record was updated recently
+		Hibernate system is responsible for providing the value for Timestamp variable so donot include in Constructor
+
+
+
+
+
+Versioning is used to track NO. of updation happened on the record where as TimeStamping is used to track the latest updation happened on the record
+In Timestamp we can see the latest updated time
+
+Any one has to be used for a table i.e either TimeStamp or Versioning both cannot be used in same table 
+
+Note	:-Default type of <timestamp>  is TimeStamp 
+
+Note	:-Here also Timestamp will go for Dirty Check
+
+
+
+Embeddable and Embedded	:-
+			
+	No Tags related to Embeddable and Embedded Only we can use Annotation but not XML
+	When we donot have inheritance relation between tables but variables has to be there in Single table then useEmbeddable and Embedded
+
+
+
+
+
+Avoiding Column(Fields) Insertion:-
+		
+	With XML in hibernate condiguration file if we donot write property for particular column than that column will be avoided(will not be inserted)
+
+	Serialization process and persisting the object is same i.e internal process
+
+	So with Annotation we can avoid insertion of a particular Column by using
+		a.Either annottion i.e @Transient 
+		or
+		b.Make that corrosponding column value as tansient
+
+
+
+
+Immutable Objects:-
+	
+	We can make our table or class as Immutable by following
+
+		For XML		:-at class level make mutable="false"
+		For  ANNOTATION	:-with @Table and @Entity also write @Immutable
+
+
+
+	By Default it is Mutable
+
+
+I have two classes with two different Fields and I want to update the map to single table so I can do in following 3 ways
+	1.Using Inheritence (Single-Table/subclass i.e Table Per Class)	:-2 persistance class must be in relation
+	2.Using One-to-One(Association)			:-2 persistance class have their own identity 
+	3.Using @Embeddable and @Embedded			:-No Inheritence and No Id
+

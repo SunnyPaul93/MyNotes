@@ -1,0 +1,712 @@
+
+
+SQL>  create table accountspecial as select * from customeraccount where 22=29;
+
+Table created.
+
+SQL> insert into accountspecial values(101,233,36363737,182877);
+
+1 row created.
+
+SQL>  insert into accountspecial values(102,363,234422327,283744);
+
+1 row created.
+
+SQL>  insert into accountspecial values(103,736,736464656,928373);
+
+1 row created.
+
+SQL>  insert into accountspecial values(104,888,837465747,20192828);
+
+1 row created.
+
+SQL>  insert into accountspecial values(105,929,626365454,120003);
+
+1 row created.
+
+SQL> insert into accountspecial values(106,100,819235465,2400000);
+
+1 row created.
+
+SQL>  select * from accountspecial;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+       104        888  837465747   20192828
+       105        929  626365454     120003
+       106        100  819235465    2400000
+
+6 rows selected.
+
+Display record of nth highest balance
+SQL> select * from accountspecial acc where 2=(select count(distinct bal) from accountspecial where acc.bal<=bal);		2nd highest bal
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       106        100  819235465    2400000
+
+SQL> select * from accountspecial acc where 1=(select count(distinct bal) from accountspecial where acc.bal<=bal);		highest bal
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       104        888  837465747   20192828
+
+SQL> select * from accountspecial acc where 5=(select count(distinct bal) from accountspecial where acc.bal<=bal);		5th highest bal
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        233   36363737     182877
+
+
+
+
+Display the nth record			
+
+SQL> select * from (select cid,bcode,acno,bal,rownumber rn from accountspecial ) where rn=3;
+select * from (select cid,bcode,acno,bal,rownumber rn from accountspecial ) where rn=3
+                                         *
+ERROR at line 1:
+ORA-00904: "ROWNUMBER": invalid identifier				(use rounum)
+
+
+SQL> select * from (select cid,bcode,acno,bal,rownum rn from accountspecial ) where rn=3;
+
+       CID      BCODE       ACNO        BAL         RN
+---------- ---------- ---------- ---------- ----------
+       103        736  736464656     928373          3							3rd record in table
+
+
+
+SQL> select * from (select cid,bcode,acno,bal,rownum rn from accountspecial ) where rn=1;			1st record in table
+
+       CID      BCODE       ACNO        BAL         RN
+---------- ---------- ---------- ---------- ----------
+       101        233   36363737     182877          1
+
+
+
+Display top n column
+SQL> select * from accountspecial  where rownum <=3 order by cid;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+
+SQL> select * from accountspecial  where rownum <=3 ;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+
+
+SQL> select * from accountspecial  where rownum <=5 ;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+       104        888  837465747   20192828
+       105        929  626365454     120003
+
+
+Display every nth record(2nd record)
+
+
+SQL> select * from accountspecial where (rowid,0) in (select rowid,mod(rownum,2) from accountspecial );
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       102        363  234422327     283744
+       104        888  837465747   20192828
+       106        100  819235465    2400000
+
+
+
+
+Display record from mth to nth 
+SQL> select * from (select cid,bcode,bal,rownum rn from accountspecial) where rn between 2 and 5;
+
+       CID      BCODE        BAL         RN
+---------- ---------- ---------- ----------
+       102        363     283744          2
+       103        736     928373          3
+       104        888   20192828          4
+       105        929     120003          5
+
+SQL> select * from (select cid,bcode,bal,rownum rn from accountspecial) where rn between 1 and 3;
+
+       CID      BCODE        BAL         RN
+---------- ---------- ---------- ----------
+       101        233     182877          1
+       102        363     283744          2
+       103        736     928373          3
+
+SQL> select * from (select cid,bcode,bal,acno,rownum rn from accountspecial) where rn between 1 and 3;
+
+       CID      BCODE        BAL       ACNO         RN
+---------- ---------- ---------- ---------- ----------
+       101        233     182877   36363737          1
+       102        363     283744  234422327          2
+       103        736     928373  736464656          3
+
+
+
+Display n lowest bal:
+
+SQL> select * from (select * from accountspecial order by bal) where rownum <=3;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       105        929  626365454     120003
+       101        233   36363737     182877
+       102        363  234422327     283744
+
+
+SQL> select * from (select * from accountspecial order by bal) where rownum <=5;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       105        929  626365454     120003
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+       106        100  819235465    2400000
+
+SQL> select * from (select * from accountspecial order by bal) where rownum <=1;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       105        929  626365454     120003
+
+sort by descending 
+
+
+SQL> select * from (select * from accountspecial order by bal) where rownum <=6;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       105        929  626365454     120003
+       101        233   36363737     182877
+       102        363  234422327     283744
+       103        736  736464656     928373
+       106        100  819235465    2400000
+       104        888  837465747   20192828
+
+6 rows selected.
+
+
+
+
+Display n highest bal:
+
+SQL> select * from (select * from accountspecial order by bal desc) where rownum <=6;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       104        888  837465747   20192828
+       106        100  819235465    2400000
+       103        736  736464656     928373
+       102        363  234422327     283744
+       101        233   36363737     182877
+       105        929  626365454     120003
+
+6 rows selected.
+
+SQL> select * from (select * from accountspecial order by bal desc) where rownum <=2;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       104        888  837465747   20192828
+       106        100  819235465    2400000
+
+SQL> select * from (select * from accountspecial order by bal desc) where rownum <=5;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       104        888  837465747   20192828
+       106        100  819235465    2400000
+       103        736  736464656     928373
+       102        363  234422327     283744
+       101        233   36363737     182877
+
+SQL> select * from (select * from accountspecial order by bal desc) where rownum <=4;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       104        888  837465747   20192828
+       106        100  819235465    2400000
+       103        736  736464656     928373
+       102        363  234422327     283744
+
+
+Display last n record
+
+SQL> select * from (select cid,bcode,acno,bal,rownum  from accountspecial) where rownum >(select max(rownum)-5 from accountspecial);
+
+no rows selected
+
+SQL> select * from (select cid,bcode,acno,bal,rownum  from accountspecial) where rownum >(select max(rownum)-3 from accountspecial);
+
+no rows selected
+
+SQL> select * from (select cid,bcode,acno,bal,rownum rn  from accountspecial) where rn >(select max(rownum)-3 from accountspecial);
+
+       CID      BCODE       ACNO        BAL         RN
+---------- ---------- ---------- ---------- ----------
+       104        888  837465747   20192828          4
+       105        929  626365454     120003          5
+       106        100  819235465    2400000          6
+
+SQL> select * from (select cid,bcode,acno,bal,rownum rn  from accountspecial) where rn >(select max(rownum)-2 from accountspecial);
+
+       CID      BCODE       ACNO        BAL         RN
+---------- ---------- ---------- ---------- ----------
+       105        929  626365454     120003          5
+       106        100  819235465    2400000          6
+
+SQL> select * from (select cid,bcode,acno,bal,rownum rn  from accountspecial) where rn >(select max(rownum)-5 from accountspecial);
+
+       CID      BCODE       ACNO        BAL         RN
+---------- ---------- ---------- ---------- ----------
+       102        363  234422327     283744          2
+       103        736  736464656     928373          3
+       104        888  837465747   20192828          4
+       105        929  626365454     120003          5
+       106        100  819235465    2400000          6
+
+
+
+
+
+
+
+*************************************************************************************************************************************
+
+Alter Statement:
+
+SQL> create table stualter(sid int,sname char(20));
+
+Table created.
+SQL>  insert into stualter values(101,'Sunny');
+
+1 row created.
+
+
+
+
+
+1.Adding a new column
+	alter table table_name add (column_name type ,column_name type )
+
+
+
+SQL> alter table stualter add(phone number,email varchar(20));
+
+Table altered.
+
+SQL>  insert into stualter values(102,'Ravi',9876789234,'ravi@gmial.com');
+
+1 row created.
+
+SQL> select * from stualter;
+
+       SID SNAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Sunny
+       102 Ravi                 9876789234 ravi@gmial.com
+
+SQL>  insert into stualter values(103,'Karan',78374674747,'karan@gmial.com');
+
+1 row created.
+
+SQL> select * from stualter;
+
+       SID SNAME                     PHONE EMAIL
+---------- -------------------- ---------- --------------------
+       101 Sunny
+       102 Ravi                 9876789234 ravi@gmial.com
+       103 Karan                7.8375E+10 karan@gmial.com
+
+
+
+
+
+2.Dropping the column
+
+	alter table table_name drop column column_name;
+
+SQL> alter table stualter drop column phone;
+
+Table altered.
+
+SQL>  insert into stualter values(104,'Rakesh',78374674747,'rakesh@gmial.com');		after droping phone we cannot add phone to stualter table
+ insert into stualter values(104,'Rakesh',78374674747,'rakesh@gmial.com')
+             *
+ERROR at line 1:
+ORA-00913: too many values
+
+
+SQL>  insert into stualter values(104,'Rakesh','rakesh@gmial.com');
+
+1 row created.
+
+SQL> select * from stualter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+
+3.Modifying the column
+
+	alter table table_name modify column_name type
+
+SQL> alter table stualter modify sid varchar(15);
+alter table stualter modify sid varchar(15)
+                            *
+ERROR at line 1:
+ORA-01439: column to be modified must be empty to change datatype	i.e here sid should be empty to modify 
+
+
+
+4.Adding primary key:
+	alter table table_name add primary key(column_name);
+
+
+SQL> alter table stualter add primary key(sid);
+
+Table altered.
+
+SQL>  insert into stualter values(105,'Pooja','pooja@gmial.com');
+
+1 row created.
+
+SQL>  insert into stualter values(105,'Navin','navin@gmial.com');			since primary key so duploicate is not allowed
+ insert into stualter values(105,'Navin','navin@gmial.com')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C004163) violated
+
+
+SQL> select * from stualter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+
+
+
+
+5.Dropping primary key:
+		alter table table_name drop primary key;
+
+
+SQL> alter table stualter drop primary key;
+
+Table altered.
+
+SQL>  insert into stualter values(105,'Navin','navin@gmial.com');
+
+1 row created.
+
+SQL>  insert into stualter values(105,'Navin','navin@gmial.com');	after dropping primary key for sid duplicate sid value as well as null sid values is allowed
+
+
+1 row created.
+
+SQL> select * from stualter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+6.Adding the constraint
+
+
+	alter table table_name add constraint constraint_name our constraint here	;
+
+
+
+
+SQL> create table stu99(sid int primary key,name char(15));
+
+Table created.
+
+SQL> insert into stu99(name) values('Sunny');			since sid is primary key so cannot insert null 
+insert into stu99(name) values('Sunny')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."STU99"."SID")
+
+
+SQL> insert into stu99 values(101,'Sunny');
+
+1 row created.
+
+SQL> insert into stu99 values(101,'Sunny');			since sid is primary key so duplicate sid is also not allowed
+insert into stu99 values(101,'Sunny')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C004168) violated
+
+
+SQL> insert into stu99 values(102,'Ravi');
+
+1 row created.
+
+SQL> insert into stu99 values(103,'Nitin');
+
+1 row created.
+
+SQL> insert into stu99 values(104,'Praveen');
+
+1 row created.
+
+SQL> insert into stu99 values(105,'Raju');
+
+1 row created.
+
+SQL> select * from stu99;
+
+       SID NAME
+---------- ---------------
+       101 Sunny
+       102 Ravi
+       103 Nitin
+       104 Praveen
+       105 Raju
+
+
+SQL> create table fee99(sid int,tfee int);
+
+Table created.
+
+
+
+SQL> insert into fee99 values(101,25000);
+
+1 row created.
+
+SQL> insert into fee99 values(102,13000);
+
+1 row created.
+
+SQL> insert into fee99 values(105,22000);
+
+1 row created.
+
+SQL> select * from fee99;
+
+       SID       TFEE
+---------- ----------
+       101      25000
+       102      13000
+       105      22000
+
+SQL> alter table fee99 add constraint ck1 foreign key(sid) references stu99(sid);
+
+Table altered.
+
+Now with this adding constraints table fee99 become child table(foreign key) of stu99 
+
+SQL> delete from stu99 where sid=103;		sid=103 of stu99 is unused in child table fee99 so we can delete 103  
+
+1 row deleted.
+
+SQL> delete from stu99 where sid=102;		sid=102 of stu99 is used in child table fee99 so we cannot delete 102
+delete from stu99 where sid=102
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.CK1) violated - child record found
+
+
+SQL> delete from stu99 where sid=105;		sid=105 of stu99 is used in child table fee99 so we cannot delete 105
+delete from stu99 where sid=105
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.CK1) violated - child record found
+
+
+SQL> desc stu99;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                       NOT NULL NUMBER(38)
+ NAME                                               CHAR(15)
+
+SQL> desc fee99;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                                NUMBER(38)
+ TFEE                                               NUMBER(38)
+
+
+7. Dropping the constraint
+
+	alter table table_name drop constraint constraint_name	(here ck1)
+SQL> alter table fee99 drop constraint ck1;
+
+Table altered.
+
+Now fee99 is no longer foreign key of stu99 so we can delete anything from stu99
+
+SQL> delete from stu99 where sid=105;
+
+1 row deleted.
+
+
+SQL> select * from fee99;
+
+       SID       TFEE
+---------- ----------
+       101      25000
+       102      13000
+       105      22000
+
+SQL> select * from stu99;
+
+       SID NAME
+---------- ---------------
+       101 Sunny
+       102 Ravi
+       104 Praveen
+
+
+8.Renaming the table
+	alter table table_name rename to new_table_name;
+	
+SQL> select * from stualter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+SQL> alter table stualter rename to studentalter;
+
+Table altered.
+
+SQL> select * from stualter;
+select * from stualter
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from studentalter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+9.Renaming the column:
+	alter table table_name rename column old_column_name to new_column_name;
+
+SQL> select * from studentalter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+SQL> select * from studentalter;
+
+       SID SNAME                EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+SQL> alter table studentalter rename column sname to name;
+
+Table altered.
+
+SQL> select * from studentalter;
+
+       SID NAME                 EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+SQL> alter table studentalter rename column sid to id;
+
+Table altered.
+
+SQL> select * from studentalter;
+
+        ID NAME                 EMAIL
+---------- -------------------- --------------------
+       101 Sunny
+       102 Ravi                 ravi@gmial.com
+       103 Karan                karan@gmial.com
+       104 Rakesh               rakesh@gmial.com
+       105 Pooja                pooja@gmial.com
+       105 Navin                navin@gmial.com
+       105 Navin                navin@gmial.com
+
+7 rows selected.
+
+10.Removing structure of table
+	.By using delete command we can delete only records of table but
+	.By using drop command we can remove table structure 
+
+	drop table table_name;
+
+
+************************************************************************************************************************************
+

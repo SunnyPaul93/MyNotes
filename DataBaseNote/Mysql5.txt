@@ -1,0 +1,744 @@
+Stored Procedure:
+Stored Procedure is a named PL/SQL block 
+It is created and stored in the database 
+
+{When we submit PL/SQL block to database engine then it will be compiled every time but it is not supporetd by MySql}
+
+When we submit Stored Procedure to database engine then it will be compiled and saved into database 
+When we want to execute Stored Procedure then we can call with its name it will be executed directly without re-compilimg
+
+PL/SQL block is not supported by MySql
+Stored Procedure is supported by MySql also 
+
+
+
+
+
+
+create will work for mysql we cannot use replace in mysql
+i.e we can create a new procedure say proc1 or we cannot replece proc1 with p1
+
+
+By default :delimiter is ; 
+
+Syntax:
+	deleimiter $			//change default deleimiter  to $
+	create procedure <procedure_name> (<parameter type> <prrameter name> <datatype>)
+	Begin
+	// statements
+	End
+	$
+	delimiter ;				//set to default delimeter ; 
+
+
+	delimeter can be set to any symbol or alpha numeric values
+
+
+
+
+	select is used in place of dbms_output.putline
+	
+	if we us say select 'Hello'; than in mysql it will terminate the procedure so we have to chan ge the delimiter.We can chan ge the delimiter to any symbol 
+	or alpha-numeric values   	
+
+
+
+
+	mysql> use sunny;
+	Database changed
+	mysql> delimiter $
+	mysql> create procedure myMsg()
+    	-> begin
+    	-> select 'Welcome to procedure in mysql' as "Message";
+    	-> end;
+    	-> $
+	Query OK, 0 rows affected (0.35 sec)
+
+	mysql> delimiter ;
+
+
+	mysql> call myMsg();
+	+-------------------------------+
+	| Message                       |
+	+-------------------------------+
+	| Welcome to procedure in mysql |
+	+-------------------------------+
+	1 row in set (0.11 sec)
+
+	Query OK, 0 rows affected (0.12 sec)
+
+
+mysql> delimiter $
+mysql> create procedure myProc3()
+    -> begin
+    -> select 'Welcome to MySQL' as 'Mesage';
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call myProc3()
+    -> ;
++------------------+
+| Mesage           |
++------------------+
+| Welcome to MySQL |
++------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+	mysql> delimiter k
+	mysql> create procedure mymsg1()
+    	-> begin
+    	-> select 'Hello Sunny' as "Message";
+   	-> end;
+    	-> k
+	Query OK, 0 rows affected (0.11 sec)
+
+	mysql> delimiter ;
+	mysql> call mymsg1();
+	+-------------+
+	| Message     |
+	+-------------+
+	| Hello Sunny |
+	+-------------+
+	1 row in set (0.00 sec)
+
+	Query OK, 0 rows affected (0.00 sec)	
+
+
+
+
+
+
+mysql> delimiter $
+mysql> create procedure p1(a int, b int)
+    -> begin
+    -> declare c int;
+    -> set c=a+b;
+    -> select c as "Sum";
+    -> end
+    -> $
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter ;
+mysql> call p1(123,34);
++------+
+| Sum  |
++------+
+|  157 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+	here declaretion section is after begin
+
+	here special notpad ed is not there
+
+
+
+
+
+
+
+
+mysql> select ascii('k');
++------------+
+| ascii('k') |
++------------+
+|        107 |
++------------+
+1 row in set (0.05 sec)
+
+mysql> select ascii('m');
++------------+
+| ascii('m') |
++------------+
+|        109 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select ascii('9');
++------------+
+| ascii('9') |
++------------+
+|         57 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select ascii(';');
++------------+
+| ascii(';') |
++------------+
+|         59 |
++------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+	Types of Parameter:					Syntax
+	
+	Input Parameter					IN id int;
+	Output parameter 					OUT sname  varchar;		//here no size is given for varchar
+	Input Output Parameter				 INOUT fee float;
+	
+	
+
+
+
+
+							Input parameter:
+		It is by default type
+		The value which we are passing cannot be changed inside the procedure and we cannot access the value outside the procedure
+		To specify the parameter as input we have to use IN keyword
+
+
+
+
+
+
+mysql> delimiter #
+mysql> create procedure p5(a int,in b int)
+    -> begin
+    -> declare s int;
+    -> set s=a+b;
+    -> select s as "Sum";
+    -> end;
+    -> #
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call p5(23,45);
++------+
+| Sum  |
++------+
+|   68 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> call p5(12,34);
++------+
+| Sum  |
++------+
+|   46 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							Output parameter:
+
+
+		It is used to bind the variable to the procedure at runtime
+		The value of variable which we are passing can be changed inside the procedure and we can access the modified value outside the procedure 
+		To specify output parameter we have have to use OUT keyword 
+
+
+mysql> delimiter ^
+mysql> create procedure p6(a int,b int,out result int)
+    -> begin
+    -> set result=a+b;
+    -> end;
+    -> ^
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> delimiter ;
+mysql> call p6(12,345,@sum);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select @sum;
++------+
+| @sum |
++------+
+|  357 |
++------+
+1 row in set (0.00 sec)
+
+
+
+
+mysql> call p6(12,34,@mysum);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @mysum;
++--------+
+| @mysum |
++--------+
+|     46 |
++--------+
+1 row in set (0.00 sec)
+
+
+
+mysql> delimiter ^
+mysql> create procedure myProc3(in a int,in b int,out c int)
+    -> begin
+    -> set c=a+b;
+    -> select c as 'SUM';
+    -> end;
+    -> ^
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter ^
+mysql> call myProc3(23,7,@c);
+    -> ^
++------+
+| SUM  |
++------+
+|   30 |
++------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call myProc3(23,7,@c);
++------+
+| SUM  |
++------+
+|   30 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+mysql> select @c;
++------+
+| @c   |
++------+
+|   30 |
++------+
+1 row in set (0.00 sec)
+
+
+
+mysql> delimiter ^
+mysql> create procedure p7(in a int,IN b int,out result int)
+    -> begin
+    -> set result=a*b;
+    -> end;
+    -> ^
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> delimiter ;
+mysql> call p7(12,345,@multiply);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @multiply;
++-----------+
+| @multiply |
++-----------+
+|      4140 |
++-----------+
+1 row in set (0.00 sec)
+
+
+
+
+
+mysql> delimiter ^
+mysql> create procedure myProc3(in a int,in b int,out c int)
+    -> begin
+    -> set c=a*a-a*b-b*a+b*b;
+    -> select c as '(a-b)(a-b)';
+    -> end;
+    -> ^
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> delimiter ;
+mysql> call myProc3(20,10,@c);
++------------+
+| (a-b)(a-b) |
++------------+
+|        100 |
++------------+
+1 row in set (0.03 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select @c;
++------+
+| @c   |
++------+
+|  100 |
++------+
+1 row in set (0.00 sec)
+
+
+
+
+
+						Input-Output
+		It is used to bind the variablle with some initilized value to procedure at runtime
+		The value of variable which we are passing can be changed inside the procedure and we can access the modified value outside the procedure 
+		To specify output parameter we have have to use INOUT keyword	(no gap b/w IN and OUT) 
+
+
+
+
+
+		mysql> delimiter *
+mysql> create procedure p8(in a int,inout b int)
+    -> begin
+    -> set b=a+b;
+    -> end;
+    -> *
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @hi=24;			here since default delimiter is ; so we cannot terminate query using ; so  we will use * to terminate as delimiter is set to *
+    -> *
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call p8(23,@hi);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @hi;
++------+
+| @hi  |
++------+
+|   47 |
++------+
+1 row in set (0.00 sec)
+
+Unless we change the delimiter we can use that delimiter to terminiate that program
+
+
+
+Now we have change our delimiter to default delimier so we can now use default ; to terminate program
+
+
+mysql> set @hi=45;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call p8(56,@hi);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @hi;
++------+
+| @hi  |
++------+
+|  101 |
++------+
+1 row in set (0.00 sec)
+
+
+
+
+
+mysql> set @mohan=83;
+Query OK, 0 rows affected (0.00 sec)
+mysql> call p8
+    -> (83,@mohan);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @mohan;
++--------+
+| @mohan |
++--------+
+|    166 |
++--------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+mysql> delimiter &
+mysql> create procedure myProc3(in a int,inout b int)
+    -> begin
+    -> set b=(a+b)*(a+b);
+    -> end;
+    -> &
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> set @b=30;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call myProc3(20,@b);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @b;
++------+
+| @b   |
++------+
+| 2500 |
++------+
+1 row in set (0.00 sec)
+
+mysql> drop procedure myProc3;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter &
+mysql> create procedure myProc3(in a int,inout b int)
+    -> begin
+    -> set b=(a+b)*(a-b);
+    -> select b as 'Square of Difference';
+    -> end;
+    -> &
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @b=50;
+    -> &
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call myProc3(30,@b);
+    -> &
++----------------------+
+| Square of Difference |
++----------------------+
+|                -1600 |
++----------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+***********************************************************************************************************************************
+Using mysql in stored procedure
+
+mysql> create table stu8(sid int primary key auto_increment,name varchar(12),fee float) auto_increment=201;
+Query OK, 0 rows affected (0.34 sec)
+
+Here we cannot use sequence but we can use auto_increment so I use here and I define auto_increment starts from 201 but default incremented by 1 always we 
+canot change the default incremented value
+
+
+
+mysql> delimiter !
+mysql> create procedure stu8insert(sname varchar(12),sfee float)		in stored procedure for mysql we can specify the length of varchar character
+    -> begin
+    -> insert into stu8 (name,fee) values(sname,sfee);
+    -> end;
+    -> !
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+
+
+
+mysql> delimiter ;
+mysql> call stu8insert('Sunny',56242);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> call stu8insert('Raju',31423);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> call stu8insert('Mohit',21325);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> call stu8insert('Kriti',34252);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> call stu8insert('Pooja',40000);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from stu8;
++-----+-------+-------+
+| sid | name  | fee   |
++-----+-------+-------+
+| 201 | Sunny | 56242 |
+| 202 | Raju  | 31423 |
+| 203 | Mohit | 21325 |
+| 204 | Kriti | 34252 |
+| 205 | Pooja | 40000 |
++-----+-------+-------+
+5 rows in set (0.00 sec)
+
+
+Here we donot need to insert every record every time.Here we created a procedure stu8insert to isnert data to stu8 and we just have to call procedure stu8insert to 
+insert data 
+
+
+
+mysql> delimiter $
+mysql> create procedure stu8delete(pid int)
+    -> begin
+    -> delete from stu8 where sid=pid;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> delimiter ;
+mysql> call stu8delete(203);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from stu8;
++-----+-------+-------+
+| sid | name  | fee   |
++-----+-------+-------+
+| 201 | Sunny | 56242 |
+| 202 | Raju  | 31423 |
+| 204 | Kriti | 34252 |
+| 205 | Pooja | 40000 |
++-----+-------+-------+
+4 rows in set (0.00 sec)	
+
+
+
+Here also we use create procedure to delete records from stu8 and we are just calling that procedure to delete record from stu8
+
+
+
+
+
+mysql> delimiter ;
+mysql> set @update=19000;					adding 19000 to fee
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call stu8update(201,@nameout,@update);			adding 19000 to Sunny's fee(201=sid)
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> select @nameout;
++----------+
+| @nameout |
++----------+
+| Sunny    |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select @update;
++---------+
+| @update |
++---------+
+|   75242 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select * from stu8;
++-----+-------+-------+
+| sid | name  | fee   |
++-----+-------+-------+
+| 201 | Sunny | 75242 |					here 19000 is added to the fee as we update 
+| 202 | Raju  | 31423 |
+| 204 | Kriti | 34252 |
+| 205 | Pooja | 40000 |
++-----+-------+-------+
+4 rows in set (0.00 sec)
+	
+
+
+
+mysql> set @updatefee=22000;				adding 22000 to fee
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call stu8update(205,@poojaout,@updatefee);		adding 22000 to pooja's fee(205=sid)
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> select @poojaout;
++-----------+
+| @poojaout |
++-----------+
+| Pooja     |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select @updatefee;
++------------+
+| @updatefee |
++------------+
+|      62000 |
++------------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from stu8;
++-----+-------+-------+
+| sid | name  | fee   |
++-----+-------+-------+
+| 201 | Sunny | 75242 |
+| 202 | Raju  | 31423 |
+| 204 | Kriti | 34252 |
+| 205 | Pooja | 62000 |						here 22000 is added to the fee as we update 
++-----+-------+-------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+mysql> create table StuStored(sid int primary key auto_increment,sname varchar(20),scity varchar(10))auto_increment=101;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> delimiter &
+mysql> create procedure StuStoredProc(name varchar(20),city varchar(10))
+    -> begin
+    -> insert into StuStored(sname,scity) values(name,city);
+    -> end;
+    -> &
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call StuStoredProc('Sunny','Silchar');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> call StuStoredProc('Mohan','Bangalore');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> call StuStoredProc('Pooja','Silchar');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> call StuStoredProc('Aditi','Pune');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> call StuStoredProc('Priya','Pune');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> call StuStoredProc('Manab','Pune');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> call StuStoredProc('Rumi','Bangalore');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from StuStored;
++-----+-------+-----------+
+| sid | sname | scity     |
++-----+-------+-----------+
+| 101 | Sunny | Silchar   |
+| 102 | Mohan | Bangalore |
+| 103 | Pooja | Silchar   |
+| 104 | Aditi | Pune      |
+| 105 | Priya | Pune      |
+| 106 | Manab | Pune      |
+| 107 | Rumi  | Bangalore |
++-----+-------+-----------+
+7 rows in set (0.00 sec)
+***********************************************************************************************************************************

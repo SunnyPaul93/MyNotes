@@ -1,0 +1,288 @@
+
+Filters:-	Filters is also a web component like Servlets
+	Web Container is responsible for managing complete lifecycle of Filter
+	Servlets is responsible for Core Request Processing
+	Before Core Request Processing by Servlets i.e before calling the service() method we may want to perform some tasks which is called 
+	PRE-PROCESSING tasks
+	After Core Request Processing by Servlets i.e after calling the service() method we may want to perform some tasks which is called 
+	POST-PROCESSING tasks
+	
+	Following are the various PRE PROCESSING tasks which we can perform on incoming request before core request processing:-
+		~Logging
+		~Security checks which includes Authentication and Authorization
+		~Verifying Session Validity 	
+		........................................etc
+	Following are the various POST PROCESSING tasks which we can perform on outgoing request after core request processing:-
+		~Data Compression	
+		~URL REWRITING
+		~Data Encription or Encoding
+		......................etc
+
+	If we write the code for PRE PROCESSING tasks and POST PROCESSING tasks across all the servlets then code duplicacy may occur which gives 
+	the maintainance problem when we try to change the code
+	So to avoid code duplicacy and maintainamce problem we can write PRE PROCESSING tasks and POST PROCESSING tasks codes in a centralized
+	place called Filter
+	
+	Note:-In One Application we can have multiple servlets  
+	Note:-All Filters and Listeners will be loaded on startup only
+
+In Servlet we may Override init() method,destroy() ,doGet(),doPost(),doPut(),getServletConfig(),doDelete(),doHead(),doTrace(),doOptions() .....................etc but have
+to override atleast one of them or more
+
+But in Filters we must have to Override init() method,destroy() method and doFilter() method but default constructor is not mandatory is upto us
+
+	All the filters will be initilized at container startup.At the time of initilizating the Filter at Container start up,Container will do following tasks:-
+		Filter Class will be loaded 
+		Filter Instance will be created by calling Default Constructor
+		Container will cast the instance into javax.servlet.Filter type to ensure that it is a filter 
+		Container creates FilterConfig object and initilizes FilterConfig object with config parameter specified in web.xml or Annotation 
+		FilterConfig object will be initilized with ServletContext object 
+		Container will call the init() mtd by passing FilterConfig object as parameter
+	At time of destroying the filter at shutdown Container  will call destroy() method to release resources initilized by init() mtd
+
+
+
+	If we want to invoke one filter before multiple servlets the we have to configure the filter with any one of the folowing ways:-
+	
+		<filter>    
+			<filter-name>mySessionFilter</filter-name>    
+			<filter-class>com.sunny.filter.DemoFilter</filter-name>    
+	 	</filter>     	
+
+
+		OPTION 1:
+		<filter-mapping>    
+			<filter-name>mySessionFilter</filter-name>    
+			<url-pattern>/add.sunny</url-pattern>    
+	 	</filter-mapping>     	
+
+		<filter-mapping>    
+			<filter-name>mySessionFilter</filter-name>    
+			<url-pattern>/remove.sunny</url-pattern>    
+	 	</filter-mapping>     	
+			
+		OPTION 2:
+		<filter-mapping>    
+			<filter-name>mySessionFilter</filter-name>    
+			<url-pattern>/add.sunny</url-pattern>    
+			<url-pattern>/remove.sunny</url-pattern>    
+	 	</filter-mapping>     	
+	
+		OPTION 3:
+		<filter-mapping>    
+			<filter-name>mySessionFilter</filter-name>    
+			<url-pattern>/*.sunny</url-pattern>    
+
+	 	</filter-mapping>     	
+
+
+
+
+Servlet Chainig :-Invoking multiple Servlets one by one is called Servlet Chaining.Servlet chaining can be done with RequestDispatcher 
+
+	To change the order of Servlets:-In Servlet chaining code changing is required if we want to change the order or add another servlet in the chain ....etc
+
+	
+
+Filter Chainig :-Invoking multiple Filters one by one is called Filters Chaining.
+
+	XML order of filter will be maintain by Container 
+	
+			 
+	To change the order of Filters:-Here we need to change the order of Filter in XML we can also add or remove our filter by adding or removing filter
+	configuration in XML
+
+	But with Annotation it will use the alphabetical order of filters Fully Qualified Classs Name .To change order of filter here we need to change the
+	name of filter
+
+
+In Lab19a we have change the code to change the order of servlets
+
+
+	When we send teh Request to any Servlet with some url-patern than container will do the following tasks:
+		Creates Stacks1
+		Collects the Incoming Request URL(hello.sunny)
+		Identify the Servlet which is matching with Incoming Request URI(HelloServlet say)
+		Pushes the Servlet calls into Stacks1
+		Creates TEMP Stack
+		Identify one or more Filters which is matching with Incoming Request URI(say FA,FB,FC)
+		Now Pushes that Filters into TEMP Stack 
+		Now Pops the filters from TEMP Stack and Pushes those Filters into Stack1
+		Now starts the processing the currrent request by doing the following:-
+			1.Pops the web component from Stack1
+			2.Checks whether web components is Filters or Servlets
+			3.If Web Component is Filters than do the following:-
+				~Pushes into Stack2
+				~doFilter() mtds will be called 
+				~When chain.doFilter() is encountered than repeats Step 1
+			4.If Web Components is Servlet than directly service() mtd is called 
+			5.Once service() mtd of Servlet is completed then Pops the web components from Stack2 one by one and execute the remaining code 
+			of filter for POST PROCESSING
+
+
+
+
+
+
+Listener:-
+	When our web application is running in Web Container than following tasks will be done by Web Conayiner and Developer 
+		
+		1.Creating ServletContext object   
+		2.Destroying ServletContext object   
+
+		3.Creating HttpSrevletRequest object   
+		4.Destroying HttpServletRequest object   
+
+		5.Creating HttpSession object   
+		6.Destroying HttpSession object   
+
+
+		7.Adding atttribute to ServletContext
+		8.Removing attribute from ServletContext
+		9.Replacing attribute from ServletContext
+
+
+
+		10.Adding atttribute to HttpSrevletRequest
+		11.Removing attribute from HttpSrevletRequest
+		12.Replacing attribute from HttpSrevletRequest
+
+
+		13.Adding atttribute to HttpSession
+		14.Removing attribute from HttpSession
+		15.Replacing attribute from HttpSession
+
+		16.Passivating HttpSession object 
+		17.Activating HttpSession object
+
+
+		One Context Per Application Not Per Container
+		
+		Each Listener Interface has Destroy,Request ,Context Creation
+
+
+
+
+
+
+Event and Listener in Servlet:
+	Events are basically occurrence of something. Changing the state of an object is known as an event.
+	Listeners are the classes which listens to a particular type of events and when that event occurs , triggers the functionality. Each type of listener is bind to
+	a type of event. 
+
+
+	Event classes:
+
+	The event classes are as follows:
+	
+		ServletRequestEvent
+		ServletContextEvent
+		ServletRequestAttributeEvent
+		ServletContextAttributeEvent
+		HttpSessionEvent
+		HttpSessionBindingEvent
+		Event interfaces
+
+	The event interfaces are as follows:
+
+		ServletRequestListener
+		ServletRequestAttributeListener
+		ServletContextListener
+		ServletContextAttributeListener
+		HttpSessionListener
+		HttpSessionAttributeListener
+		HttpSessionBindingListener
+		HttpSessionActivationListener
+
+
+
+
+
+
+	Listener InterFace				Event Class				Tasks will be listened
+
+	ServletContextListener			ServletContextEvent				Task 1 and 2
+	ServletRequestListener			ServletRequestEvent				Task 3 and 4
+	HttpSessionListener				HttpSessionEvent				Task 5 and 6
+	ServletContextAttributeListener			ServletContextAttributeEvent			Task 7 , 8 and 9
+	ServletRequestAttributeListener			ServletRequestAttributeEvent			Task 10, 11 and 12		
+	HttpSessionAttributeListener			HttpSessionBindingEvent			Tasks 13, 14 and 15
+
+	HttpSessionBindingListener			HttpSessionBindingEvent			Value Bound and Value UnBound
+	HttpSessionActivationListener			HttpSessionActivationEvent			Tasks 16 and 17
+
+
+HttpSessionBindingListener:No Need to configure in web.xml or annotation
+
+Container Tasks at Container Start Up:-
+	Create ServletContext object 
+			ServletContext sc=new ServletContextImpl();
+	Gets context parameter from web.xml or annotation and store in ServletContext object
+	Creates ServletContextEvent
+			ServletContextEvent sce=new ServletContextEvent(sc);
+	Creates ServletContextListener object
+			ServletContextListener scl=new ServletContextListenerImpl();
+	contextInitilized() method with ServletContextListener object
+			scl.contextInitilized(sce)
+
+Container Tasks at Container Shut-Down:-
+		Invoke contextDestroy() mtd ServletContextListener object
+		scl.contextDestroy(sce);
+		Destroy ServletContext object
+
+
+
+
+
+
+
+Session binding and session attribute listeners are almost same 
+	httpsession.putvalue(name,value) is same as setAttribute
+	httpsession.renovalue();
+
+We use put value for storing value in session but httpsession.putvalue(.....,.....) is value bound and httpsession.removevalue() is value unbound so SessionBindingListeners
+are used
+
+Every Listener has one event,Event has source of corrosponding Listener object
+
+
+Listeners tasks is not to provide any response to customer but we can do what performance is done 
+
+
+
+Session Migration:-
+
+	Mainly HttpSessionActivationListener is used for session migration
+	HttpSessionActivationListener methods:-
+		void sessionWillPassivate(event):-Will called by web container at Server1
+		void sessionDidActivate(event):-Will be called  by web container at Server3
+
+	When we have large scale enterprise application then lakhs of users may visit the appilcation at a time
+	To manage lakhs of user concurrently we need to Implement Clustered Environment with Load Balancing Server(LBS) and many application server 
+ 	When we send the request first LBS takes that request and forward to free server at Cluster Unit 
+	Some time one user request may be forwarded to different servers
+
+	Let user 1st request given to Server 1 where session object is created for user 
+	user 2nd request given to Server 3
+	Now session object of that user is required at Server 3
+	In this case we have to migrate the session object from Server1 to Server3 
+	Following events will happen at Session Migration:-
+		Session will be pessivate at Server1
+		Session will be Activate at Server3
+	To  perform any tasks at these events we can register HttpSessionActivationListener with following mtds:-
+		void sessionWillPassivate(event):-Will called by web container at Server1
+		void sessionDidActivate(event):-Will be called  by web container at Server3
+
+Note:-	Server will also have load i.e how many request can be process by Server  :===Load Testing
+	Per User concurrrent session is not allowed 
+
+
+
+
+	Theory:If I login in somewhere than container donot know my user name or password Now Same user uses to login in different system or browser at a 
+	time  so different session is created so How to Resolve:-
+	Soln:=	One Approach is to Store in DB but there is an disadvantage that per user 2 time contacting DB i.e at login and logout time
+		Second Approach Concurrent Session Map
+  
+
+	ConcurrentSession:-Session Running at a time

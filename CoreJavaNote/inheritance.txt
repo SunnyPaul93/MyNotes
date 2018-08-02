@@ -1,0 +1,17 @@
+is a relationship-->inheritance
+inheritance-->reusability of code
+
+advantage of is a relation is code reusuability
+by using extend skeyword we can implement is a relationship
+
+with superclass rference variabloe we cannot call sub class newly defined 
+members(methods, etc)
+
+
+
+has a relationship-->
+class student{
+String name;
+int roll;
+}
+name,rollno has a relationship with student

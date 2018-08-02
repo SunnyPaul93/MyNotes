@@ -1,0 +1,1479 @@
+***************************************************************************************************************************************
+Sub-queries:When we include one query as apart of another query than it is calles as sub-query
+1st, sub-query will be evaluated and depending on the result returned by sub-query, the main query will be executed
+Depending on the condition provided in sub-query it may return zero or more results
+When sub-query is returning exactly one record than we can use = operator to assign the result of sub-query to main query
+When sub-query is returning more than one record than we can use IN operator to assign the result of sub-query to main query
+
+SQL> select * from customer;
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+       102 Raju            Raju@gmail.com                 8273747474
+       103 Rani            Rani@gmail.com                 9182746758
+       104 Sumit           Sumit@gmail.com                7182738945
+
+SQL> create table customeraddress(cid int,street varchar(20),city varchar(20));
+
+Table created.
+
+SQL> insert into customeraddress values(101,'Rangirkhari','Silchar');
+
+1 row created.
+
+SQL> insert into customeraddress values(102,'BTM Layout','Bangalore');
+
+1 row created.
+
+SQL> insert into customeraddress values(103,'MKR','Bangalore');
+
+1 row created.
+
+SQL> insert into customeraddress values(104,'Kandiwali West','Mumbai');
+
+1 row created.
+
+SQL> select * from customeraddress;
+
+       CID STREET               CITY
+---------- -------------------- --------------------
+       101 Rangirkhari          Silchar
+       102 BTM Layout           Bangalore
+       103 MKR                  Bangalore
+       104 Kandiwali West       Mumbai
+
+SQL> set linesize 200;
+SQL> create table customerfee(cid int,fee int,dop date);
+
+Table created.
+
+SQL>  insert into customerfee values(101,65000,'15-Jan-2017');
+
+1 row created.
+
+SQL> insert into customerfee values(102,44300,'19-Feb-2017');
+
+1 row created.
+
+SQL> insert into customerfee values(103,87600,'2-Sep-2017');
+
+1 row created.
+
+SQL> insert into customerfee values(104,50000,'20-Nov-2017');
+
+1 row created.
+
+SQL> select * from customerfee;
+
+       CID        FEE DOP
+---------- ---------- ---------
+       101      65000 15-JAN-17
+       102      44300 19-FEB-17
+       103      87600 02-SEP-17
+       104      50000 20-NOV-17
+
+
+
+SQL> select cname from customer where email='SunnyPaul@gmail.com';
+
+CNAME
+---------------
+Sunny
+
+SQL> select cname from customer where cid=(select cid from customer where email='SunnyPaul@gmail.com');
+
+CNAME
+---------------
+Sunny
+
+SQL> select cname from customer where cid=(select cid from customer where phone=7182738945);
+
+CNAME
+---------------
+Sumit
+
+SQL> select cname from customer where cid=(select cid from customeraddress where street='BTM Layout');
+
+CNAME
+---------------
+Raju
+
+
+
+SQL> select cname,email from customer where cid=(select cid from customeraddress where street='Rangirkhari');
+
+CNAME           EMAIL
+--------------- ------------------------------
+Sunny           SunnyPaul@gmail.com
+
+
+SQL> select street,city from customeraddress where cid=(select cid from customerfee where fee=87600 );
+
+STREET               CITY
+-------------------- --------------------
+MKR                  Bangalore
+
+
+
+
+SQL> select fee,dop from customerfee where cid=(select cid from customer where cname='Sunny');
+
+       FEE DOP
+---------- ---------
+     65000 15-JAN-17
+
+SQL>  select * from customer where cid in(select cid from customeraddress where city='Bangalore' );
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       102 Raju            Raju@gmail.com                 8273747474
+       103 Rani            Rani@gmail.com                 9182746758
+
+SQL>  select * from customer where cid =(select cid from customeraddress where city='Bangalore' );
+ select * from customer where cid =(select cid from customeraddress where city='Bangalore' )
+                                    *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+Since here raju and rani are satying in Bangalore i.e more than one record so we have to use IN operator to assign sub-query resuult to main query
+
+
+SQL> select cname,cid,email from customer where cid in(select cid from customeraddress where cid in(select cid  from customerfee where fee=50000));
+
+CNAME                  	CID 	EMAIL
+--------------- ---------- ------------------------------
+Sumit                  	104 	Sumit@gmail.com
+
+
+SQL> select cname,cid,email from customer where cid in(select street from customeraddress where street in(select cid  from customerfee where fee=50000));
+select cname,cid,email from customer where cid in(select street from customeraddress where street in(select cid  from customerfee where fee=50000))
+                                                                                           *
+ERROR at line 1:
+ORA-01722: invalid number
+
+SQL> select street,city where cid in(select cid from customerfee where cid in(select cid from customerfee where fee=65000));
+select street,city where cid in(select cid from customerfee where cid in(select cid from customerfee where fee=65000))
+                   *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+
+SQL> select street,city from customeraddress where cid in(select cid from customerfee where cid in(select cid from customerfee where fee=65000));
+
+STREET               CITY
+-------------------- --------------------
+Rangirkhari          Silchar
+
+
+SQL>  select city from customeraddress where cid=(select cid from customer where email='Raju@gmail.com');
+
+CITY
+--------------------
+Bangalore
+
+SQL>  select * from customer where cid=(select cid from customerfee where dop='15-Jan-2017');
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+
+
+SQL>  select * from customer where cid=(select cid from customerfee where fee between 40000 and 80000);
+ select * from customer where cid=(select cid from customerfee where fee between 40000 and 80000)
+                                   *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+Since more than one record so use IN instead of = operator
+
+SQL>  select * from customer where cid in(select cid from customerfee where fee between 40000 and 80000);
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+       102 Raju            Raju@gmail.com                 8273747474
+       104 Sumit           Sumit@gmail.com                7182738945
+
+
+SQL> select fee from customerfee where cid=(select cid from customer where cname='Rani');
+
+       FEE
+----------
+     87600
+**************************************************************************************************************************************************
+
+
+
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Srinivas        FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL>  create view studentinfosub as select sid,sname,course from studentinfo;
+
+View created.
+
+SQL> select * from studentinfosub;
+
+       SID SNAME           COURSE
+---------- --------------- ---------------
+         1 Srinivas        FC
+         2 Dande           CoreJava
+         3 Manish          Android
+         4 DK              Hadoop
+         5 Rajeev          Android
+         6 Firoj           Hadoop
+         7 Kofel           Android
+
+7 rows selected.
+
+SQL> update studentinfosub set sname='Sri' where sid=1;
+
+1 row updated.
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Sri             FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL> select * from studentinfosub;
+
+       SID SNAME           COURSE
+---------- --------------- ---------------
+         1 Sri             FC
+         2 Dande           CoreJava
+         3 Manish          Android
+         4 DK              Hadoop
+         5 Rajeev          Android
+         6 Firoj           Hadoop
+         7 Kofel           Android
+
+7 rows selected.
+Since we use view instread of table for creating studentinfosub so insert or update or delete of sub table(studentinfotable) will effect the main table(studentinfo)
+
+*************************************************************************************************************************************
+Since we use table  for creating studentinfotable so insert or update or delete of sub table(studentinfotable) will not effect the main table(studentinfo)
+
+
+
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Sri             FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL> create table studentinfotable as select sid,sname,course from studentinfo;
+
+Table created.
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Sri             FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL> select * from studentinfotable;
+
+       SID SNAME           COURSE
+---------- --------------- ---------------
+         1 Sri             FC
+         2 Dande           CoreJava
+         3 Manish          Android
+         4 DK              Hadoop
+         5 Rajeev          Android
+         6 Firoj           Hadoop
+         7 Kofel           Android
+
+7 rows selected.
+
+SQL>  update studentinfotable set sname='Srinivas' where sid=1;
+
+1 row updated.
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Sri             FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL> select * from studentinfotable;
+
+       SID SNAME           COURSE
+---------- --------------- ---------------
+         1 Srinivas        FC
+         2 Dande           CoreJava
+         3 Manish          Android
+         4 DK              Hadoop
+         5 Rajeev          Android
+         6 Firoj           Hadoop
+         7 Kofel           Android
+
+7 rows selected.
+**************************************************************************************************************************************
+
+Sequence: Sequence is used to generate numeric value automatically and it is used only in Oracle
+
+Syntax: create sequence <sequence name> 
+	increment by	<value>
+	start with 		<value>
+With the sequence we can use the following properties to access value
+	1.<seq name>.nextval
+	2.<seq name>.currval
+For Ascending values
+By Default starts with 1
+By Default increment by 1
+Min value=1
+Max value=10^27
+Range:	1 ----10^27
+
+For Descending values
+By Default starts with -1
+By Default increment by -1
+Min value=-10^26
+Max value=-1
+Range:	(-10^26) ---- (-1)
+
+
+
+we can give our own starting value and incremented value but starting value should be withing range
+
+Dropping sequence:
+
+syntax: drop sequence<sequence name>
+
+
+
+
+
+
+
+
+
+
+SQL> create sequence genauto increment by -2 start with 80;
+create sequence genauto increment by -2 start with 80
+*
+ERROR at line 1:
+ORA-04008: START WITH cannot be more than MAXVALUE
+
+
+SQL> create sequence genauto increment by 2 start with 80;
+
+Sequence created.
+
+SQL> drop sequence genauto;
+
+Sequence dropped.
+
+SQL> create sequence genauto increment by 2 start with -80;
+create sequence genauto increment by 2 start with -80
+*
+ERROR at line 1:
+ORA-04006: START WITH cannot be less than MINVALUE
+
+
+SQL> create sequence genauto increment by -2 start with -80;
+
+Sequence created.
+
+SQL> drop sequence genauto;
+
+Sequence dropped.
+
+
+
+
+
+
+
+
+SQL> create sequence genauto increment by -2;
+
+Sequence created.
+
+SQL> select genauto.nextval from dual;
+
+   NEXTVAL
+----------
+        -1
+
+SQL> select genauto.nextval from dual;
+
+   NEXTVAL
+----------
+        -3
+
+
+
+
+
+
+
+SQL> create sequence idgen;				here by default start with 1 and incremented by 1
+
+Sequence created.
+
+SQL> create table empidgen(id int,name varchar(20),age int);
+
+Table created.
+
+SQL> insert into empidgen values(101,'Sunny',23);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.nextval,'Ravi',27);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.nextval,'Rakhi',22);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.currval,'Sumit',36);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.nextval,'Purnima',25);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.nextval,'Kajol',65);
+
+1 row created.
+
+SQL> insert into empidgen values('110','Nupur',30);
+
+1 row created.
+
+SQL> delete from empidgen where age=30;
+
+1 row deleted.
+
+SQL> insert into empidgen values(110,'Nupur',30);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.nextval,'Pakhi',20);
+
+1 row created.
+
+SQL> insert into empidgen values(idgen.currentval,'Sakshi',24);
+insert into empidgen values(idgen.currentval,'Sakshi',24)
+                                  *
+ERROR at line 1:
+ORA-00984: column not allowed here
+
+
+SQL> insert into empidgen values(idgen.currval,'Sakshi',24);
+
+1 row created.
+
+SQL> select * from empidgen;
+
+        ID NAME                        AGE
+---------- -------------------- ----------
+       101 Sunny                        23
+         1 Ravi                         27
+         2 Rakhi                        22
+         2 Sumit                        36
+         3 Purnima                      25
+         4 Kajol                        65
+       110 Nupur                        30
+         5 Pakhi                        20
+         5 Sakshi                       24
+
+9 rows selected.
+
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+         6						last created idgen was 5 as given above
+
+SQL> select idgen.currval from dual;
+
+   CURRVAL
+----------
+         6
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+         7
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+         8
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+         9
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        10
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        11
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        12
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        13
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        14
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        15
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        16
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        17
+
+SQL> select idgen.nextval from dual;
+
+   NEXTVAL
+----------
+        18
+
+
+SQL> create sequence idgen1 start with 100 increment by 10;
+
+Sequence created.
+
+
+
+SQL> select idgen1.currval from dual;
+select idgen1.currval from dual
+       *
+ERROR at line 1:
+ORA-08002: sequence IDGEN1.CURRVAL is not yet defined in this session
+
+At the starting we cannot access the sequence with currval we have to use nextval
+
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       100
+
+
+
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       110
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       120
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       130
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       140
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       150
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       160
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       170
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       180
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       190
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       200
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       210
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       220
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       230
+
+SQL> select idgen1.nextval from dual;
+
+   NEXTVAL
+----------
+       240
+
+
+
+SQL> insert into empidgen values(idgen1.currval,'Gaurav');
+insert into empidgen values(idgen1.currval,'Gaurav')
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> insert into empidgen values(idgen1.nextval,'Gaurav');
+insert into empidgen values(idgen1.nextval,'Gaurav')
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+Since empidgen current value is 5 as using from idgen so we cannot use idgen1 as idgen1 starts with 100 but current is 5 Basically we may not use multiple sequence
+in a table
+
+
+
+
+
+
+
+
+
+SQL> create sequence idgen2
+  2  start with 10
+  3  increment by -1;
+create sequence idgen2
+*
+ERROR at line 1:
+ORA-04008: START WITH cannot be more than MAXVALUE
+
+We cannot create sequence as above beause it is incremented by -1 i.e decrement  and for this range is -10^26 to  -1
+
+SQL> create sequence idgen2
+  2  start with -25
+  3  increment by -5;
+
+Sequence created.
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -25
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -30
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -35
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -40
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -45
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -50
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -55
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -60
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -65
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -70
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -75
+
+SQL> select idgen2.nextval from dual;
+
+   NEXTVAL
+----------
+       -80
+
+
+
+
+SQL> create sequence idgen3
+  2  start with -15
+  3  increment by 5;
+create sequence idgen3
+*
+ERROR at line 1:
+ORA-04006: START WITH cannot be less than MINVALUE
+
+
+
+
+SQL> create sequence idgen3
+  2  increment by -2;
+
+Sequence created.
+
+SQL> drop sequence idgen3;
+
+Sequence dropped.
+
+
+
+
+
+
+SQL> select * from user_sequences;
+
+SEQUENCE_NAME                   	MIN_VALUE	MAX_VALUE	INCREMENT_BY 	C O 	CACHE_SIZE	LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+MVIEW$_ADVSEQ_GENERIC                	1 		4294967295 		1 	N  N         	50           			1
+MVIEW$_ADVSEQ_ID                        	1 		4294967295	            	1 	N  N         	20			1
+LOGMNR_EVOLVE_SEQ$                       	1 		1.0000E+27            		1 	N  Y         	20			1
+LOGMNR_SEQ$                             	1 		1.0000E+27            		1 	N  Y         	20           			1
+LOGMNR_UIDS$                            	1 		1.0000E+27            		1 	N  Y         	20         			100
+REPCAT$_FLAVORS_S              	-2.147E+09 	2147483647            		1 	N  N          0           			1
+REPCAT$_FLAVOR_NAME_S              	1 		1.0000E+27            		1 	N  N          0           			1
+REPCAT$_REPPROP_KEY                     	1 		1.0000E+27            		1 	N  N         	20           			1
+REPCAT_LOG_SEQUENCE                     1 		1.0000E+27            		1 	N  N         	20           			1
+REPCAT$_REFRESH_TEMPLATES_S   1 		1.0000E+27            		1 	N  N         	20           			1
+REPCAT$_USER_AUTHORIZATIONS_S1 		1.0000E+27            		1 	N  N         	20           			1
+
+SEQUENCE_NAME                   	MIN_VALUE  MAX_VALUE 		INCREMENT_BY 	C O 	CACHE_SIZE 	LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+REPCAT$_TEMPLATE_REFGROUPS_S        	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_TEMPLATE_OBJECTS_S              	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_TEMPLATE_PARMS_S                  	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_USER_PARM_VALUES_S              	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_TEMPLATE_SITES_S                    	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_TEMP_OUTPUT_S                         	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_RUNTIME_PARMS_S                    	1 	1.0000E+27            		1 	N N         		20           		1
+TEMPLATE$_TARGETS_S                              	1 	1.0000E+27            		1 	N N         		20           		1
+REPCAT$_EXCEPTIONS_S                             	1 	1.0000E+27            		1 	N N         		20           		1
+IDGEN                                   		       	1 	1.0000E+27            		1 	N N         		20          		21
+IDGEN1                                  		       	1 	1.0000E+27           		10 	N N         		20         		300
+
+SEQUENCE_NAME                   MIN_VALUE  	MAX_VALUE 	INCREMENT_BY 	C O 		CACHE_SIZE 	LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+IDGEN2                         	-1.000E+26         	-1           		-5 		N N        		 20        		-125
+
+23 rows selected.
+
+
+
+
+
+
+SQL> create sequence idgen3
+  2  start with 20
+  3  increment by 10
+  4  maxvalue 200;
+
+Sequence created.
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        20
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        30
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        40
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        50
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        60
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        70
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        80
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+        90
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       100
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       110
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       120
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       130
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       140
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       150
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       160
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       170
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       180
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       190
+
+SQL> select idgen3.nextval from dual;
+
+   NEXTVAL
+----------
+       200
+
+SQL> select idgen3.nextval from dual;
+select idgen3.nextval from dual
+*
+ERROR at line 1:
+ORA-08004: sequence IDGEN3.NEXTVAL exceeds MAXVALUE and cannot be instantiated
+
+Since we give the maxvalue to be 200 so after 200 sequence cannot generate value
+
+SQL> create sequence idgen4
+  2  increment by -25
+  3  start with -10
+  4  minvalue -125;
+
+Sequence created.
+
+SQL> select idgen4.nextval from dual;
+
+   NEXTVAL
+----------
+       -10
+
+SQL> select idgen4.currval from dual;
+
+   CURRVAL
+----------
+       -10
+
+SQL> select idgen4.nextval from dual;
+
+   NEXTVAL
+----------
+       -35
+
+SQL> select idgen4.nextval from dual;
+
+   NEXTVAL
+----------
+       -60
+
+SQL> select idgen4.nextval from dual;
+
+   NEXTVAL
+----------
+       -85
+
+SQL> select idgen4.nextval from dual;
+
+   NEXTVAL
+----------
+      -110
+
+SQL> select idgen4.nextval from dual;
+select idgen4.nextval from dual
+*
+ERROR at line 1:
+ORA-08004: sequence IDGEN4.NEXTVAL goes below MINVALUE and cannot be instantiated
+Since we give the minvalue to be -125 so after 125 sequence cannot generate value
+
+
+
+
+SQL> create sequence idgen6
+  2  start with 10
+  3  increment by 15
+  4  maxvalue 90
+  5  cycle;
+create sequence idgen6
+*
+ERROR at line 1:
+ORA-04013: number to CACHE must be less than one cycle
+
+By Default cycle;	----------- cycle cache 20; 
+Here 20 number is not possible within max value  (here only 6 i.e 10,25,40,55,70,85,100 is posible which is less than default i.e 20 )
+
+					ceil((max-min) /increment by)		
+					ceil((90-1)/15)=5.93333333333333=6 which is less than 20(default)
+
+But we can specify our cahche 
+NUMBER TO CACHE MUST BE LESS THAN ONE CYCLE
+
+
+SQL> create sequence idgen6
+  2  start with 10
+  3  increment by 15
+  4  maxvalue 100
+  5  cycle cache 6;
+
+Sequence created.
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        10
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        25
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        40
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        55
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        70
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        85
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+       100
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+         1
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        16
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        31
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        46
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        61
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        76
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        91
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+         1
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        16
+
+SQL>  select idgen6.nextval from dual;
+
+   NEXTVAL
+----------
+        31
+
+
+
+
+SQL> create sequence idgen5
+  2  start with 10
+  3  increment by 15
+  4  maxvalue 400
+  5  cycle;
+
+Sequence created.
+
+By Default cycle;	----------- cycle cache 20; 
+Here 20 number is possible within max value
+Default cycle cache is 20 and it is calculated as 
+					ceil((max-min) /increment by)		
+			here is 		ceil((400-1)/15)=26.6=27 > 20(default)
+
+
+NUMBER TO CACHE MUST BE LESS THAN ONE CYCLE
+
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        10
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        25
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        40
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        55
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        70
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        85
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       100
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       115
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       130
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       145
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       160
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       175
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       190
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       205
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       220
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       235
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       250
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       265
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       280
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       295
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       310
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       325
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       340
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       355
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       370
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       385
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       400
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+         1
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        16
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        31
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        46
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        61
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        76
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+        91
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       106
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       121
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       136
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       151
+
+SQL> select idgen5.nextval from dual;
+
+   NEXTVAL
+----------
+       166
+
+
+
+
+
+*************************************************************************************************************************************

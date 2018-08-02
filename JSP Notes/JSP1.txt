@@ -1,0 +1,1235 @@
+JSP(JAVA SERVER PAGE):-
+
+	Variables are already declard in every JSP (eg. response,request,out,.................etc)
+	JSP is an intermediate format
+	Intermediate JSP will be copnverted to Servlet which is called translated servlet
+	JSP should never receive or process request
+	JSP is Server side Technology like Servlet which is used to develope server side web component	
+	The extnsion of the file must be .jsp
+
+	JSP=HTML+JAVA
+
+	JSP LifeCycle:-
+	When client send first request to JSP container will do the folowing tasks:-
+		Translate JSP to Servlet	(show.jsp ----------> show_jsp.java)
+		Compiles that translated Servlet (show_jsp.java--->show_jsp.class)
+		Load the Translated Servlet Class 
+		Create instances of Translated Servlet Class
+		Calls the lifecycle method _jspinit() for initilization 	
+		Invokes the lifecycle method _jspservice()
+
+	Whenever client sends the 2nd onward request to JSP than _jspService() will be called directly 
+	At container shutdown time container will call lifecycle method _jspDestroy()
+		
+	_jsp:---
+		1.Declare Inplicit Variable(automatically declared)
+			3 initilized by container (page,response,request)
+			5 not initilized
+		
+		2.Initilized implicit object 
+			5 initilized
+			
+		3.Reads data from JSP line by line(JAVA code will be copied as it is in _jsp and HTML line by line with out.write(html code))
+		if we write error in JAVA code than that error will also be copied
+
+		Scriptlet should contain valid Java Statement
+
+
+	_ for life cycle method of JSP means that methods cannot be overridden 
+
+	<% 
+	int a=10;		//valid
+	static int x=100;	//invalid since local variable cannot be Static 
+	public void m1(){}	//error since by default all the codes are place under service method if methods are placed under scriptlet
+
+	%>
+
+
+	<%  !
+	int a=10; 		//valid
+	static int y=20;	//valid
+	public void m1(){}	//valid
+					Here all will be placed inside class
+
+	public void _jspinit(){}	//invalid 	
+	public void _jspDestroy(){}	//invalid 
+		We cannot override inti,destroy,service ,method of JSP here 			
+	
+	%>
+
+
+	eg:-
+	index.jsp
+		
+		<html>
+
+		<body>
+		<h1> Welcome to Sunny's World </h1>	
+		<%!
+
+		public void _jspinit(){
+		SOP("this is _jspinit()");
+		}	//invalid 	
+		public void _jspDestroy(){
+		SOP("this is _jspDestroy()");
+
+		}	//invalid 
+
+
+		%>
+		
+		</body>
+		</html>
+
+
+
+	JSP Implicit Object:-
+		JSP implicit object are objects which are readily available in every JSP
+		Every JSP we are writing will be translated into Servlet class by the WebConatiner
+		Every translated servlet will have _jspService() mtd which contain mainly 9 variables to hold Web Container objects
+		Out of which 8 variables are by default enabled and one is Disaled (i.e Exception) 
+		7 implicit objects are fixed i.e enable by default but session and exception are the implicit object which we can enable or disable as per our 
+		requirement
+
+
+		JSP Implicit Object Type				JSP Implicit Object
+
+		HttpServletRequest					request
+		HttpServletResponse					response
+		PageContext					pageContext
+		HttpSession					session
+		ServletContext					application
+		ServletConfig 					config
+		JspWriter						out
+		Object						page(=this)
+		Throwable 					exception
+
+	exception implicit object is by default disable and page session is enable Now to disable page session and enable exception we can do following:--
+		<%@ page session="false"    isErrorPage="true"%>
+
+
+
+	JSP Scripting Elements:-
+		To use Java Statement in JSP we can use Scripting Elements:-
+		1.Scriptlets
+		2.Expression 
+		3.Declaration
+
+
+		1.Scriptlets:-
+			Any valid Java Statements are allowed inside Scriptlets
+			All Statements of Scriptlet will be placed will be placed inside _jspService() mtd of translated Servlet
+			Syntax:		<%____________________%>
+			
+	<% 
+	int a=10;		//valid
+	out.println(a);
+	SOP(a);	
+	static int x=100;	//invalid since local variable cannot be Static 
+	public void m1(){}	//error since by default all the codes are place under service method if methods are placed under scriptlet
+
+	%>
+
+
+	internally above code will be converted as :-
+
+		_jspService(){
+		............
+
+		int a=99;
+		out.println(a);		
+		SOP(a);	
+		
+	}
+			 
+		2.Expression:-
+			Expression is short-cut form of out.print(exp)
+			All the expression willm be converted to out.print(..............) and will be palced inside _jspService() mtd of translated servlet
+			Expression should not ends with semicolon(;) 
+			Syntax:-	<%=exp%>
+		
+			<%
+			String str="Sunny";
+			%>		
+
+			<%=str%>
+			<%=Hello Guys%>
+			<%=Hello Guys;%>			invlalid
+	internally above code will be converted as :-
+
+		_jspService(){
+		............
+		String str="Sunny";
+		out.print("str");
+		out.print("Hello Guys");
+		out.print("Hello Guys";);		which is invalid so corrosponsing to that expression is invalid
+
+		
+	}
+
+		3.Declaration:-
+			Method defination,Blocks,Constructors,Class lavel variables are allowed inside the Declaraction section
+			All the code in Declaration section will be placed directly inside translated servlet class and outside _jspService() mtd
+
+			Syntax:-<% ! % >
+			<% ! 
+			String str="Sunny";
+			void m1(){
+		..............................................................
+			}
+			%>
+	
+	internally above code will be converted as :-
+	
+		class show_jsp ............{
+		String str="Sunny";
+		void m1(){
+..........................................................................
+		}	
+
+		_jspService({
+		..............................................................
+		}
+		}
+
+		4.We can use the following to commnets in JSP page:-
+			<!--This is HTML Comment-->
+			<%--This is JSP Comment/Hidden Comment --%>
+	
+
+	Container is responsible for writing Servlet class for JSP which is called as Translated Servlet
+		1.Using org.apache.jsp package
+		2.Importing 3 packages
+		3.Super Class of Translated Servlet is HttpJSPBase
+		4.Overriding the _jspInit() and _jspDestroy() method
+		5.Overriding _jspService() will do the following:-
+			A:Declaring and Initilizing 8 Implicit Object  
+			B:Moving JSP code into Translated Servlet as follows:---
+				a.HTML Tag and Text will be converted as out.write()
+				b.Scriptlets will be placed in _jspService()
+				c.Expression will be translated to out.print()
+				d.Declaration will be placed outside _jspService() and inside the translated Servlet
+				e.EL expresion will be evaluated ${MSG} say
+				f.Processing the custom tags <sunny:hello />
+
+
+
+
+	We can change the default super class i.e HttpJSPBase but it is not recomended
+
+
+
+
+	JSP Directives:-
+		Directives are special instructions to container to perform the required tasks
+		There are 3 Directives in JSP 
+		1.include directive
+		2.page directive
+		3.taglib directive
+	
+
+
+
+	1.include directive:-
+		include directive is used to include one JSP or HTML to another to another JSP i.e include one resource to another resource
+		include directive line will be replaced with content of included JSP or HTML at transiction time
+		We can write one or more include directive iinside the JSP 
+			Syntax:-
+				<%@ include file="some jsp or html"%>
+
+		eg:-
+			<%@ include file="header.html"%>
+			<%@ include file="footer.html"%>
+			<%@ include file="login.jsp"%>
+			........................................etc
+
+	Since in JSPLab3 we use include 2 html and 1 jsp so three times html and body in translated code as each file is either JSP or HTML file and each have 
+	html and body tag
+
+	2.page directive:-
+		There are 8 attributes in page directive
+		language
+		import
+		session
+		extends
+		isThreadSafe
+		errorPage
+		isErrorPage
+		isELIgnored
+		Syntax:-
+			<%@ page attributename %>
+
+
+
+	language:-
+		language is an attribute used to specify the language for scriptlets and descriptions
+		Intially when JSP was designed SUN in 1999 than they palned to include multiple languages(C,C++,JAVA..........etc) so they given language 
+		as an directive but later JAVA become the default one
+		Curently valid value is Java and it is default Value
+		
+		<%@ page language="java"%>		valid
+		<%@ page language="c"%>			invalid(invalid language attribute)
+		
+
+	import:-
+		import attribute is bacically used to specify packages to be imported for translated Servlet
+		We can import one or more packages with comma(,) seperation using this attribute			
+		<%@ page import="java.util.*,java.io.*"%>
+
+	
+	session:-
+		session attribute is used to enable or disable the session object in JSP 
+		By default session object is enabled in every JSP's
+		We can also disable session object by following:-
+			<%@ page session="false"%> 
+	
+	
+	extends:-
+		HttpJSPBase is default super class for translated servlet
+		If we want to use other super class for translated servlet instead of HttpJSPBase than we have to use extends attribute
+		When take HttpServlet as super class we have to override any of the method of HttpServlet i.e based on Superclass container will understand
+		which lifecycle is from which method
+		
+		By Default any _jsp.. class will extends HttpJspBase and implements JspSourceDependent but we can change superclass from HttpBase to some
+		other
+		
+		<%@ page extends="javax.servlet.http.HttpServlet"%>
+	
+
+
+	isThreadSafe:-
+		This attribuite is used to specify the Servlet Thread model required
+		Default Servlet Thread model is multi-thread model
+		Default value of isThread attribbute is true
+		If we want to follow single thread model than use the atttribute value as false
+			<%@ page isThreadSafe="false"%>
+		If we want to follow multi thread model than use the atttribute value as true
+			<%@ page isThreadSafe="true"%>
+	
+	errorPage and isErrorPage:-
+		We can handle exception in every JSP or can do the following:-
+			We want to handle the exception in a centralized JSP than we have to use two Attributes
+			~errorPage is used to specify the centralized JSP 
+			~isErrorPage is used to enable the exceptiion implicit object in centralized JSP used for error handling
+		By Default exception handaling is Disabled i.e isErrorPage="false"
+			we can Enable it by <%@ page isErrorPage="true" %>
+		
+		If in Any JSP we have 
+				<%@ page errorPage="err.jsp" %>
+		than error will be handled in that JSP(err.jsp) 
+
+	isELIgnored:-
+		isELIgnored is used to enable or disabble EL expression
+
+		Note:-Upto Tomcat 5.0 EL Expression are ignored by default we have to enable tham
+		          Fron Tomcat 6.0 EL Expression are enable by default
+
+		In every latest container ELExpression is enabled by default 
+			
+		if EL Exepression true than display ${MSG} as it is 	
+		if EL Exepression false than display ${MSG} will display actual attribute set 	
+	
+
+
+	3.taglib directive:-
+		taglib directives allows to use custom tags in JSP
+
+
+	Standard Action:-
+		Built-in-Tags:-
+	Following are important JSP Standard Action
+	<jsp:include>	
+	<jsp:forward>
+	<jsp:param>
+	<jsp:useBean>	
+	<jsp:setProperty>	
+	<jsp:getProperty>	
+
+
+<jsp:include>	:-It is used to include one JSP or HTML inside another JSP 
+		  It will include the response of the included page at runtime
+			syntax:-	<jsp:include page="jsp or html file"/>	
+				<jsp:include page="header.jsp"/>	
+				<jsp:include page="footer.html "/>	
+
+
+		<jsp:include> functionality is similar to include() method of RequestDispatcher
+
+		<%
+		request.setAtrribute("email","sunny@gmail.com");
+		RequestDispatcher rd=request.getRequestDispatcher("header.jsp");
+		rd.include(request,rsponse);
+		%>
+				
+	
+<jsp:forward>	:-It is used to forward the control from one JSP to another JSP or HTML
+		
+			syntax:-	<jsp:forward page="jsp or html file">
+				<jsp:forward page="hello.jsp">
+				<jsp:forward page="hai.html">
+					
+		<jsp:forward>  functionality is similar to forward() method of RequestDispatcher
+
+		<%
+		request.setAtrribute("email","sunny@gmail.com");
+		RequestDispatcher rd=request.getRequestDispatcher("hello.jsp");
+		rd.forward(request,rsponse);
+		%>
+			 	
+
+
+
+
+<jsp:param>	:-It is used to send the request parameter data from One JSP to another JSP while we are including or forwarding 
+		  It allows to define new request parameters 
+		 <jsp:param> must be used along with <jsp:include> or <jsp:forward>
+		 
+
+			syntax:-	<jsp:param name="email" valu="sunny@gmail.com">		
+		
+		<jsp:param> must be inside <jsp:include> or <jsp:forward>
+ 
+			eg:-	<jsp:include page="header.jsp">
+					<jsp:param name="email" valu="sunny@gmail.com">		
+				</jsp:include>			
+
+			eg:-	<jsp:forward page="home.jsp">
+					<jsp:param name="email" valu="sunny@gmail.com">		
+				</jsp:include>			
+
+NOTE:-	Normally parameter name and value are collected from client
+	Every tag has JAVA code behind it
+
+	form action="test.sunny" then go to test servlet
+	form action="test.jsp" then go to jsp page test
+	
+
+
+
+
+<jsp:useBean> ,<jsp:setProperty> and <jsp:getProperty>	:-These 3 tags are used for:-
+						Creating Java Bean Object 
+						Storing data in Java Bean Object
+						Accessing data from Java Bean Object	
+	
+
+
+Now a Java Bean is a java class that should follow following conventions:
+	It should have a no-arg constructor.
+	It should be Serializable.
+	It should provide methods to set and get the values of the properties, known as getter and setter methods.
+
+According to Java white paper, it is a reusable software component. A bean encapsulates many objects into one object, so we can access this object from multiple
+places. Moreover, it provides the easy maintenance.
+
+
+
+
+<jsp:useBean>	:-It is used to create the Java Bean object and store that object in the required scope
+		
+		syntax:-	<jsp:useBean id="" class="" scope="">	
+
+
+
+		id: is used to identify the bean in the specified scope
+
+		scope: represents the scope of the bean. It may be page, request, session or application. The default scope is page
+
+			page: specifies that you can use this bean within the JSP page. The default scope is page
+
+			request: specifies that you can use this bean from any JSP page that processes the same request. It has wider scope than page
+
+			session: specifies that you can use this bean from any JSP page in the same session whether processes the same request or not. 
+			It has wider scope than reques
+	
+			application: specifies that you can use this bean from any JSP page in the same application. It has wider scope than session
+
+		class: instantiates the specified bean class (i.e. creates an object of the bean class) but it must have no-arg or no constructor and must not be 
+		abstract
+
+		type: provides the bean a data type if the bean already exists in the scope. It is mainly used with class or beanName attribute. If you use it 
+		without class or beanName, no bean is instantiated.
+
+		beanName: instantiates the bean using the java.beans.Beans.instantiate() method.
+
+
+		class should be fully qualified class name
+
+		eg:- 		syntax:-	<jsp:useBean id="ST" class="com.sunny.Student" scope="session">	
+	
+
+
+<jsp:setProperty>:-	It is used to set value to the property of Java Bean Object i.e assign the value to corrosponding property 
+		syntax:-
+			<jsp:setProperty name="<id/attName>" property="nameOfVariable" value="........">	
+		eg.	<jsp:setProperty name="ST" property="name" value="Sunny">	internally takes ST.setname(Sunny);	
+							
+
+
+ <jsp:getProperty>	:-<jsp:getProperty> is used to get the value of the property of Java Bean object 
+				syntax:-	<jsp:getProperty name="<id/attName>" property="nameOfVariable">	
+		eg.	<jsp:getProperty name="ST" property="name" >	
+			
+		In get property we donot need to set any value because we are only getting so only name and property 
+		
+		By using  <jsp:getProperty> we can store data in Java Bean object by collecting data from request parameter 	
+
+
+In JSPLab11 show1,show2,show3 is getting parameters done by container.Every time we have to change the name of JSP's in index.html in form action
+		
+
+
+Difference between include directive and include action:-
+
+
+	include directive 						include action
+	
+	Attribute of include directive is file 				Attribute of include action is page
+	<%@ include file="header.jsp"%> 				<jsp:include page="header.jsp"> 
+	
+	include directive line is replaced with content of included		include action line is replaced with response of
+	JSP or HTML at transiction time				JSP or HTML included at runtime
+	
+	include directive is not good in performance			include directive is good in performance
+
+	When we are including any JSP using include directive than we 		When we are including any JSP using include action than we
+	can not pass parameter to that JSP				can pass parameter to that JSP	
+
+
+SCOPES:-	We can store data in different Container object to access later, depending on the requirement
+	These objects are called scope objects
+	We can store data in required scope as an attribute
+	An attribute is name-value pair
+	Name of attribute is of type String 
+	Value of attribute is of type Object
+	Attributes are read-write i.e we have to store the attribute so that we can collect later 
+	We can use the following mtds to manage attributes:-
+	void setAttribute(String,Object)
+	Object getAtttribute(String)
+	void removeAttribute(String)
+	Enumeration getAttributeNames()
+
+
+	JSP SCOPES:-
+	There are 4 scopes in JSP:-	
+		Page Scope
+		Request Scope 	
+		Session Scope
+		Application Scope
+
+
+
+		Page Scope:-	The data from page scope can be accesses within the same JSP only
+
+		Request Scope:-	When data is stored in the HttpServletRequest object than the scope of data is request scope 
+				The data from request scope can be accessed by single user in that request only before sending response to the client 	
+		
+		Session Scope:-	When data is stored in the HttpSession object than the scope of data is session scope 
+				The data from Session scope can be accessed by single user across multiple request but within the same session 	
+		
+Application Scope or Application:-	When data is stored in the ServletContext object than the scope of data is context or applicationscope 
+				The data from context scope can be accessed by multiple user across multiple request
+
+
+
+
+	Page Context 	:-It is the master implicit object which allowa to access all other implicit objects of JSP 
+			  We can manage the scope of JSP using this object 	
+		
+			Managing atttribute uusing pageContext:-
+			We can store atttribute directly in request,session and application(context) using setAtttribbute() mtd
+			We can not store attribute directly in page because page is of type java.lang.Object
+			In JSP we can store and acces the atttributes using master implicit object called pageContext
+
+			We can use following mtd of PageContext to manage attributes:-
+			void setAttribute(String name,Object value)	
+			void setAttribute(String name,Object value,int scope)	
+			Object getAttribute(String)
+			Object getAttribute(String,int scope)
+			void removeAttribute(String)
+			void removeAttribute(String,int scope)
+			Enumeration getAtttributeName(int scope)
+			Object findAttribute(String name)
+ 
+
+
+
+EL Expression:-	
+		syntax:-
+			${ELStatement}
+			${ALTER_NAME}
+			${ALTER_NAME[<index>]}
+			${OneObject.MemberObject.PropertyNameOfMemberObject}
+			
+
+			${Object}
+			${Object.property}
+			${Object.property.property}
+			${Object.property.property.property..............................................................................}
+			
+		EL Implicit Object is designed to access data from various object 
+	Implicit Objects:-
+			param 
+			paramValues 
+			header 
+			headerValues
+			cookie
+			pageScope
+			requestScope
+			sessionScope
+			applicationScope
+			initParam
+			pageContext
+
+
+
+
+		param and paramValues:-	
+			These two EL implicit objects are used to collect the request parameters
+			When we use param then intenally request.getParameter() method will be called 
+			When we use paramValues then intenally request.getParameterValues() method will be called 
+				eg:-	${param.email}
+					${param.course}	:-here only 1st course will be displayed
+					${paramValues.course[0]}	
+					${paramValues.course[1]}	
+					${paramValues.course[2]}	.............................
+					etc....................................		
+
+		header and headerValues:-
+			These two EL implicit objects are used to collect request Headers
+			When we use header then intenally request.getHeader() method will be called 
+			When we use headerValues then intenally request.getHeaderValues() method will be called 
+				eg:-	${header.host}
+					${header.referer}
+					${headerValues.accept-language[0]}
+					${headerValues.accept-language[1]}
+					etc....................................
+		
+		cookie:-
+			This EL implicit object is used to collect request cCookies
+				${cookie.<cookieName>.value}
+				eg:-	${cookie.email.value}
+					etc....................................
+		initParam:-
+			This EL implicit object is used to collect Context Parameter from ServletContext object
+				eg:-	${initParam.state} 
+					${initParam.city} 
+					etc....................................
+
+		pageContext:-	
+			This EL implicit object is used to access all other JSP implicit object and their properties
+				eg:-	${pageContext.session.id}
+					${pageContext.session.id.length}
+					${pageContext.request.remoteAddr}
+					${pageContext.request.method}
+					${pageContext.request.requestURI}
+					${pageContext.response.contentType}
+					etc....................................				
+
+
+
+
+
+		pageScope,requestScope,sessionScope and applicationScope:-
+			In servlet class we can store the data as attribute 
+			In JSP we can collect attribute data and display that data 
+			We can store the following type of data as attribute in required scope   
+				1.String,Wrappers and Date
+				2.Collection of String,Wrappers aand Date (using JSTL)
+				3.Collection of Collections (using JSTL)
+				4.Custom or User Defined class object (like Customer,Books,Student,Test.....etc) 
+				5.Collection of User Defined class object (using JSTL)	
+				6.Map object
+				7.Collection of Map Objects (using JSTL)	
+		
+
+
+
+
+		1.String,Wrappers and Date:-
+		
+		In Servlet:-
+			req.setAtttriute("EM","suun@gmail.com");
+			sess.setAtttriute("PHN",new Long(7282928282l));
+			contx.setAtttriute("DOB",new Date());
+
+		In JSP:-
+			${requestScope.EM}
+			${EM}
+			${sessionScope.PHN}
+			${PHN}
+			${applicationScope.DOB}
+			${DOB}
+
+		
+
+
+		2.Collection of String,Wrappers aand Date (using JSTL):-
+
+		In Servlet:-
+			ArrayList al=new ArrayList();
+			al.add(new Integer(26));
+			al.add(new Byte(76));
+			........................
+			........................
+			
+			String str[]={"Sunny","Ravi","Nitin".....................}		
+			req.setAttribute("AL",al);
+			sess.setAttribute("STR",str);
+
+		In JSP:-
+			${requestScope.AL[0]}
+			${requestScope.AL[1]}
+			...................................................................
+	..................................................................................
+			${sessionScope.STR[0]}
+			${sessionScope.STR[1]}
+		............................................................................................
+
+
+	NOTE:-	There is a problem with above expresion because of using index directly So we can solve that using JSTL tags
+			
+
+		
+
+
+
+		4.Custom or User Defined class object (like Customer,Books,Student,Test.....etc):-
+			In Servlet:-
+				class Address{
+					String street;
+					String city;
+				}
+
+
+
+				class Student{
+					int sid;
+					String sname;
+					String email;
+					Address addr;
+				}
+
+			sess.setAttribute("STUD",stud);
+			
+			In JSP :-
+				Sid:	${sessionScope.STUD.sid}
+				Sname:	${sessionScope.STUD.sname}
+				Email:	${sessionScope.STUD.email}
+				Street:	${sessionScope.STUD.addr.street}
+				City:	${sessionScope.STUD.addr.city}
+			
+
+
+
+			
+
+				 
+
+		5.Collection of User Defined class object (using JSTL):-
+
+
+			In Servlet:-
+			ArrayList al=new ArrayList();
+			al.add(stud1);
+			al.add(stud2);
+			........................
+			........................
+			sess.setAttribute("AL",al);
+
+		In JSP:-
+			Sid:	${AL[0].cid}
+			Sname	${sessionScope.AL[0].sname}
+			Email	${sessionScope.AL[0].email}
+			Street	${sessionScope.AL[0].addr.street}
+			City	${sessionScope.AL[0].addr.city}
+
+			...................................................................
+
+	
+
+	
+		6.Map object:-
+
+			In Servlet:-
+			HashMap hm=new HashMap();
+			hm.put("sid","101");
+			hm.put("sname","Sunny");
+		...........................................................................
+			sess.setAttrbute("HM",hm);
+			In JSP:-
+			Sid:${sessionScope.HM["sid"]}
+			Sname:${sessionScope.HM["sname"]}	
+
+
+
+
+		
+
+JSTL TAGS:-
+		
+	JSTL stands for JSP Standard Tag Library
+	JSTL is collection of utility tags implemented by SUN which can be used by developer in JSP
+	JSTL are divided into following types:-
+		Core Tags  
+		Formating Tags 
+		SQL Tags
+		XML Tags 
+	
+		
+	Steps to use JSTL tags:-
+		1.Copy jstl.jar and standard.jar (which are tag handler classes) to our WEB-INF/lib folder 
+		(Tomcat7.0\webapps\examples\WEB-INF\lib)
+		(TOMCAT_Home here Tomcat7.0 in my computer)
+		
+		2.Use following taglib directives in any JSP
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c">  
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql">  
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt">  
+		
+		prefix can be anything 
+		we can write prefix as sunny instead of c
+		
+	FOR PRE-DIFINED TAGS WE HAVE TO COPY jstl.jar and standard.jar
+		PRE-DIFINED TAGS:-Core Tags, Formating Tags, SQL Tags, XML Tags 
+
+
+	
+	
+	LIST OF JSTL CORE TAGS
+		<c:out>
+		<c:set>
+		<c:remove>
+		<c:if>
+		<c:choose>
+		<c:when>
+		<c:otherwise>
+		<c:forEach>
+		<c:import>
+		<c:redirect>
+		<c:param>
+		<c:url>
+
+
+
+
+
+	<c:out>		:-it is used to display data to JSP output stream 
+		Attribute:-	value
+		USAGE:-	<c:out value="MOHAN"/> 
+				<c:out value="msg"/> 
+				<c:out value="${msg}"/> 
+
+				
+		
+	<c:set>		:-it is used to ser attribute in required scope
+		Attribute:-	variable,value,scope 
+		USAGE:-	<c:set var="EM" value="sunny@gmail.com" scope="session" //internally session.setAttribute("EM","sunny@gmail.com")/>
+			<c:set var="NAME" value="Raju" scope="session" //internally session.setAttribute("NAME","Raju")/>
+
+				
+
+	<c:remove>	:-it us used to remove attribute from required scope 
+		Attribute:-	variable,scope
+		USAGE:-	<c:remove var="EM" scope="session"/>		//internally session.removeAttribute("EM");
+
+
+
+	<c:if>		:-it is used to perform simple if conditional checks
+		Attribute	:-test 
+			Here test is a condition test can be replaces by anything 
+
+		USAGE:-	<c:if test="${name eq 'SUNNY'}">
+				Your Name is Sunny
+			</c:if>
+			<c:if test="${name ne 'SUNNY'}">
+				Your Name is Not Sunny
+			</c:if>
+		If condition is true than name eq 'SUNNY' but if the condition is false than we donot have any tags for else condition so give any tag name
+		i.e name ne 'SUNNY'	 or name saaffd 'SUNNY'.......etc 						
+
+
+NOTE:-	We have tags with and without body if we donot have body than tags will be ended in same <> otherwise if it has body than tags will ends at different <>
+
+	 	
+	<c:choose> ,<c:when> and <c:otherwise>	:-
+			it is used to perform simple conditional checks like switch statement
+		Attribute:-	choose	-No Attributes Available 
+			when	-test		here test is some condition test can be replaces by anything   
+			otherwise	-No Attributes Available
+		
+		USAGE:-	 
+			<c:choose>
+				<c:when test="${sid eq 99}">
+					ID is 99				//like case1
+				</c:when>
+				<c:when test="${sid eq 123}">
+					ID is 123				//like case2
+				</c:when>
+				<c:otherwise>
+					ID is unknown			//like default
+				</c:otherwise>
+			</c:choose>
+			
+
+
+
+NOTE:-	We can have multiple when condition and single otherwise (otherwise works like default in switch )
+
+	<c:forToken>	:-it is used to access the elements by splitting the string as per delimiter 
+		Attributes	:-variable,items,delimiters,begin,end,step
+
+
+	
+
+
+
+	<c:forEach>	:-it is used to access the elements of collections of array
+		Attributes	:-variable,item,begin,end,step,varStatus
+		USAGE	:-Using <c:forEach> we can access the following types of data:-
+				1.Collection of String,Wrappers aand Date (using JSTL)
+				2.Collection of Collections (using JSTL)
+				3.Collection of User Defined class object (using JSTL)	
+				4.Map object
+				5.Collection of Map Objects (using JSTL)	
+		
+
+NOTE:-	varStatus is not required
+
+
+
+
+	<c:import>	:-it is used to include resources(html or JSP)
+		Attrbute	:-url
+
+		USAGE	:-	<jsp:include page="header.jsp"/>
+				<c:import url="header.jsp"/>
+				<c:import url="http://www.google.co.in"/>
+				<c:import url="http://www/jlcindia.com/contactus.jsp"/>
+
+			<jsp:include> can include the resources which are in same server (i.e local resources)
+			<c:import> can include the resources which are in same server or different server (i.e local as well as remote resources)
+
+
+	<c:redirect>	:-it is used to redirect the request to specified resource(html or JSP)
+		Attribute	:-url 
+		USAGE	:-	<jsp:forward page="header.jsp"/>	
+				<c:redirect url="header.jsp"/>
+				<c:redirect url="http://www.google.co.in"/>
+				<c:redirect url="http://www/jlcindia.com/contactus.jsp"/>
+			
+			<jsp:forward> can forward request to resources which are in same application
+			<c:redirect> can forward request to resources which are in same application and different application running in the same or 
+			different servers 
+
+
+
+	<c:param>	:-it is used to define parameters 
+			<c:param> must be used along with <c:import> and <c:redirect> 
+		Attributes	:-name,values
+		USAGE	:-<c:param name="email" value="sunny@gmail.com"/>	
+		
+
+
+	<c:url>		:-it is used to encode the url with sessionid
+		Attribute	:-value
+		USAGE	:-<c:url value="hello.jsp" />
+				<a href="hello.jsp">Click</a>	
+				<a href='<c:url value="hello.jsp"/>'>Click</a>	
+				<a href='<%=response.encodeURL("hello.jsp")%>'>Click</a>	
+				
+			
+
+
+
+CUSTOM TAG:-	When we want to display dynamic content in JSP than we can use EL Expression and JSTL tags 
+		If these two are not enough for my application than I can develope my own tags called custom tags 
+		When we develope custom tags than we can reuse across multiple JSP's
+
+		USAGE:-
+		We can define our own tags with our own functionality and than use those tags inside the JSP page
+
+
+	Advantages:-	Eliminate the need of Scriptlet tags
+			Seperating BuisnessLogic from JSP
+			Reusibility of Custom Tags 
+				
+
+	Syntax:-		<prefix:tagname attr1=Value1..........................attrN=valueN
+NOTE:-	For Custom Tags URI(Uniform Resource Identifier) of taglib directive must match with URI specified in TLD file 
+
+NOTE:-	If the value of <rtexprvalue> is true than we can provide the value of attribute dynamically using scriptlets or EL Expression
+	
+	TLD files contains the information of tag and tag-handler class 	
+	IN TLD URI can be may match or maynot match i.e can be anything
+	n numbers of tags can be described under one tld file
+	
+	Custom Tag Processing Flow:-
+	1.Whenever tag is encountered in JSP then container takes tag name and prefix
+	2.Container will checks whether any taglib diretive  is available whose prefix is matching with prefix of tag encountered 
+	3.If no matching taglib directive is available than that tag will be ignored 
+	4.If matching taglib directive is available then URI of matching taglib directive will be taken 
+	5.Container checks whether any tld file is available whose URI is matching with URI of the taglib directive identified 
+	6.If matching tld file is found then container checks tag description in that tld file by checking the following:-
+		a.Checks whether tag name is found in that tld or not 
+		b.If tag name is not found than error mesage will be given(No tag "showMessage" defined in tag library imported with prefix sunny)
+		b.If tag name is found than checks whether atttributes are used correctly or not 
+		c:If atttribute names are not used correctly than error message will be given(Undefined Attribute name "phone" or Missing required atttribute "sname" ....etc)
+		d.If attribute names are used correctly than TagHandlerClass will be taken 
+	7.Container starts Tag Handler LifeCycle
+	8.Once Tag Handler class LifeCycle is completed than tag processing is completed 
+
+	Life Cycle methods of TagHandler class extending TagSupport class::-
+		public int doStartTag()      	 
+		public int doAfterBody()      	 
+		public int doEndTag()      	 
+		void setParent(Tag)
+		void setPageContext(PageContext)
+
+	Depend on Super Class i.e whether TagHandler class extends TagSupport or BodyTagSupport the life cycle method will change    
+
+
+
+
+
+	Tag Handler Class Extending Body Tag Support:-
+	We can develope the tags with or without body using TagSupport as super class
+	Using TagSupport we can develope all types of tags like simple tags, nested tags, tags with body, tags without body ,looping tags ............etc
+	But BodyTagSupport should be used as a super class  to our Tag Handler class only in special class i.e if we want to get the body into our control and we 
+	want to modify the body as per requirement  
+	If tag handler class is extending BodyTagSupport then use following two extra life cycle method in Tag Handler calss
+		public void setBodyContent(BodyContent bc) 
+		public void doInitBody()
+
+	We need 
+		EVAL_BODY_BUFFERED 	
+		from doStartTag() to execute the setBodyContent() method
+	
+
+	EVAL_BODY_BUFFERED is the default result from doStartTag() when tag handler class extends BodyTagSupport
+	We use the following method to get body content in the tag handler class 
+		public BodyContent getBodyContent()
+
+
+		
+	Life Cycle methods of TagHandler class extending BodyTagSupport class::-
+		public int doStartTag()      	 
+		public void setBodyContent(BodyContent bc) 
+		public int doAfterBody()      	 
+      		public int doInitBody()
+		public int doEndTag()
+		void setParent(Tag)
+		void setPageContext(PageContext)	
+
+
+
+
+
+
+
+
+Lab 23:-	for oracle and mysql import oracle and mysql jar in web-inf/lib
+	Now
+  create table myuser(userid int primary key,fullname varchar(30),email varchar(50),phone long,username varchar(15) unique,password varchar(15));
+
+
+
+
+In Lab 23 for Every Servlet say Login,Register and ForgotPw servlet there are some common code such as Collect Input data ,Forward our result using 
+RequestDispatcher in every servlet so writing the commom code in every servlet causes code duplication problem so To aviod this duplicate  control logic and 
+to apply common logic to multiple requests we need FRONT CONTROLLER DESIGN PATTERN
+
+Having Common code in multiple Servlet is difficult to maintain and single code change might required changes to be made in multiple Servlets So for this also we 
+design Front Controller Design Pattern 
+
+In Front Controller Design Pattern we design a Servlet where all the common code will be placed 
+The main goal of Front Controller is to centralizes the control logic and single point of controller for entire application
+
+
+	As Per Front Controller Design Pattern	:-
+				We need to write one and only one controller component for entire we application
+				One and only one controller component is single entry point for web application 
+	
+	Controller component ,ay ne implemented as Servlet or Filter 
+	All the Web Frameworks like Struts1,Struts2,JSF1,JSF2 and SpringMVC are implemented based on MVC Architecture and Front Controller Design Pattern
+	Servlet is used as Front Controller component in Struts1,JSF and SpringMVC
+	Filter is used as Front Controller components in Struts2
+
+
+
+ 
+
+File Download:-
+		Download from server to our client locatiion
+		
+	Default content type is text/html
+	No we want to send some BinaryStream so for this use response.setContentType("application/octet-stream");
+
+	A MIME attachment with the content type "application/octet-stream" is a binary file. Typically, it will be an application or a document that must be 
+	opened in an application, such as a spreadsheet or word processor. If the attachment has a filename extension associated with it, you may be able to tell
+	 what kind of file it is
+	SAY:- A .exe extension, for example, indicates it is a Windows or DOS program (executable), while a file ending in .doc is probably meant to be opened in
+	 Microsoft Word.
+
+
+	No matter what kind of file it is(i.e for any type of stream),use application/octet-stream  
+
+
+Content-disposition Header
+The MIME Content-disposition header provides presentation information for the body-part. It is often added to attachments specifying whether the attachment body
+part should be displayed (inline) or presented as a file name to be copied (attachment). The Content-disposition header has the following format:
+
+		Content-disposition: disposition_type; parameter=value;parameter=value...
+
+
+
+For suppose if an pdf to be download than Content-disposition should of attachment type and if pdf to be open in browser than Content-disposition should of inline
+type
+
+
+File Upload:-
+		
+	Interface Part:-	
+		javax.servlet.http.part
+ 
+		public interface Part:-This class represents a part or form item that was received within a multipart/form-data POST request.
+		UsedSince:-	Servlet 3.0
+
+	METHOD USED:-
+
+		1.getInputStream	:-
+
+			java.io.InputStream getInputStream() throws java.io.IOException	:-Gets the content of this part as an InputStream
+	Returns	:-The content of this part as an InputStream
+	Throws:-	java.io.IOException - If an error occurs in retrieving the contet as an InputStream
+
+
+
+
+
+		2.getContentType	:-
+
+			java.lang.String getContentType()	:-Gets the content type of this part.
+	Returns	:-The content type of this part.
+
+
+
+
+
+		3.getName	:-
+
+			java.lang.String getName()		:-Gets the name of this part
+	Returns	:-The name of this part as a String
+
+
+
+
+
+
+		4.getSize		:-	
+			
+			long getSize()			:-Returns the size of this fille.
+	Returns	:-a long specifying the size of this part, in bytes.
+
+
+
+
+
+
+		5.write		:-	
+		
+			void write(java.lang.String fileName) throws java.io.IOException   :-A convenience method to write this uploaded item to disk.
+				This method is not guaranteed to succeed if called more than once for the same part. This allows a particular
+				 implementation to use, for example, file renaming, where possible, rather than copying all of the underlying data, 
+				thus gaining a significant performance benefit.
+
+			Parameters:-
+				fileName - the name of the file to which the stream will be written. The file is created relative to the location as specified
+				 in the MultipartConfig
+
+			Throws	:-java.io.IOException - if an error occurs.
+
+
+
+
+
+
+
+
+		6.delete		:-
+			
+			void delete() throws java.io.IOException	:-Deletes the underlying storage for a file item, including deleting any associated 
+							   temporary disk file.
+
+			Throws	:-java.io.IOException - if an error occurs.
+
+
+
+
+
+
+
+
+		7.getHeader	:-
+
+			java.lang.String getHeader(java.lang.String name)	:-Returns the value of the specified mime header as a String. If the Part did
+				 not include a header of the specified name, this method returns null. If there are multiple headers with the same name,
+				 this method returns the first header in the part. The header name is case insensitive. You can use this method with any
+				 request header.
+		Parameters:-
+				name - a String specifying the header name
+
+		Returns	:-a String containing the value of the requested header, or null if the part does not have a header of that name
+
+
+
+
+
+		8.getHeaders	:-
+
+			java.util.Collection<java.lang.String> getHeaders(java.lang.String name)	:-Gets the values of the Part header with the given name.
+									Any changes to the returned Collection must not affect this Part.
+									Part header names are case insensitive.
+
+		Parameters:-
+				name - the header name whose values to return
+
+		Returns	:-a (possibly empty) Collection of the values of the header with the given name
+
+
+
+
+
+
+
+
+		9.getHeaderNames	:-
+			java.util.Collection<java.lang.String> getHeaderNames()	:-Gets the header names of this Part.
+							Some servlet containers do not allow servlets to access headers using this method,
+							 in which case this method returns null
+							Any changes to the returned Collection must not affect this Part.
+
+		Returns	:-a (possibly empty) Collection of the header names of this Part
+
+
+
+
+I18N	:-Internationalization(20 characters)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

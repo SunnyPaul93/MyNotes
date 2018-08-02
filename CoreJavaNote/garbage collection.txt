@@ -1,0 +1,365 @@
+in old langaugages like C++ programmer is responsible to create new object and to destroy usless objects
+usually programmer taking very much care while crreating objects and neglecting destruction of useless 
+objects because of his negelectence at certain point for creation of new object sufficient memory may not
+be avilable(because total memory filled with useless obj. objects) and total application may be down with
+memory problems hence out of memory error is very commom problem in old languages like C++
+
+
+but int java programmer is responsible to  only  for creation of  object and programmer not responsible
+to destroy useless objects so Sun people provided one assistent to destroy useless objects this 
+assistant is always running in background (demon threat) and destroy useless objects just because of this assistant
+a chance of failing java problems with memory problems is very very low this assistant is nothing but 
+garbage collector(GC)
+
+hence the main objective of GC is to destroy useless objects
+
+The ways to make an object elligible for GC:
+
+even though we are not responsible for destruction of useless objects but still if we feel object no longer 
+required it is highly recomended to make the object elligible for GC
+
+if  and only if an object doesnot contain any reference variable than that object elligible for Garbage 
+collection
+
+the following are various ways to make object elligible for GC:
+1.Nullifying the reference variable 
+Student s1=new Student();
+Student s2=new Student();
+    //till here no object elligible for GC
+	now
+	s1=null;
+	1st oblect elligible for GC
+	now 
+	s2=null;
+	1st and 2nd(both) oblects elligible for GC
+if and object no lonher required than asssign null to all its reference reference variable than that
+object automatically elligible for garbage collection. this approach is nothing but nullifyng the referenc 
+variable
+
+2.Reassigning reference variable
+Student s1=new Student();
+Student s2=new Student();
+    //till here no object elligible for GC
+	now 
+	s1=new Student();	//3rd object
+	//1st object eligible for GC
+
+	now 
+	s2=s1;	
+	//1st object and 2nd object eligible for GC
+if an object no longer reqd. than reassign its reference variable to some other objects(3rd)
+than old object by default elligible for garbage collection
+
+3. Objects created inside a method::
+class Test{
+	psvm(String[]arg)
+	{
+	m1();
+	}
+	psv m1(){
+	Student s1=new Student();
+	Student s2=new Student();
+	}
+} 
+
+her s1 and s2 are local variables  and we know local variables will be created whenever we 
+are calling the method local variables destroyed once method is completed
+after completing m1 both objects elligible for GC
+
+
+the objects which are cteated inside a method are by default elligible for GC once that methods
+complets
+
+
+
+class Test{
+	psvm(String[]arg)
+	{
+	Student s=m1();		//here i am interested to hold returned object 
+	//here 2nd object elligible for GC 
+	}
+	public static Student m1(){
+	Student s1=new Student();
+	Student s2=new Student();
+	return s1;
+	}
+} 
+
+
+
+
+class Test{
+	psvm(String[]arg)
+	{
+	m1();			//here i am not interested to hold returned object 
+	//here both 2 objects elligible for GC 
+	}
+	public static Student m1(){
+	Student s1=new Student();
+	Student s2=new Student();
+	return s1;
+	}
+} 
+
+
+
+if a method return something it is not compulsary to hold  returned object its upto our wish
+
+
+
+class test 
+{
+	static Student s;
+	p s v main(String []asdf){
+	m1();
+	//here 2nd object elligible for GC because  after method completed local variable(s1) will be gone but static variable(s) wont be gone
+	}
+	p s v m1(){
+	s=new Student();
+	Student s1=new Student();
+
+	}
+	
+}
+
+4. Island of isolation						//diagram 3rd last page copy2
+class test{
+	test i;
+	p s v m(String []hjg){
+	test t1=new test();
+	test t2=new test();
+	test t3=new test();
+	//here no objects elligible for GC
+	t1.i=t2;
+	t2.i=t3;
+	t3.i=t1;
+	//here no objects elligible for GC
+	t1=null;
+	//here no objects elligible for GC
+
+	t2=null;
+	//here no objects elligible for GC
+
+	t3=null;
+	//here three object elligible for GC
+
+	}
+}
+
+
+
+
+
+
+
+
+conclusion:1if an obj doesnot contain ref. var. it is elligible for GC
+conclusion:2even though obj  contain ref. var. but still sometime it is elligible for GC(island of isolation)
+
+
+
+
+we can request JVM to run GC but whether JVM accept our request or not there is no gurantee 
+but mostly GC accept our request
+
+Various ways for requesting JVM to run GC::
+once we made obj elligible for GC it may not be destroyed immediatly by GC whenever JVM runs GC
+than only the objects will be destroyed but when exactly JVM rund GC we can't accept it is varied from
+jvm to jvm
+
+Inatead of waiting until JVM runs GC we can request JVM to run GC programatically but whether JVM
+aacept our request or not there is no gurantee but most of time JVM accept our request
+following are two ways for requesting JVM to run GC:
+1.By using System class:
+System class conatins a static method gc() for this purpose(System.gc();)
+
+
+
+2.By using Runtime class:
+java appliction can communicate with JVM by using Runtime object.Runtim class present in 
+java.lang package and it is a singletone class 
+we can create runtime ofject Runtime.getRuntime(); method
+Runtime r=Runtime.getRuntime();		//runtime is private so we do like this
+Once we got runtime object we ca call the following methods on that objects 
+a:Total memory: it returns no. of byte of total memory present in heap(heap size)
+r.totalMemory();
+
+b.Free memory:  it returns no. of byte of free memory present in the heap
+r.freeMemory();
+
+c.gc:requesting JVM to run Garbage collector
+r.gc();
+
+class RuntimeDemo{
+psvm(String [] args)
+{
+Runtime r=Runtime.getRuntime();
+Sop(r.totalMemory());
+Sop(r.freeMemory());
+r.gc();
+for(int i=1;i<=10000;i++){
+	Hello h=new Hello();
+	h=null;
+	}
+Sop(r.freeMemory());
+Sop(r.freeMemory());		//to run our program internally jvm requires some memory so there is a reduction in memory even we are asking immediatly
+r.gc();
+Sop(r.freeMemory());		//at begining some  usesless objects are there these may be destroyed so may be free memory is greater thar earlier fre memory
+
+}
+}
+
+
+GC method present in system class is a static method where as GC method present in Runtime class is 
+instance mtd
+
+System.gc();		//valid
+Runtime.gc();		//invalid
+(new Runtime).gc();		//invalid  since singelton class so new object cannot be created
+Runtime.getRuntime.gc();	//valid
+
+System.gc(); more convinient than Runtime.getRuntime.gc(); but highly recomended to use Runtime gc()
+because internally System class GC method claas Runtime class GC method only
+ 
+Finalization::
+
+finalize()
+//cleanup activities
+//resource deallocation activity
+
+
+just before destroying an obj GC callls finalize method to perform cleanup activities once finalize mtd 
+completes automatically GC destroyed that object
+finalize mtd present in obj class with following declaration::
+					protected void finalize() throws  throwable
+we can override finalize mtd in our class to define our own clean up activities
+
+
+case 1:
+class test{
+psvm(Strimg []arg)
+{
+String s=new String("sun");	//here String object elligible for gc so String class finalize mtd will be called
+s=null;
+System.gc();
+Sop("End of main");
+public void finalize(){
+sop("finalize mtd called");		//just to explain the flow use sop statement
+}
+
+}}
+here String class finalize mtd will be called and hence String class finalize mtd executed which 
+has empty implementation and hence o/p:End of main 
+
+class test{
+psvm(Strimg []arg)
+{
+test t=new test();		//here test object elligible for gc so test class finalize mtd will be called
+t=null;
+System.gc();
+Sop("End of main");
+public void finalize(){
+sop("finalize mtd called");		//just to explain the flow use sop statement
+}
+
+}}
+here test class finalize mtd will be called and hence test class finalize mtd executed 
+ in this case the o/p: End of main followed by Finalize method call or
+	            Finalize method call followed by  End of main  it depends
+
+
+case 2:
+class test{
+psvm(Strimg []arg)
+{
+test t=new test();
+t.finalize();		//normal mtd	
+t.finalize();		//normal mtd
+t=null;
+System.gc();
+sop("end of main");
+public void finalize{
+sop("finlize");}
+
+}}
+here( 2 times finalize mtd(called explecitly) just jike normal mtd call and object wont be destroyed and one time finalize
+ mtd by GC ) will be executed 
+based on our requirement we can call finalize mtd explecitly than it will be executed jike normal 
+mtd call and object wont be destroyed and  if gc calls finalize mtd than obj will be destroyed 
+
+object donot want completion of finalize method but GC want completion of finalize mtd
+
+case 3:
+on any obj GC calls finalize mtd only once even that object elligible for gc multiple times
+
+class finalizedemo{
+	static finalizedemo s;
+	psvm(String []add){
+	finalizedemo f=new finalizedemo();
+	sop(f.hashCode());
+	f=null;
+	System.gc();			//here gc call finalize mtd and than destroy object
+	sop(s.hashCode());
+	s=null;
+	System.gc();			//here gc destroys object directly(gc won't call finalize mtd 2nd time)
+	Sop("end of main");
+	}
+	public void finalize(){
+	sop("finalize mtd call");
+	s=this;				//current object
+	}
+}
+
+
+for every object unique number is there which is hash code
+
+
+
+class test {
+static int count=0;
+psvm(string []ajkgs){
+for(int i=0;i<10;i++){
+test t=new test();
+t=null;
+}
+}
+public void finalize(){
+sop("finalize mtd call"+  ++count;)}  //to check howmany object destroyed by gc use one counter variable
+}//here no memory problem and jvm wont run GC since value of  i=10(means 10 objects means very small memory)
+
+
+
+class test {
+static int count=0;
+psvm(string []ajkgs){
+for(int i=0;i<1000000;i++){
+test t=new test();
+t=null;
+}
+}
+public void finalize(){
+sop("finalize mtd call"+  ++count;)}  //to check howmany object destroyed by gc use one counter variable
+}
+
+
+we cant expect exact behaviour of GC it is varied from JVM to JVM hence folllowing question s we cant 
+provide exect answers
+Q1:when exactly JVM reuns GC
+Q2:in which order GC identifies eligible objects
+Q3.in which order GC  describes eligible objects
+Q4:whether GC destroys all elligible objects or not 
+Q5:what algorithm followed by GC etc................
+
+whenever prog runs with low memory than JVM runs GC but we cant except exactly at what time
+most of GC follows Mark and Sweep algorithm but it doesot mean every GC will follow same algorithm
+
+
+Student s1=new Student();
+Student s2=new Student();
+Student s3=new Student();
+Student s4=new Student();
+Student s1crore=new Student();
+
+1crore obj created 
+than here memory problem came since every objects has reference name so used objects
+so out of memory error rises  here GC and JVM wont do anything here programmer mistake

@@ -1,0 +1,146 @@
+try{
+}catch(Exception e){
+}		valid
+
+try{
+}catch(Exception e){
+}catch(Exception e){
+}//invalid
+
+try{
+}catch(AIOBE e){
+}catch(Exception e){
+}//valid
+
+try{
+}catch(Exception e){
+}finally{
+}//valid
+
+try{
+}catch(Exception e){
+}finally{
+}//valid
+
+try{
+}catch(Exception e){
+}
+try{
+}catch(Exception e){
+}//valid
+
+try{
+}catch(Exception e){
+}
+try{
+}finally{
+}//valid
+
+
+try{}//invalid
+
+catch(Exceeption e){}//invalid 
+
+finally{}//invalid 
+
+
+try{
+}finally{
+}catch(Exception e){
+}//invalid
+
+try{
+}
+sop("Hello");
+catch(Exception e){
+}//invalid
+
+try{
+}
+catch(Exception e){
+}
+sop("Hello");
+catch(Exception e){
+}//invalid
+
+
+try{
+}
+catch(Exception e){
+}
+sop("Hello");
+finally{}//invalid
+
+
+try{
+try{
+}catch(Exception e){
+}catch(Exception e){
+}
+sop("Hello");//valid
+
+try{
+try{
+}
+}catch(Exception e){
+}//invalid
+
+
+try{
+try{
+}finally{}
+}catch(Exception e){
+}//valid
+
+try{
+}catch(Exception e){
+
+try{
+}catch(Exception e){
+}
+
+}//valid
+
+
+
+try{
+}catch(Exception e){
+finally{}
+}//invalid
+
+try{
+}catch(Exception e){
+}
+finally{
+try{
+}catch(Exception e){
+}
+}//valid
+
+try{
+}catch(Exception e){
+}
+finally{
+finally{}
+}//invalid
+
+
+try{
+}catch(Exception e){
+}
+finally{
+}
+finally{
+}//invalid
+
+
+try{
+sop("try");catch(Exception e){
+sop("catch");
+}finnally{}//invlaid
+
+try{
+}catch(Exception e)
+
+finnally{
+sop("finally");}//invalid

@@ -1,0 +1,572 @@
+					JAVASCRIPT
+
+It is most popular scripting language in internet and works in all the browser like InternetExplorer,FireFox,Chrome,Opera,Safari .........etc
+
+
+JavaScript is a dynamic programing language
+It is used as part of web pages whose implementation allows client side script to interact with the user and make dynamic pages 
+It is an interpreted obbject based programming language 
+It is implemented based on Java Syntax
+It is case sensitive 
+
+Web browser is responsible for 
+	~Compiling the Java Script Code 
+	~Running the Java Script Code
+
+It is typically embeded in HTML or JSP 
+
+
+Javascript will load immediately when the page loads into browser
+
+<SCRIPT> tag can be defined in <body>
+<SCRIPT> tag can be defined in <head>
+<SCRIPT> tag can be defined in the external file.But the extension of file should be .js
+
+<script type="text/jaavascript" src='<fileNameof js>'>
+</script>  
+
+
+
+Need Of JavaScript:-
+	~Used for client side validation(So that to increase the Performance by reducing the network claas between web client and web server)
+	~We can make our own page dynamically by updating HTML,DOM Tree dynamically 
+	~We can listen the event using JavaScript
+
+
+
+js file can be specially made in JavaScript or HTML file 
+
+
+To Develope JavaScript in Eclipse make sure we have JavaEE(Enterpries Eddition) version of Eclipse
+
+
+
+1.Variable :-
+		var x;
+		var x=10;
+	
+	var can take any values(String,int,long,byte,short,char,float..............etc)
+
+To Print anything:-
+document.write("<br /> Sunny");
+
+window.document.write("<br /> Sunny");
+
+here window is option
+
+If any error occur or if we any wrong value is given than it would not give any error so to show error we use alert:-
+
+alert("enter valid value");
+
+
+
+
+2.Events:
+
+document.getElementById("myBtn").addEventListener("click", displayDate);
+
+	The addEventListener() method attaches an event handler to the specified element.
+	The addEventListener() method attaches an event handler to an element without overwriting existing event handlers.
+
+	onload
+	onclick
+	ondlbclick
+	onfocus
+	onblur
+	onmouseover
+	onmouseout
+	onkeypress
+	onkeydown
+	onkeyup
+	onchange
+	onselect
+
+
+
+3.Functions:
+		function we can define with or without parameter and with or without return 
+
+getElementById	:-The getElementById() method returns the element that has the ID attribute with the specified value.This method is one of the most 
+		common methods in the HTML DOM, and is used almost every time you want to manipulate, or get info from, an element on your document.
+
+		Returns null if no elements with the specified ID exists.
+		
+		An ID should be unique within a page. However, if more than one element with the specified ID exists, the getElementById() method returns
+		 the first element in the source code.
+
+			id is for unique identification
+
+		syntax:-
+		document.getElementById(elementID)
+
+
+
+		document.getElementById("demo").innerHTML = "Sunny Hi!!!";
+		
+		The innerHTML property sets or returns the HTML content (inner HTML) of an element.
+
+
+
+		Syntax	:-
+			Return the innerHTML property		:-HTMLElementObject.innerHTML
+	
+			Set the innerHTML property			:-HTMLElementObject.innerHTML = text
+
+			Now text Specifies the HTML content of an element	
+
+
+
+
+
+The this Keyword
+		In JavaScript, the thing called this, is the object that "owns" the current code.
+		The value of this, when used in a function, is the object that "owns" the function.
+
+
+The HTML DOM (Document Object Model):-When a web page is loaded, the browser creates a Document Object Model of the page.
+				     The HTML DOM model is constructed as a tree of Objects.
+
+
+
+
+The <nav> tag defines a set of navigation links.
+
+Notice that NOT all links of a document should be inside a <nav> element. The <nav> element is intended only for major block of navigation links. 
+
+
+
+4.Object :-
+	String 
+	Date 
+	Math
+	Array
+
+
+
+
+Window Object:-
+		Window Object is top level object in JAVASCRIPT hierarchy 
+		The Window object represent a browser window
+		A window object is created automatically with every instance of a <body>
+
+
+
+
+<link> 	:-Element is used to link to external style sheets i.e xyz.css
+
+rel 	:-Attribute specifies the relationship between the current document and the linked 
+	  document/resource.
+
+
+
+The setTimeout() method calls a function or evaluates an expression after a specified number of milliseconds.
+
+
+The clearTimeout() method clears a timer set with the setTimeout() method.
+
+The ID value returned by setTimeout() is used as the parameter for the clearTimeout() method.
+
+Note: To be able to use the clearTimeout() method, you must use a global variable when creating the timeout method:
+
+myVar = setTimeout("javascript function", milliseconds);
+
+
+
+The status property sets the text in the status bar at the bottom of the browser, or returns the previously set text.
+Note: The status property does not work in the default configuration of IE, Firefox, Chrome, Safari or Opera 15 and newer. To allow scripts to change the text of
+the status, the user must set the dom.disable_window_status_change preference to false in the about:config screen. 
+(or in Firefox: "Tools - Options - Content -Enable JavaScript / Advanced - Allow scripts to change status bar text").
+
+
+
+open() method :-opens a new browser window.
+
+Tip: Use the close() method to close the window.
+
+
+Syntax
+window.open(URL, name, specs, replace)
+
+
+
+
+URL	Optional. Specifies the URL of the page to open. If no URL is specified, a new window with about:blank is opened
+
+
+name	Optional. Specifies the target attribute or the name of the window. The following values are supported:
+		_blank - URL is loaded into a new window. This is default
+		_parent - URL is loaded into the parent frame
+		_self - URL replaces the current page
+		_top - URL replaces any framesets that may be loaded
+		name - The name of the window (Note: the name does not specify the title of the new window)
+
+
+specs	Optional. A comma-separated list of items, no whitespaces. The following values are supported:
+
+
+	channelmode=yes|no|1|0	Whether or not to display the window in theater mode. Default is no. IE only
+	directories=yes|no|1|0		Obsolete. 	Whether or not to add directory buttons. Default is yes. IE only
+	fullscreen=yes|no|1|0		Whether or not to display the browser in full-screen mode. Default is no. A window in full-screen mode must also be in theater mode. IE only
+	height=pixels		The height of the window. Min. value is 100
+	left=pixels			The left position of the window. Negative values not allowed
+	location=yes|no|1|0		Whether or not to display the address field. Opera only
+	menubar=yes|no|1|0		Whether or not to display the menu bar
+	resizable=yes|no|1|0		Whether or not the window is resizable. IE only
+	scrollbars=yes|no|1|0		Whether or not to display scroll bars. IE, Firefox & Opera only
+	status=yes|no|1|0		Whether or not to add a status bar
+	titlebar=yes|no|1|0		Whether or not to display the title bar. Ignored unless the calling application is an HTML Application or a trusted dialog box
+	toolbar=yes|no|1|0		Whether or not to display the browser toolbar. IE and Firefox only
+	top=pixels			The top position of the window. Negative values not allowed
+	width=pixels		The width of the window. Min. value is 100
+
+
+replace	Optional. Specifies whether the URL creates a new entry or replaces the current entry in the history list. The following values are supported:
+	true - URL replaces the current document in the history list
+	false - URL creates a new entry in the history list
+
+
+Return Value:	A reference to the newly created window, or null if the call failed
+
+
+
+
+
+
+
+
+
+
+
+The anchor element is used to link to another page or to a certain part of the page if you use its ID.
+
+<a href="index.html">Home</a>
+And The link tag defines a link between a document and an external resource.
+
+The link tag is used to link to external style sheets.
+
+<head>
+<link rel="stylesheet" type="text/css" href="theme.css">
+</head>
+
+
+
+
+
+
+Navigator Object:-
+	The navigator object is actualy a Javascript object, not an HTML DOM object
+	The navigator object is automatically created by JavaScript runtime engine and contains information about the client browser
+
+
+
+
+
+
+
+History Object:-
+	It is acualy a Javascript object, not an HTML DOM object 
+	The History object is automatically created by JavaScript runtime engine and consists of an array of URL's
+	The URL's are URL's that user has visited within a browser window
+	The History object is a part of Window object and can be accessed through window.history property 
+	
+	 
+	
+
+Location Object:-
+	It is actually a Javascript object, not an HTML DOM object 
+	The Loction object is automatically created by JavaScript runtime engine and contains information about current  URL
+	The Location object is a part of Window object and can be accessed through window.location property 
+	
+	
+Screen Object:-
+	The screen object contains the information about visitor's screen
+
+
+HTML DOM PROPERTIES:-
+	NOTE	:-In the list below x is a node object(HTML element)	
+
+	There are some typical DOM Propeerties:-
+		x.innerHTML	:-The inner text value of x(a HTML element)
+		x.nodeName	:-the name of x
+		x.nodeValue	:-the value of x
+		x.parentNode	:-the parent node of x
+		x.childNode	:-the child node of x
+		x.attribute		:-the attribute node of x
+		
+
+
+HTML DOM METHODS:-
+	x.getElementById(id)			:-get the element with specified id
+	x.getElementByTagName(name)		:-get all the elements with a specified tag name
+	x.appendChild(node)			:-insert a child node to x
+	x.removeChild(node)			:-remove a child node from x
+
+
+
+focus()	:-This method is used to give focus to an element
+	
+	syntax	:-HTMLElementObject.focus()
+
+	parameter:-none
+
+
+selectedindex	:-This property sets or returns the index of selected option in  a drop-down list
+		
+		The index starts at 0
+
+Note	:-If drop-down list allows multiple selection it will only returns the index of 1st selected option 
+	  The value -1 will deselect all options (if any)
+
+Note	:-If no index selected than selectedindex property will return -1
+		
+		Syntax	:-selectObject.selectedIndex
+
+
+disabled		:-This property sets or returns whether a drop-down list should be disabled or not 
+		A disabled elements are unusable or un-clickable
+		This property reflects the HTML disabled attribute
+
+
+
+checked		:-This property sets or return the checked state of a checkbox
+		 This property reflects the HTML checked attribute
+
+		Syntax	:-checkedObject.checked
+
+
+
+
+
+Without Submitting Form How to interact with DB??????????
+	Say I want to Interact with my DataBase when Name field is specified in my form So we cannot do this with Synchromous JS i.e Till Now what we 
+	did is Synchronous i.e when we want to connect with say DB than whole page will be reload 
+
+Now to solve this kind of problem we can use AJAX.With help of AJAX we can either connect to DB with every character of Name Specified(say here in this example)
+or with words also 
+
+
+
+
+
+Case 1	:-Synchronous
+		When we submit submit the button then
+			~Browser will collect all data 
+			~Browser will create the request 
+			~Browser will prepare URI
+			~Browser will sends the request to server
+			~Browser has to write for response
+	If response is available than Browser receive the response 
+			~Browser renders/display the respond
+
+	When our browser perform the tasks than entire page will be reloaded
+
+Case 2	:-ASynchronous
+		Asynchronous request processing Identify the event.On that event we call some JS function 
+			Now in JS function:-
+				~We will collect all data 
+				~We will create the request 
+				~We will prepare URI
+				~We will sends the request to server
+	When response is ready than we receive the response
+				~We renders/display the respond
+	We can do the above tasks without reloading the entire page
+
+
+NOTE	:-Synchronous is already there with browser and for ASynchronous AJAX is required
+
+Asynchronous JavaScript and XML(AJAX)	:-
+		
+	AJAX is a technique for creating the fast and dynamic web page
+	AJAX allows web pages to be updated asynchronously by exchanging small amount of data with the server behind the scenes.It means it is
+	possible to update a part of a web page without reloading the whole page 
+
+	Classic web pages which donot use the AJAX reloads the entire page if the content is changed 
+	Examples of AJAX:-Google MAP,GMail,Youtube, Facebook tabs .................etc
+
+
+	In AJAX response can be of various type XML,SimpleText,AJAX
+	
+	AJAX uses a combination of following to perform the tasks	:-
+		~XMLHttpRequest Object(MordernBrowser and IE7)
+		~ActiveX Object(IE6 and below)
+		~JavaScript/DOM(Used to interect browser and server)
+		~TEXT(Returned results)
+		~XML(Returned results)
+		~JSON(Returned results)
+		~HTML(Returned results)
+
+
+	When we are sending the request using AJAX then after submitting the request connection b/w the client and server will be closed.Later browser 
+	will check the request status time to time.When response is ready than it will collect the response
+
+
+
+
+
+
+
+Processing the XML is very difficult as compared to text
+Instead of XML another format to transfer the data known as JSON(JavaScript Object Notation)
+
+JSON(JavaScript Object Notation)	:-
+		JSON is a syntax of storing and exchanging the text information. Much like XML
+		JSON is smaller than XML and faster and easier to parse
+		The JSON text fromat is syntactically identical to the code for creating JavaScript objects
+		Because of this similarity instead of using a parser a JS program can use built-in eval() function to execute JSON data to produce native JS object
+ 
+
+
+Parser in XML:-
+Parser is one which reads the XML data
+
+Two kinds of parser :-
+	DOM(Object Based)
+	Event based			:-Push Parsing(eg.SAX)				Pull Parsing(eg.StAX)
+
+
+
+
+		DOM	:-					SAX	:-
+				
+		Tree Based					Event Based
+		
+		Document Object Model				Simple API for XML
+		
+		DOM reads entire document 				SAX reads node by node
+		
+		Useful when reading small to medium  size XML fiel		Used when big XML files needs to parse
+		
+		DOM is littele slower as compared to SAX
+		
+		DOM can insert and delete nodes			SAX cannot insert or delete node
+		
+
+
+JSON syntax Rules	:-
+		JSON syntax is a subset of JavaScript object notation syntax
+		Data is in name/value pair
+		Data is sepearted by comma(,)
+		Curly braces holds objects 
+		Square braces holds arrrays	
+
+
+JSON Name/Value Pairs:-
+		JSON is witten in name/value pair 
+		A name/value pair consists of a field name(in double quotes) followed by a colon than folowed by a value
+			"first name":"sunny"
+
+		JSON value:-
+			It can be 
+				a number(integer or floating point)
+				a string(in double quotes)
+				a bollean value(true or false)
+				an array(in square braces)
+				an object(in curly braces)
+				null
+
+		JSON Object:-
+			JSON object are written inside curly braces 
+			Object can contain multiple name/value pairs:-
+				{"first name":"sunny","last name":"paul"}
+
+
+		JSON Array:-
+			JSON object are written inside the square braces
+			An array can contain multiple objects
+
+			var txt='{
+				"Student":{
+					[{"first name":"Sunny","last name":"paul"},{"first name":"aditi","last name":"paul"}]		
+					
+					}
+				}'; 
+				
+			var obj=eval("("+txt+")");
+
+
+
+JSON FILE:-
+		The file type for JSON file is ".json"
+		The MIME type for JSON is "application/json"
+
+
+
+
+href="#"	:-it is just like null value it means it is like a dummy link i.e if we click where href="#" than it will not go to any page or anywhere 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

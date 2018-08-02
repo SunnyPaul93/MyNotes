@@ -1,0 +1,51 @@
+we can use instanceof operator to check whether given object is of particular type 
+or not
+to use instanceof operator there must be relation b/w two types(arguments types
+either child to parent or parent to child or same type) otherwise we will get
+compile error incompatable types
+
+null istanceof x; is always false
+x may be object or reference type or any data type etc
+
+
+pre increment 1st increment/decrement then assign
+post increment 1st assign  then increment/decrement
+int x=10;
+int y=++10;
+sop(y);		//invalid
+int x=10;
+int y=++x;
+sop(y);		//valid
+
+increment and decrement operators only for variables not for constant values
+
+
+int x=10;
+int y=++ (++x);
+sop(y);  	//invalid since ++x we will get value and cannot use increment for value 
+
+final int x=10;
+x++;
+sop(x);//invalid since final means constant value 
+
+increment and decrement cannot be applied to boolean
+increment and decrement can be applied to int,char,double,float,short,bhyte
+char ch='a';
+ch++
+sop(ch);//b 
+
+double d=10.5;
+ch++
+sop(d);//11.5
+
+
+
+byte b=10;
+b=b+1;
+sop(b);//invalid since byte cannot be in int
+
+byte b=10;
+b++;
+sop(b);//valid
+
+any arithmethic opereator(+,-,*,/,%) by default int type

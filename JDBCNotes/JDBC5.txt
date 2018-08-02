@@ -1,0 +1,995 @@
+*************************************************************************************************************************************
+Q):In JDBC API or in java.Sql package SUN has provided more interfaces like Connection,Statement,PrepareStatement,CallableStatement,ResultSet etc.......
+How Instances will be created ?
+
+Ans:Various Driver Vendor has implemented various subclass for these interfaces.Those Vendor specific sub classes will be instanciated depending on JDBC driver
+
+
+MySql vendor has provided following subclasses in com.mysql.jdbc packaes:
+	JDBC4Connection
+	StatementImpl
+	JDBC4PrepareStatement
+	JDBC4CallableStatement
+
+
+Oracle(SQL) vendor has provided following subclasses in oracle.jdbc.driver packaes:
+	T4CConnection
+	T4CStatement
+	T4CPrepareStatement
+	T4CCallableStatement
+
+
+
+
+
+
+
+Database Metadata:
+	
+	Database Metadata is an interface available in java.sql packages
+	SubClass of Database Metadata  interfaces is provided by Driver vendor
+	Database Metadata  is used to get the information about our databases i.e we can find whether the database supporting the required features or not
+	We can use the following method of Connection interfaces to get the Database Metadata object 
+		public DatabaseMetaData getMetaData() 
+	
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+
+
+public class JDBC_Lab22 {
+
+	public static void main(String[] args) throws SQLException {
+
+		// TODO Auto-generated method stub
+
+	//	Connection con=JDBC_UTIL.myOracleConnection();
+	
+		Connection con=JDBC_UTIL.getMySQLConnection();
+		
+		DatabaseMetaData dmd=con.getMetaData();
+		System.out.println("Url :"+dmd.getURL());
+		System.out.println("User :"+dmd.getUserName());
+		System.out.println("Major Version :"+dmd.getDatabaseMajorVersion());
+		System.out.println("Minor Version :"+dmd.getDatabaseMinorVersion());
+		System.out.println("Full Join :"+dmd.supportsFullOuterJoins());
+		System.out.println("Product Name :"+dmd.getDatabaseProductName());
+		System.out.println("Product Version	:"+dmd.getDatabaseProductVersion());
+		System.out.println("Multiple RS :"+dmd.supportsMultipleOpenResults());
+		System.out.println("DB :"+dmd.getDatabaseProductName());
+		System.out.println("DriverMajorVersion :"+dmd.getDriverMajorVersion());
+		System.out.println("DriverMajorVersion :"+dmd.getDriverMinorVersion());
+		System.out.println("Driver Name :"+dmd.getDriverName());
+		System.out.println("DriverVersion :"+dmd.getDriverVersion());
+		System.out.println("JDBC Major Version :"+dmd.getJDBCMajorVersion());
+		System.out.println("JDBC Minor Version :"+dmd.getJDBCMinorVersion());
+		System.out.println("RS Holdability 	:"+dmd.getResultSetHoldability());
+		System.out.println(dmd.hashCode());
+		System.out.println(dmd.isReadOnly());
+		System.out.println(dmd.supportsAlterTableWithAddColumn());
+		System.out.println(dmd.supportsAlterTableWithDropColumn());
+		System.out.println(dmd.storesLowerCaseIdentifiers());
+		System.out.println(dmd.storesLowerCaseQuotedIdentifiers());
+		System.out.println(dmd.storesMixedCaseIdentifiers());
+		System.out.println(dmd.supportsBatchUpdates());
+		System.out.println(dmd.supportsExpressionsInOrderBy());
+		System.out.println(dmd.supportsGroupBy());
+		System.out.println(dmd.supportsLikeEscapeClause());
+		System.out.println(dmd.supportsDataManipulationTransactionsOnly());
+		System.out.println(dmd.supportsRefCursors());
+		System.out.println(dmd.supportsResultSetHoldability(1));
+		System.out.println(dmd.supportsResultSetHoldability(2));
+		System.out.println(dmd.supportsSavepoints());
+		System.out.println(dmd.supportsStatementPooling());
+		System.out.println(dmd.supportsStoredProcedures());
+				
+		if(con!=null)
+		con.close;
+	}
+
+}
+*************************************************************************************************************************************
+ResultSetMetaData: ResultSetMetaData is an interface available in java.sql packages
+	Subclass of ResultSetMetaData interfaces is provided by Driver Vendor
+	ResultSetMetaData is used to get information about ResultSet Object 
+
+	We can use the following method of ResultSet interfaces to get the ResultSetMetaData object 
+		public ResultSetMetaData getMetaData() 
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+
+public class JDBC_Lab23 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			st=con.createStatement();
+			rs=st.executeQuery("select sid,name,email,phone from student6");		//for both mysql and Oracle(SQl)
+			ResultSetMetaData rsmd=rs.getMetaData();
+			int col=rsmd.getColumnCount();
+			System.out.println("Columns :"+col);
+			for (int i = 1; i <=col; i++) {
+				String colnm=rsmd.getColumnName(i);
+				String clsnm=rsmd.getColumnClassName(i);
+				String tblnm=rsmd.getTableName(i);
+				String tynm=rsmd.getColumnTypeName(i);
+				int size=rsmd.getPrecision(i);
+				String schm=rsmd.getSchemaName(i);
+				System.out.println(colnm+"\t\t"+clsnm+"\t\t"+tblnm+"\t\t"+tynm+"\t"+size+"\t\t"+schm);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			
+		}
+		finally {
+			JDBC_UTIL.mycleanup2(rs, st, con);
+		}	
+	}
+
+}
+
+
+
+*************************************************************************************************************************************
+RowSets:
+	RowSet is an interface available in javax.sql package 
+	RowSet Interface is extending ResultSet interface
+	RowSet  Interface implementation classes are provided by Java Vendor
+	RowSet  functionality is similar to ResultSet
+	
+	We can use RowSet  object to store records returned by SELECT Sql Statement 
+	RowSet  can be accessed with or without connection i.e RowSet  are connection less object 
+	By Default RowSet  are scrollable and updatable
+	RowSet  are elligible for Serialization 
+
+If we want to move one object from one machine to another than we have to do serialization but ResultSet not elligible for Serialization so we uses RowSet which 
+is elligible for serialization
+
+	RowSet object can be ceated as follows:	
+	
+	RowSet jrs=new JdbcRowSetImpl();
+	jrs.setUrl(url);
+	jrs.setUserName(un);
+	jrs.setPassword(pwd);
+	jrs.setCommand(sql);
+	jrs.setExecute();
+	
+
+Following are subtype of RowSet interface:
+	1.JdbcRowSet interface:A JDBCRowSet is a RowSet that wraps around a ResultSet object. It is a connected RowSet that provides JDBC interfaces in 
+	the form of a JavaBean interface.JDBCRowSet is a connected RowSet, which has a live connection to the database and all the calls on the 
+	JDBCRowSet are percolated to the mapping call in the JDBC connection, statement, or result set.JDBCRowSet requires the presence of JDBC drivers   
+
+	2.CachedRowSet:A CachedRowSet is a RowSet in which the rows are cached and the RowSet is disconnected, that is, it does not maintain an active 
+	connection to the database.
+	
+	3.WebRowSet:A WebRowSet is an extension to CachedRowSet. It represents a set of fetched rows or tabular data that can be passed between tiers
+	and components in a way such that no active connections with the data source need to be maintained. The WebRowSet interface provides support for the production and consumption of result sets and their synchronization with the data source, both in 
+	Extensible Markup Language (XML) format and in disconnected fashion.
+	
+
+	4.FilteredRowSet:A FilteredRowSet is an extension to WebRowSet that provides programmatic support for filtering its content.
+
+
+	5.JoinRowSet:A JoinRowSet is an extension to WebRowSet that consists of related data from different RowSets. There is no standard way to establish 
+	a SQL JOIN between disconnected RowSets without connecting to the data source. A JoinRowSet addresses this issue.
+
+
+
+
+
+	Types Of RowSets:
+	~Connected RowSet
+	~DisConnnected  RowSet
+
+
+
+~Connected RowSet:
+		These RowSet estlablish a connection with database and retain it 
+		Connection RowSet are like ResultSet i.e connected RowSet needs the connection as long as we are accessing the RowSet data
+		We cannot serialize the connected RowSet 
+		JdbcRowSet is connecteed RowSet
+ 	
+~DisConnnected  RowSet:
+		These RowSet estlablishes a connection,executes a query and closes the connection 
+		Disconnected RowSet are not like ResultSet i.e disconnected RowSet donot need connection always while we access the RowSet data 
+		We can serialize disconnected RowSet 
+		CachedRowSet is disconnected RowSet 	
+
+
+
+
+
+
+
+
+
+
+
+package jdbc1;
+
+import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
+
+import oracle.jdbc.rowset.OracleCachedRowSet;
+
+public class JDBC_Lab24 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		try {
+			
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+
+			CachedRowSet ors=new OracleCachedRowSet();		//Oracle has given its own CachedRowSet
+			
+			ors.setReadOnly(false);
+			ors.setUrl("jdbc:oracle:thin:@localhost:1521:XE");
+			ors.setUsername("system");
+			ors.setPassword("system");
+			ors.setCommand("select sid,name,email,phone from student6");
+			
+			ors.execute();
+			
+			while(ors.next()){
+				System.out.println(ors.getInt(1)+"\t"+ors.getString(2)+"\t"+ors.getString(3)+"\t"+ors.getLong(4));
+			}
+			
+			ors.absolute(2);
+			ors.updateString(2, "Raju");
+			ors.updateString(3, "raju@gmail.com");
+			ors.updateLong(4, 8373763633l);
+			ors.updateRow();
+			ors.acceptChanges();
+			System.out.println("Updated");
+		} catch (Exception e) {	
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		//since using so no need to close the resources 
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**************************************************************************************************************************************
+Transiction Management:
+	Transiction is the process of performing mulitiple database operation as one Atomic unit with All-Nothing Criteria.After submitting query connection will
+	Commit by default so we have to disable comit by 
+	con.setAutoCommit(false);
+
+	When all the database operations is in the units are successful then Transiction is successful and should be committed
+	When any or all the database operations is in the units failed then Transiction should be rolled back
+
+	When we implement Transiction properly in our application, it gaurentee ACID properties
+	A:Atomicity
+	C:Consistency
+	I:Isolation 
+	D:Durability
+
+
+Types of Transiction:	
+	~Local Transiction
+	~Dristributed Transiction
+		
+
+~Local Transiction:When single database is participating in Transiction operation then it is called Local  Transiction
+		This is supported by JDBC 
+	EX:	Transfer funds from one account to another account where two accounts are in same bank or different bank
+
+		
+
+~Dristributed Transiction:When two or more Databases are participating  in Transiction Operation then it is called Dristributed Transiction 
+		 This is supported by EJB or Spring
+	EX:	Transfer funds from one account to another account where two accounts are in  different bank or different databases
+
+
+
+Note:JDBC statements only supports for Local Transictions and donot supports Dristributed Transiction
+
+
+JDBC Transiction Management:
+	Specifying the Transiction Boundaries:
+		Connection con=null;
+		try{
+		con=.......................................................;
+		con.setAutoCommit(false);			//Transiction Begin
+		
+		op1;
+		op2;
+		op3;
+		.............
+		.................
+		con.commit();				//Transiction  End
+		}catch(.....................){
+
+		if(con!=null)
+		con.rollback;
+		}
+
+
+When multiple transiction are running concurrently then we may get some transiction concurrency problem:
+	Dirty Read Problem:Dirty read occurs where one transaction is changing the tuple/record, and a second transaction can read this tuple/record before
+	 the original change has been committed or rolled back. This is known as a dirty read scenario because there is always the possibility that the first 
+	transaction may rollback the change, resulting in the second transaction having read an invalid value. 
+	
+	Repatable Read Problem:Non Repeatable Reads happen when in a same transaction same query yields different results. This happens when another
+	 transaction updates the data returned by other transaction.
+ 
+	Phantom Read Problem:Phantom read occurs where in a transaction same query executes twice, and the second result set includes rows that were not
+	 visible in the first result set. This situation is caused by another transaction inserting new rows between the execution of the two queries.	
+
+
+	We need to specify the transiction isolation levels to solve these transictional concurrency problem 
+	There are 4 transictional Issolation levels which are defined as Constants in Connection interface as follows:
+	TRANSICTION_READ_UNCOMMITTED	1
+	TRANSICTION_READ_COMMITTED		2
+	TRANSICTION_REPETABLE_READ		4
+	TRANSICTION_SERIALIZABLE		8
+
+	Use the following methods to specify the required Transictional Isolation  Level
+	~con.setTransictionIsolation(2)
+	~con.setTransictionIsolation(Connection.TRANSICTION_READ_COMMITTED)
+	
+
+
+
+
+
+
+
+
+
+
+mysql> create table JDBCAccount(accno int,acctype varchar(10),bal float);
+Query OK, 0 rows affected (0.34 sec)
+
+SQL> create table JDBCAccount(accno int,acctype varchar(10),bal float);
+
+Table created.
+
+
+mysql> insert into JDBCAccount values(101,'SA',35000);
+Query OK, 1 row affected (0.11 sec)
+
+mysql>  insert into JDBCAccount values(102,'SA',78000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into JDBCAccount values(103,'SA',65000);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into JDBCAccount values(104,'SA',90000);
+Query OK, 1 row affected (0.07 sec)
+
+
+
+//Transiction Management
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class JDBC_Lab26 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Account acc=new Account();
+		acc.transfer(101,103,1500);
+	}
+}
+	
+
+		
+		
+		
+		
+		class Account{
+			int bal;
+			int dabal,sabal,danewbal,sanewbal;
+			public void transfer(int sa,int da,int amt){
+				Connection con=null;
+				PreparedStatement ps1=null;
+				PreparedStatement ps2=null;
+				try {
+					con=JDBC_UTIL.getMySQLConnection();
+//					con=JDBC_UTIL.myOracleConnection();
+					
+					//Starting Transiction
+					con.setAutoCommit(false);				//Transiction begins
+					
+					//Operation 1 Check destination account
+					ps1=con.prepareStatement("select bal from  JDBCAccount where accno=?");
+					ps1.setInt(1, da);
+					
+					ResultSet rs1=ps1.executeQuery();
+					if(rs1.next())
+						dabal=rs1.getInt(1);
+					else 
+						throw new InvalidAccountNumberException();
+
+					danewbal=dabal+amt;
+					
+					
+					//Operation 2 Updating destination Account
+					
+					ps2=con.prepareStatement("update  JDBCAccount set bal=? where accno=?");
+					ps2.setInt(1, danewbal);
+					ps2.setInt(2, da);
+					ps2.executeUpdate();
+					
+					System.out.println(da+ " :updated");
+					
+					
+					//Operation 3 Checking Source Account
+					
+					ps1.setInt(1, sa);
+					rs1=ps1.executeQuery();
+					if(rs1.next())
+						sabal=rs1.getInt(1);
+					else 
+						throw new InvalidAccountNumberException(sa);
+					
+					
+					if(sabal>=amt){		//if source balance is more than amount to be deducted 
+						sanewbal=sabal-amt;
+					}
+					else 
+							throw new InsufficientFundsException();
+					
+					
+					//Operation 4 Updating Source Account
+					ps2.setInt(1, sanewbal);
+					ps2.setInt(2,sa);
+					ps2.executeUpdate();
+					con.commit(); 					//Tx End
+					
+					
+					System.out.println(sa+" : Updated");
+					System.out.println("Fund Transfered Successfully");
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+					System.out.println(e);
+					try {
+						con.rollback();
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+				}
+				finally {
+					JDBC_UTIL.mycleanup1(ps1, con);
+					JDBC_UTIL.mycleanup1(ps2, con);
+				}
+
+			}
+		
+
+			
+			
+			
+			
+			
+			class InsufficientFundsException extends Exception{
+				 InsufficientFundsException() {}
+				 
+				public String toString(){
+					return getMessage1();
+				}
+				
+				public String getMessage1(){
+					String msg="Sufficient funds are Not Available in Your Account";
+					if(bal!=0)
+						 msg="Funds : "+bal+ " Are Available In Your Account";
+					return msg;
+				}
+			}
+			
+			
+			class InvalidAccountNumberException extends Exception{
+				int accno;
+				InvalidAccountNumberException() {	}
+				InvalidAccountNumberException(int accno) {
+						this.accno=accno;
+				}
+				
+						
+				public String toString(){
+					return "Accno: "+accno+" is not found";
+				}
+				
+				
+				
+				
+			}
+				
+			
+			
+			
+			
+			
+			
+		}
+			
+
+
+
+
+
+
+
+Run JDBC_Lab26
+	Now 1500 added to accno 103(destination) and 1500 deducted from 101(source)
+mysql> select * from JDBCAccount;
++-------+---------+-------+
+| accno | acctype | bal   |
++-------+---------+-------+
+|   101 | SA      | 33500 |
+|   102 | SA      | 78000 |
+|   103 | SA      | 66500 |
+|   104 | SA      | 90000 |
++-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+Everytime we run above code same thing happen
+
+
+
+
+
+
+
+
+
+
+
+
+************************************************************************************************************************************
+
+Working with Dates:
+
+
+
+SQL> create table JDBCDate(id int,dop date);
+
+Table created.
+SQL> insert into JDBCDate values(101,'18-DEC-2009');
+
+1 row created.
+
+SQL> insert into JDBCDate values(102,'15-FEB-1993');
+
+1 row created.
+
+SQL> insert into JDBCDate values(103,'14-OCT-1997');
+
+1 row created.
+
+mysql> create table JDBCDate(id int,dop date);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into JDBCDate values(101,'2016-1-26');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into JDBCDate values(102,'2016-7-13');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into JDBCDate values(103,'2018-10-3');
+Query OK, 1 row affected (0.03 sec)
+
+
+mysql> select * from JDBCDate;
++------+------------+
+| id   | dop        |
++------+------------+
+|  101 | 2016-01-26 |
+|  102 | 2016-07-13 |
+|  103 | 2018-10-03 |
++------+------------+
+3 rows in set (0.00 sec)
+
+
+SQL> select * from JDBCDate;
+
+        ID DOP
+---------- ---------
+       101 18-DEC-09
+       102 15-FEB-93
+       103 14-OCT-97
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.Date;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+
+public class JDBC_Lab27 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		
+		int sid=110;
+		int d=25;
+		int m=12;
+		int y=2017;
+		Date dt=new Date(y-1900,m-1,d);
+		
+		Connection con=null;
+		Statement st=null;
+		try {
+//			con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+			DatabaseMetaData dmd=con.getMetaData();
+			String db=dmd.getDatabaseProductName();
+			String dop="";
+			System.out.println(db);
+			if(db.equals("Oracle")){
+				SimpleDateFormat f=new SimpleDateFormat("dd-MMM-yyyy");
+				dop=f.format(dt);
+				System.out.println(dop);
+				
+				
+			}else if(db.equals("MySQL")){
+				SimpleDateFormat f=new SimpleDateFormat("yyyy-MM-dd");
+				dop=f.format(dt);
+				System.out.println(dop);
+			}
+			st=con.createStatement();
+			String sql=String.format("insert into JDBCDate values(%d,'%s')", sid,dop);
+			st.executeUpdate(sql);
+			System.out.println("Inserted Successfully");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+}
+mysql> select * from JDBCDate;
++------+------------+
+| id   | dop        |
++------+------------+
+|  101 | 2016-01-26 |
+|  102 | 2016-07-13 |
+|  103 | 2018-10-03 |
+|  110 | 2017-12-25 |
++------+------------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+
+public class JDBC_Lab28 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		int sid=108;
+		int d=15;
+		int m=5;
+		int y=2020;
+		Date dt=new Date(y-1900,m-1,d);
+		
+		Connection con=null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		try {
+			con=JDBC_UTIL.myOracleConnection();
+//			con=JDBC_UTIL.getMySQLConnection();
+
+			ps=con.prepareStatement("insert into JDBCDate values(?,?)");
+			ps.setInt(1, sid);
+			ps.setDate(2, dt);
+			ps.executeUpdate();
+			System.out.println("Inserted Succesfully");
+			JDBC_UTIL.mycleanup1(ps, null);
+			
+			ps=con.prepareStatement("select * from JDBCDate");
+			rs=ps.executeQuery();
+			while (rs.next()) {
+				int id=rs.getInt(1);
+				Date dop=rs.getDate(2);
+				
+			}
+			DatabaseMetaData dmd=con.getMetaData();
+			String db=dmd.getDatabaseProductName();
+			String dop="";
+			System.out.println(db);
+			
+			if(db.equals("Oracle")){
+				SimpleDateFormat f=new SimpleDateFormat("dd-MMM-yyyy");
+				dop=f.format(dt);
+				System.out.println(dop);
+				
+				
+			}else if(db.equals("MySQL")){
+				SimpleDateFormat f=new SimpleDateFormat("yyyy-MM-dd");
+				dop=f.format(dt);
+				System.out.println(dop);
+			}
+
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		finally {
+			JDBC_UTIL.mycleanup2(rs, ps, con);
+		}
+	}
+
+}
+
+SQL> select * from JDBCDate;
+
+        ID DOP
+---------- ---------
+       101 18-DEC-09
+       102 15-FEB-93
+       103 14-OCT-97
+       110 25-DEC-17
+       108 15-MAY-20
+
+
+
+
+
+************************************************************************************************************************************
+
+Working With Files:
+	When we want to store the files from database then do the following:
+	Define the column data type as BLOB(Oracle)/LONGBLOB(MYSQL)
+	Create the FileInputStream by representing the file and its path 
+	Invoke the following method with PreparedStatement
+		ps.setBinaryStream(index,fileinputstream)
+
+	When we want to read the files from database then do the following:
+	Invoke the following method with ResultSet
+		InputStream is=rs.getBinaryStream(1);			//here 1 is the position of file 		
+	Create the FileOutputStream by representing the file and its path 
+	Read the data from InputStream and write to FileOutputStream
+
+
+Note: 	It is not a good practice to store large files and images in database i.e files and images whose size is large(in Kb or Mb).It may damage the performance 
+	because of redaing and writing the Streams  every time
+
+	Best Practice:
+	Store the file and images in HardDisk
+	Store the file name with the path in the data
+
+
+
+If column type is blob then corrosponding setter mtd is stBinaryStream()
+
+mysql>  create table datafile(id int,name varchar(15),data longblob);
+Query OK, 0 rows affected (0.27 sec)
+
+SQL> create table datafile(id int,name varchar(15),data blob);
+
+Table created.
+	
+
+
+package jdbc1;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.StringTokenizer;
+
+public class JDBC_Lab29 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String fileName="E:\\DataBase\\pic1.jpg";
+		String absFileName=fileName;
+		StringTokenizer tok=new StringTokenizer(fileName,"\\");
+		while (tok.hasMoreTokens()) {
+			fileName=tok.nextToken();
+		}
+		Connection con=null;
+		PreparedStatement ps=null;
+		FileInputStream fis=null;
+		try {
+		//	con=JDBC_UTIL.getMySQLConnection();
+			con=JDBC_UTIL.myOracleConnection();
+			String sql="insert into datafile(name,data) values(?,?)";
+			ps=con.prepareStatement(sql);
+			
+			ps.setString(1, fileName);
+			File img=new File(absFileName);
+			fis=new FileInputStream(img);
+			ps.setBinaryStream(2,fis,(int)img.length());
+			ps.execute();
+			
+			System.out.println("Inserted Successfully");
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		finally {
+			JDBC_UTIL.mycleanup1(ps, con);
+			if(fis!=null)
+			try {
+				fis.close();
+			} catch (IOException e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+
+}
+
+
+SQL> select *  from datafile;
+SP2-0678: Column or attribute type can not be displayed by SQL*Plus
+
+
+SQL> select id,name  from datafile;
+
+        ID NAME
+---------- ---------------
+           pic1.jpg
+
+pic1.jpg file size is to large so
+
+but in my sql we can do 
+mysql> select * from datafile;
+
+/J¦9TsV+4¿°(U_7+¦%]-ì_ö˜üjaÇ_Å¦4+Eif[¦$6Jq7VGxC$6¦]Æa+F¢îNJ7ê+¢¦<(n*Os7ó¥ìF8r˜US¼-½lué?èl+¿Sâ'-YTrGOê+¼µ¡¬P+f¼+o-é    åp-öJd++ê=u(>Zqv@
+YèîsmR,¬jö)-CTà-!Kf        +Tbæ«½4ñ<+iJ^?áé¦¦0=¦+-<?Ü¦î¬+#-&J=a(êù      f¡4¦3±ßå`_T=+&rqf"96v¦S¬Y=  k+<4v#CS -êV+=-dn ná+_-¦9r+%=+-#ï¦£áÄPû+¼ƒë-IçÖ;°«++¿çò}+8+dH±î7úú>»+I'~,ïF|¯-3+¦(\æÄ¬¯îO±+¦èç¼¿º    ïzE nTSb¦¦>W3ÅdÑ»e»£OÖxû+fN-fS0a¦æVFq+¦1aG|¦¦O[ön+g»+p-+¦xµ-S#äße<4(÷Cpôpnwf-¦îAç-¦u¥tdK+v}+ÜK¦
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+mysql> select id,name from datafile;
++------+----------+
+| id   | name     |
++------+----------+
+| NULL | pic1.jpg |
++------+----------+
+1 row in set (0.05 sec)
+
+*************************************************************************
+
+
+package jdbc1;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class JDBC_Lab30 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String fileName="pic1.jpg";
+		Connection con=null;
+		ResultSet rs=null;
+		PreparedStatement ps=null;
+		FileOutputStream fos=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			String sql="select name,data from datafile where name=?";
+			ps=con.prepareStatement(sql);
+			
+			ps.setString(1, fileName);
+			rs=ps.executeQuery();
+			
+			while (rs.next()) {
+			File img=new File("E:\\"+fileName);
+			fos=new FileOutputStream(img);
+			byte [] mybuffer =new byte[1];
+			InputStream is=rs.getBinaryStream(2);
+			
+			while (is.read(mybuffer)>0) {				//buffer is a byte array
+				fos.write(mybuffer);	
+				
+			}
+			}
+			
+		System.out.println("File Accessed in E:\\"+fileName);
+		System.out.println("Done");
+			
+				
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+		finally {
+			JDBC_UTIL.mycleanup2(rs, ps, con);
+			if(fos!=null)
+			try {
+				fos.close();
+			} catch (IOException e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+
+}
+
+
+here file is created in  E:\\
+
+
+
+
+

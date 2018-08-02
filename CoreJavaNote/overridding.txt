@@ -1,0 +1,28 @@
+our overriding should not effect other user
+class p{
+public void m1(){			//other people can access
+}}
+class c extends p{
+public void m1(){			//other people can access
+}}
+
+class p{
+public void m1(){			//other people can access
+}}
+class c extends p{
+void m1(){			//other people cannot access
+}}
+
+oberridding applicable only for methods but not for variables 
+for variables if we override than it is variable hidding
+while overiding, modifiers must be higher type
+in overridding method resolution always takes care by jvm based on run time
+object 
+
+in overloading mtd resolution is based on reference type by the compiler
+
+var arg overridding
+var arg mtd should overriding with another var arg mtd only but not by simple method
+
+
+

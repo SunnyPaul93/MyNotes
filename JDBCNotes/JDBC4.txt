@@ -1,0 +1,1120 @@
+***********************************************************************************************************************************
+Batch Update:
+
+When we submit multiple queries to database one by one then lot of time will be wasted for the request and response 
+
+Using Batch Update:
+	For 1 Sql statement:	5ms		+5ms		+5ms		+5ms
+		     	request time	compilation time	execution time 	response time
+
+	For 100 Sql statement:5ms		+100*5ms		+100*5ms		+5ms=1010
+
+
+
+Using Batch update with Statement:
+	We can submit multiple types of Sql Statements
+	We can submit multiple Sql statements 
+	We can reduce the number of round trips between our application and database which will increase the application performance 
+	We can use insert,update or delete statements only but cannot use select statement  i.e only allow updateble statements 
+	Use the following meyhods of statements interface to implement Batch updates 
+		void addBatch(String)
+		int [] executeBatch()
+		void clearBatch()
+
+In batch update we cannot use select statements but in stored procedure we can use select statements 
+
+
+Using Batch update with PrepareStatement:
+	We can submit only single types of Sql Statements
+	We can submit multiple Sql statements 
+	We can reduce the number of round trips between our application and database which will increase the application performance 
+	We can use insert,update or delete statements only but cannot use select statement  i.e only allow updateble statements 
+	Use the following meyhods of statements interface to implement Batch updates 
+		void addBatch(String)
+		int [] executeBatch()
+		void clearParameters()
+
+
+
+
+
+
+
+
+mysql> create table student6(sid int primary key,name varchar(15),email varchar(20),phone bigint);
+Query OK, 0 rows affected (0.11 sec)
+
+
+SQL> create table student6(sid int primary key,name varchar(15),email varchar(20),phone number(10));
+
+Table created.
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class JDBC_Lab15 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			
+			st=con.createStatement();
+			
+			String str1="insert into student6 values(101,'Mohan','paul@gmail.com',9393883838)";
+			st.addBatch(str1);
+			String str2="insert into student6 values(102,'Ravi','ravi@gmail.com',9383847474)";
+			st.addBatch(str2);
+			String str3="insert into student6 values(103,'Aditi','pooja@gmail.com',7585757575)";
+			st.addBatch(str3);
+			String str4="insert into student6 values(105,'Pawan','pawan@gmail.com',8273650697)";
+			st.addBatch(str4);
+			String str5="insert into student6 values(107,'Naresh','naresh@gmail.com',8373746464)";
+			st.addBatch(str5);
+			
+			String str6="update student6 set name='Sunny' where sid=101";
+			st.addBatch(str6);
+			
+			String str7="delete from student6 where sid=105";
+			st.addBatch(str7);
+			
+			int x[]=st.executeBatch();			//since multiple updatable statements so have to store in array
+			for (int i = 0; i < x.length; i++) {
+				System.out.println(x[i]);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Sorry No Updatable Record");
+			e.printStackTrace();
+			
+		}
+		
+		finally {
+			JDBC_UTIL.mycleanup1(st, con);
+			
+		}
+	}
+
+}
+
+
+mysql> select * from student6;
++-----+--------+------------------+------------+
+| sid | name   | email            | phone      |
++-----+--------+------------------+------------+
+| 101 | Sunny  | paul@gmail.com   | 9393883838 |
+| 102 | Ravi   | ravi@gmail.com   | 9383847474 |
+| 103 | Aditi  | pooja@gmail.com  | 7585757575 |
+| 107 | Naresh | naresh@gmail.com | 8373746464 |
++-----+--------+------------------+------------+
+4 rows in set (0.00 sec)
+
+connect with Oracle(SQL) database
+SQL> select * from student6;
+
+       SID NAME            EMAIL                     PHONE
+---------- --------------- -------------------- ----------
+       101 Sunny           paul@gmail.com       9393883838
+       102 Ravi            ravi@gmail.com       9383847474
+       103 Aditi           pooja@gmail.com      7585757575
+       107 Naresh          naresh@gmail.com     8373746464
+
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+
+public class JDBC_Lab16 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		PreparedStatement ps=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			
+			String str1="insert into student6 values(?,?,?,?)";
+			
+			ps=con.prepareStatement(str1);
+			
+			ps.setInt(1, 201);	
+			ps.setString(2, "Rani");
+			ps.setString(3,"rani@gmail.com" );
+			ps.setLong(4, 8373646464l);
+			ps.addBatch();
+		
+			ps.setInt(1, 202);	
+			ps.setString(2, "Sumit");
+			ps.setString(3, "sumit@gmail.com");
+			ps.setLong(4, 9998383834l);
+			ps.addBatch();
+		
+			ps.setInt(1, 203);	
+			ps.setString(2, "Priya");
+			ps.setString(3, "priya@gmail.com");
+			ps.setLong(4, 8393938383l);
+			ps.addBatch();
+		
+			int x[]=ps.executeBatch();			//since multiple updatable statements so have to store in array
+			for (int i = 0; i < x.length; i++) {
+				System.out.println(x[i]);
+			}
+			String str2="insert into student6 values(?,?,?,?)";
+			ps=con.prepareStatement(str2);
+			ps.setInt(1, 210);
+			ps.setString(2, "Pranab");
+			ps.setString(3, "pranab@yahoo.com");
+			ps.setLong(4, 9292983838l);
+			int x2=ps.executeUpdate();
+			
+			String str3="insert into student6(sid,name) values(?,?)";
+			ps=con.prepareStatement(str3);
+			ps.setInt(1, 215);
+			ps.setString(2, "Rumi");
+			
+			
+			int x3=ps.executeUpdate();			
+			
+		
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Sorry No Updatable Record");
+			e.printStackTrace();
+			
+		}
+		
+		finally {
+			JDBC_UTIL.mycleanup1(ps, con);
+			
+		}
+	}
+
+}
+
+
+
+mysql> select * from student6;
++-----+--------+------------------+------------+
+| sid | name   | email            | phone      |
++-----+--------+------------------+------------+
+| 101 | Sunny  | paul@gmail.com   | 9393883838 |
+| 102 | Ravi   | ravi@gmail.com   | 9383847474 |
+| 103 | Aditi  | pooja@gmail.com  | 7585757575 |
+| 107 | Naresh | naresh@gmail.com | 8373746464 |
+| 201 | Rani   | rani@gmail.com   | 8373646464 |
+| 202 | Sumit  | sumit@gmail.com  | 9998383834 |
+| 203 | Priya  | priya@gmail.com  | 8393938383 |
+| 210 | Pranab | pranab@yahoo.com | 9292983838 |
+| 215 | Rumi   | NULL             |       NULL |
++-----+--------+------------------+------------+
+9 rows in set (0.00 sec)
+
+
+
+connect to Oracle
+SQL> select * from student6;
+
+       SID NAME            EMAIL                     PHONE
+---------- --------------- -------------------- ----------
+       101 Sunny           paul@gmail.com       9393883838
+       102 Ravi            ravi@gmail.com       9383847474
+       103 Aditi           pooja@gmail.com      7585757575
+       107 Naresh          naresh@gmail.com     8373746464
+       201 Rani            rani@gmail.com       8373646464
+       202 Sumit           sumit@gmail.com      9998383834
+       203 Priya           priya@gmail.com      8393938383
+       210 Pranab          pranab@yahoo.com     9292983838
+       215 Rumi   
+
+9 rows selected.
+
+**************************************************************
+SQL> create table school(id int primary key,name varchar(10));
+
+Table created.
+
+mysql> create table school(id int primary key,name varchar(10));
+Query OK, 0 rows affected (0.12 sec)
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Scanner;
+
+public class JDBC_Lab17 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		PreparedStatement ps=null;
+		
+		try {
+		//	con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+			String sql="insert into school values(?,?)";
+			ps=con.prepareStatement(sql);
+			Scanner sc=new Scanner(System.in);
+			char choice='Y';
+			do{
+				
+				System.out.println("Enter ID");
+				int id=sc.nextInt();
+				sc.nextLine();
+				
+				System.out.println("Enter Name");
+				String nm=sc.nextLine();
+				
+				ps.setInt(1, id);
+				ps.setString(2, nm);
+				ps.addBatch();
+				System.out.println("Do you Want to add more record ?");
+				
+				choice=sc.nextLine().charAt(0);
+			}while(choice=='Y');
+			
+			int res[]=ps.executeBatch();
+			for (int i = 0; i < res.length; i++) {
+				System.out.println("Result is :" +res[i]);
+			}
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally {
+			JDBC_UTIL.mycleanup1(ps, con);
+		}
+	}
+
+}
+
+Using Scanner Class
+
+mysql> select * from school;
++-----+-------+
+| id  | name  |
++-----+-------+
+| 101 | Sunny |
+| 102 | Aditi |
+| 103 | Ravi  |
+| 104 | Sumit |
++-----+-------+
+4 rows in set (0.00 sec)
+
+connect with Oracle
+SQL> select * from school;
+
+        ID NAME
+---------- ----------
+       101 Mohan
+       102 Pooja
+       103 Navin
+       104 Kiran
+
+*************************************************************************************************************************************
+
+Result Set:
+
+Result set is an interface available in java.sql package and sub-class of ResultSet is provided by Driver vendor 
+Result set contains the record returned by select statement 
+Result set can be created by using the following methods:
+	ResultSet rs=st.executeQuery("select ...............................................");			//Statement interface 
+	ResultSet rs=ps.executeQuery();							//PrepareStatement interface
+
+
+
+	We can use ResultSet  object to store records returned by SELECT Sql Statement 
+	ResultSet  can be accessed with connection only i.e RowSet  are connection oriented object 
+	By Default ResultSet  are forward-Only and Read-Only
+	ResultSet  are not elligible for Serialization 
+
+  
+At starting when resultset object is created then initially Result Set cursor is pointing to before first, and also result set is same as iterator in collection 
+
+
+We can use next() method to move the result set pointer in forward direction 
+	public boolean next(){
+		Checks whether the next record is available or not
+		if Next record is avilable then 
+			moves the pointer to next record
+			return true; 
+		if Next record is not avilable then 
+			moves the pointer to next position
+			return false; 
+		}
+
+We can use previous() method to move the result set pointer in reverse direction 
+	public boolean previous(){
+		Checks whether the previous record is available or not
+		if Previous record is avilable then 
+			moves the pointer to previous record
+			return true; 
+		if Previous record is not avilable then 
+			moves the pointer to previous position
+			return false; 
+		}
+
+
+
+When the ResultSet pointer is pointing to one record then we can access the data of various column using getxxxxxxxx() method
+	
+	public int getInt(int columnIndex)
+	public int getInt(String columnName)
+	public String getString(int columnIndex)
+	public String getString(String columnName)
+	etc.............................
+
+
+
+
+for Oracle(SQL), MYSQL use select sid,sname,....... from ..........................
+for MYSQL use select * from .........................
+
+
+***************************************************************************
+
+Types of result-sets:-
+Depending on the cursor movement there are two types of result set:	
+	~Forward-Only ResultSet
+	~Scrollable 	"
+	
+
+~Forward-Only ResultSet:-
+	When the resultset is forward only then:
+	Pointer can move to only in forward direction 
+	Pointer can be moved only once 
+	Pointer can be moved in sequential order only
+
+	
+Note:By default resultset is forward-only 
+
+	st=con.createstatement();
+	rs=st.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................");
+	rs=st.executeQuery();
+			
+	In the above two the ResultSet is forward only
+
+
+But We can explecitly specify ResultSet as forward:		
+	st=con.createstatement(ResultSet.TYPE_FORWARD_ONLY,.........);
+	rs=st.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................",ResultSet.TYPE_FORWARD_ONLY,.........);
+	rs=st.executeQuery();
+			
+
+
+We can use the following method on Forward-Only ResultSet:
+		public boolean next()
+		public boolean isBeforeFirst()
+		public boolean isFirst()
+		public int getRow()			//Give the row number matches for each row in resultset 
+		public XXXXXX getXXXX(String)			here XXXX:Datatype
+		public void close()
+		public boolean isAfterLast()
+		public boolean isLast()		//not allowed in Oracle
+		public XXXXXX getXXXX(int)
+
+
+Database vendor have some method and Jdbc i.e Java Vendor have some method so there is a possibilities that some method of Jdbc programme may not be 
+used or profitable (here for getting records of result set )
+
+
+
+
+
+
+
+~Scrollable ResultSet:
+	When ResultSet is scrollable then 
+	Pointer can move in both forward and reverse direction 
+	Pointer can move multiple times 
+	Pointer can move in random order 
+	
+
+By default ResultSet is not Scrollable
+
+But We can explecitly specify ResultSet as Scrollable:		
+	st=con.createstatement(ResultSet.TYPE_SCROLL_SENSITIVE,.........);
+	rs=sr.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................",ResultSet.TYPE_SCROLL_SENSITIVE,.........);
+	rs=sr.executeQuery();
+			
+
+	st=con.createstatement(ResultSet.TYPE_SCROLL_INSENSITIVE,.........);
+	rs=sr.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................",ResultSet.TYPE_SCROLL_INSENSITIVE,.........);
+	rs=sr.executeQuery();
+	
+
+Again Scrollable ResultSet are of two types:
+	1.Sensitive		:-If sensitive then if changes occurs in database than those changes are reflected in the ResultSet also   
+	2.InSensitive	:-If insensitive then if changes occurs in database than those changes are not reflected in the ResultSet  
+	
+We can use the following methods On Scrollable ResultSet
+
+	public void close()
+	public XXX getXXX(int)
+	public XXX getXXX(String)
+
+
+	public void moveToCurrentRow() :Move from the insert-row staging area back to what had been the current row prior to the moveToInsertRow() call.
+	public void moveToInsertRow():Move to the insert-row staging area to set up a row to be inserted.
+
+a.	Methods for Moving to a New Position
+
+	public void beforeFirst():Positions to before the first row of the result set, or has no effect if there are no rows in the result set. This is where you would 
+	typically start iterating through a result set to process it going forward and is the default initial position for any kind of result set.You are outside the 
+	result set bounds after a beforeFirst() call. There is no valid current row, and you cannot position relatively from this point.
+	
+	public void afterLast():Positions to after the last row of the result set, or has no effect if there are no rows in the result set. This is where you would 
+	typically start iterating through a result set to process it going backward.You are outside the result set bounds after an afterLast() call. There is no valid 
+	current row, and you cannot position relatively from this point.
+	
+	public boolean last():Positions to the first row of the result set, or returns false if there are no rows in the result set.
+	public boolean first():Positions to the last row of the result set, or returns false if there are no rows in the result set.
+
+
+	public boolean absolute(int):Positions to an absolute row from either the beginning or end of the result set. If you input a positive number, then it positions 
+	from the beginning. If you input a negative number, then it positions from the end. This method returns false if there are no rows in the result set.
+	Attempting to move forward beyond the last row, such as an absolute(11) call if there are 10 rows, will position to after the last row, having the same 
+	effect as an afterLast() call.
+	Attempting to move backward beyond the first row, such as an absolute(-11) call if there are 10 rows, will position to before the first row, having the 
+	same effect as a beforeFirst() call.
+
+
+	public boolean relative(int):Moves to a position relative to the current row, forward if you input a positive number or backward if you input a negative 
+	number, or returns false if there are no rows in the result set.The result set must be at a valid current row for use of the relative method.
+	Attempting to move forward beyond the last row will position to after the last row, having the same effect as an afterLast() call.
+	Attempting to move backward beyond the first row will position to before the first row, having the same effect as a beforeFirst() call.
+	A relative(0) call is valid but has no effect.			
+
+
+
+
+
+b.	Methods for Checking the Current Position
+	public boolean isBeforeFirst():Returns true if the position is before the first row.
+	public boolean isAfterLast():Returns true if the position is after the last row.
+	public boolean isFast():Returns true if the position is at the first row.
+	public boolean isLast():Returns true if the position is at the last row.
+	public int getRow():Returns the row number of the current row, or returns 0 if there is no valid current row.
+
+
+c.	Processing a Scrollable Result Set
+	public boolean next()
+	public boolean previous()
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+d.	Performing a DELETE Operation in a Result Set	
+	The result set deleteRow() method will delete the current row. 
+	public void deleteRow():to delete row
+
+	rs.absolute(5);
+	rs.deleteRow();			//where current position of cursor that row's column will be deleated
+
+
+
+
+e.	Performing an UPDATE Operation in a Result Set
+	
+	public void updateRow():to update row
+
+
+	Call the appropriate updateXXX methods to update the data in the columns you want to change
+	
+	rs.updateString(1, 101);			//where current position of cursor that row's column will be updated
+	rs.updateFloat(2, "Raju")
+	rs.updateRow();			
+
+	Call the updateRow method to copy the changes to the database or the cancelRowUpdates method to cancel the changes.
+	Once you call updateRow, the changes are run and will be made permanent with the next transaction COMMIT operation.
+	
+	PUBLIC void cancelRowUpdates() :Cancel an UPDATE operation on the current row. Call this after the updateXXX calls but before the updateRow call.
+
+
+
+
+
+f.	Performing an INSERT Operation in a Result Set
+	Result set INSERT operations use what is called the result set insert-row, which is a staging area that holds the data for the inserted row until it is copied
+	 to the database. You must explicitly move to this row to write the data that will be inserted.
+
+		public void moveToInsertRow():create empty row for inserting records
+		public void InsertRow():To insert record
+
+
+
+Already my records are there in student6
+
+mysql> select * from student6;
++-----+--------+------------------+------------+
+| sid | name   | email            | phone      |
++-----+--------+------------------+------------+
+| 101 | Sunny  | paul@gmail.com   | 9393883838 |
+| 102 | Ravi   | ravi@gmail.com   | 9383847474 |
+| 103 | Aditi  | pooja@gmail.com  | 7585757575 |
+| 107 | Naresh | naresh@gmail.com | 8373746464 |
+| 201 | Rani   | rani@gmail.com   | 8373646464 |
+| 202 | Sumit  | sumit@gmail.com  | 9998383834 |
+| 203 | Priya  | priya@gmail.com  | 8393938383 |
+| 210 | Pranab | pranab@yahoo.com | 9292983838 |
+| 215 | Rumi   | NULL             |       NULL |
++-----+--------+------------------+------------+
+9 rows in set (0.08 sec)
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class JDBC_Lab18 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		try {
+		//	con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+			st=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			String sql="select * from student6";
+			rs=st.executeQuery(sql);
+		
+		//	rs=st.executeQuery("select sid,name,email,phone from student6");//  for Oracle(SQL), MYSQL use select sid,sname,.......
+			
+			System.out.println("Forward Direction");
+			
+			while (rs.next()) {
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+				
+			}
+			
+			
+			//since scrroable so can do both forward and reverse
+			System.out.println("Reverse Direction");
+			while (rs.previous()) {
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+				
+			}
+	
+	//		Methods for Moving to a New Position
+			
+			System.out.println("1st Record");
+			rs.first();
+			System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+			
+			
+			System.out.println("Last Record");
+			rs.last();
+			System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+			
+			System.out.println("3rd Record");
+			rs.absolute(3);						//particular record get selected
+			System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+			
+			
+			System.out.println("From 3rd next 4th Record");
+			rs.relative(4);					//now from current position i.e 3rd select 4th record
+			System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+						
+	/*		rs.beforeFirst();
+			System.out.println("before first:"+rs.getRow());
+			
+			rs.afterLast();
+			System.out.println("after last:"+rs.getRow());
+			
+	*/	
+			System.out.println();
+			
+			System.out.println(rs.getString("sid")+"\t"+rs.getString("name")+"\t"+rs.getString("email")+"\t"+rs.getString("phone"));
+			
+			System.out.println();
+			System.out.println("Methods for Checking the Current Position");
+			System.out.println("Checking AfterLast:"+rs.isAfterLast());
+			System.out.println("Checking BeforeFirst:"+rs.isBeforeFirst());
+			System.out.println("Checking First:"+rs.isFirst());
+			System.out.println("Checking Last:"+rs.isLast());
+			System.out.println("Checking Current position of cursor:"+rs.getRow());
+			System.out.println("Checking Current position record is there or not:"+rs.wasNull());	
+			
+			System.out.println("*******************************************");
+			
+			rs.moveToCurrentRow();
+			System.out.println(rs.getRow());
+			rs.moveToInsertRow();
+			System.out.println(rs.getRow());
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+				finally {
+			JDBC_UTIL.mycleanup2(rs, st, con);
+		}
+	}
+
+}
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class JDBC_Lab19 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		try {
+//			con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+			st=con.createStatement(ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);
+			String sql="select * from student6";
+			rs=st.executeQuery(sql);
+//			rs=st.executeQuery("select sid,name,email,phone from student6");//  for Oracle(SQL), MYSQL use select sid,sname,.......
+
+			
+			
+			
+			System.out.println("Forward Direction");
+			
+			while (rs.next()) {
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+				
+			}
+			
+			System.out.println();
+			System.out.println("Methods for Checking the Current Position");
+			System.out.println("Checking AfterLast:"+rs.isAfterLast());
+			System.out.println("Checking BeforeFirst:"+rs.isBeforeFirst());
+			System.out.println("Checking First:"+rs.isFirst());
+			System.out.println("Checking Last:"+rs.isLast());
+			System.out.println("Checking Current position of cursor:"+rs.getRow());
+			System.out.println("Checking Current position record is there or not:"+rs.wasNull());	
+							
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+				finally {
+			JDBC_UTIL.mycleanup2(rs, st, con);
+		}
+	}
+
+}
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class JDBC_Lab20 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		
+		try {
+		
+//			con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+					st=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+					String sql="select * from student6";
+					rs=st.executeQuery(sql);
+//					rs=st.executeQuery("select sid,name,email,phone from student6");//  for Oracle(SQL), MYSQL use select sid,sname,.......
+
+					rs.absolute(4);
+					rs.updateInt(1, 110);
+					rs.updateString(2, "Navin");
+					rs.updateRow();
+					System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+					
+					
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		finally {
+			JDBC_UTIL.mycleanup2(rs, st, con);
+		}
+	}
+
+}
+
+***************************************************************************
+Types of result-sets:
+Depending on the ResultSet updation there are two types of result set:	
+	~ReadOnlyResultSet
+	~Updatable or Dynamic ResultSet
+
+~ReadOnlyResultSet:
+	When ResultSet is read-only then we can just access the data from ResultSet object by calling getter method and we can not do any updation
+	on ResultSet Object 
+	Read-Only ResultSet is also called Static ResultSet
+	By Default ResultSet are read-only
+
+	st=con.createstatement();
+	rs=sr.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................");
+	rs=sr.executeQuery();
+			
+	In the above two the ResultSet is forward and read only
+
+But We can explecitly specify ResultSet as read-only:		
+	st=con.createstatement(.......................................................................,ResultSet.CONCUR_READ_ONLY);
+	rs=sr.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................",...................................................,ResultSet.CONCUR_READ_ONLY);
+	rs=sr.executeQuery();
+			
+
+We can use following method on Read-Only Result-Set:
+		public boolean next()
+		public boolean isBeforeFirst()
+		public boolean isFirst()
+		public int getRow()			//Give the row number matches for each row in resultset 
+		public XXXXXX getXXXX(String)			here XXXX:Datatype
+		public void close()
+		public boolean isAfterLast()
+		public boolean isLast()		
+		public XXXXXX getXXXX(int)
+	
+	
+
+
+
+
+
+
+~Updatable ResultSet:
+	When ResultSet is updatable then we can do following operation on ResultSet object
+	Access the data from ResultSet
+	Insert the records into ResultSet
+	Update the record of ResultSet
+	Delete the record From ResultSet
+
+	By Default ResultSet is Not Updatable
+	
+
+
+But We can explecitly specify ResultSet as updatable:
+		
+	st=con.createstatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+	rs=sr.executeQuery("select.............................");
+	
+	st=con.preparestatement("select.............................",ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE;
+	rs=sr.executeQuery();
+			
+
+NOTE:Forward-Only and Updatable Combination is not allowed
+NOTE:Forward-Only and ReadOnly Combination is  allowed
+NOTE:Scrollable and Updatable Combination is  allowed
+NOTE:Scrollable and ReadOnly Combination is  allowed
+
+
+
+
+We can use the following methods On Scrollable ResultSet
+
+	public void close()
+	public XXX getXXX(int)
+	public XXX getXXX(String)
+
+
+	public void moveToCurrentRow() :Move from the insert-row staging area back to what had been the current row prior to the moveToInsertRow() call.
+	public void moveToInsertRow():Move to the insert-row staging area to set up a row to be inserted.
+
+a.	Methods for Moving to a New Position
+
+	public void beforeFirst():Positions to before the first row of the result set, or has no effect if there are no rows in the result set. This is where you would 
+	typically start iterating through a result set to process it going forward and is the default initial position for any kind of result set.You are outside the 
+	result set bounds after a beforeFirst() call. There is no valid current row, and you cannot position relatively from this point.
+	
+	public void afterLast():Positions to after the last row of the result set, or has no effect if there are no rows in the result set. This is where you would 
+	typically start iterating through a result set to process it going backward.You are outside the result set bounds after an afterLast() call. There is no valid 
+	current row, and you cannot position relatively from this point.
+	
+	public boolean last():Positions to the first row of the result set, or returns false if there are no rows in the result set.
+	public boolean first():Positions to the last row of the result set, or returns false if there are no rows in the result set.
+
+
+	public boolean absolute(int):Positions to an absolute row from either the beginning or end of the result set. If you input a positive number, then it positions 
+	from the beginning. If you input a negative number, then it positions from the end. This method returns false if there are no rows in the result set.
+	Attempting to move forward beyond the last row, such as an absolute(11) call if there are 10 rows, will position to after the last row, having the same 
+	effect as an afterLast() call.
+	Attempting to move backward beyond the first row, such as an absolute(-11) call if there are 10 rows, will position to before the first row, having the 
+	same effect as a beforeFirst() call.
+
+
+	public boolean relative(int):Moves to a position relative to the current row, forward if you input a positive number or backward if you input a negative 
+	number, or returns false if there are no rows in the result set.The result set must be at a valid current row for use of the relative method.
+	Attempting to move forward beyond the last row will position to after the last row, having the same effect as an afterLast() call.
+	Attempting to move backward beyond the first row will position to before the first row, having the same effect as a beforeFirst() call.
+	A relative(0) call is valid but has no effect.			
+
+
+
+
+
+b.	Methods for Checking the Current Position
+	public boolean isBeforeFirst():Returns true if the position is before the first row.
+	public boolean isAfterLast():Returns true if the position is after the last row.
+	public boolean isFast():Returns true if the position is at the first row.
+	public boolean isLast():Returns true if the position is at the last row.
+	public int getRow():Returns the row number of the current row, or returns 0 if there is no valid current row.
+
+
+c.	Processing a Scrollable Result Set
+	public boolean next()
+	public boolean previous()
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+d.	Performing a DELETE Operation in a Result Set	
+	The result set deleteRow() method will delete the current row. 
+	public void deleteRow():to delete row
+
+	rs.absolute(5);
+	rs.deleteRow();			//where current position of cursor that row's column will be deleated
+
+
+
+
+e.	Performing an UPDATE Operation in a Result Set
+
+	public void updateRow():to update row
+
+	Call the appropriate updateXXX methods to update the data in the columns you want to change
+	
+	rs.updateString(1, 101);			//where current position of cursor that row's column will be updated
+	rs.updateFloat(2, "Raju")
+	rs.updateRow();			
+
+	Call the updateRow method to copy the changes to the database or the cancelRowUpdates method to cancel the changes.
+	Once you call updateRow, the changes are run and will be made permanent with the next transaction COMMIT operation.
+	
+	PUBLIC void cancelRowUpdates() :Cancel an UPDATE operation on the current row. Call this after the updateXXX calls but before the updateRow call.
+
+
+
+
+
+f.	Performing an INSERT Operation in a Result Set
+	Result set INSERT operations use what is called the result set insert-row, which is a staging area that holds the data for the inserted row until it is copied
+	 to the database. You must explicitly move to this row to write the data that will be inserted.
+		
+		public void moveToInsertRow():create empty row for inserting records
+		public void InsertRow():To insert record
+
+
+
+
+ResultSet cannot be updatable even if we use ResultSet.CONCUR_UPDATABLE in following cases:
+	When SELECT statements uses JOINS
+	When SELECT statements uses Aggregate functions
+	When SELECT statements  uses * instead of column names (In Oracle only)
+	When SELECT statements  donot contain primary key 
+
+
+
+
+
+SQL>  select * from student6;
+
+       SID NAME            EMAIL                     PHONE
+---------- --------------- -------------------- ----------
+       101 Sunny           paul@gmail.com       9393883838
+       102 Ravi            ravi@gmail.com       9383847474
+       103 Aditi           pooja@gmail.com      7585757575
+       107 Naresh          naresh@gmail.com     8373746464
+       201 Rani            rani@gmail.com       8373646464
+       202 Sumit           sumit@gmail.com      9998383834
+       203 Priya           priya@gmail.com      8393938383
+       210 Pranab          pranab@yahoo.com     9292983838
+       215 Rumi
+
+9 rows selected.
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class JDBC_Lab21 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		
+		try {
+//			con=JDBC_UTIL.getMySQLConnection();
+			con=JDBC_UTIL.myOracleConnection();
+		
+			st=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			
+	//		rs=st.executeQuery("select * from student6");  // for only MYSQL use select * 
+			rs=st.executeQuery("select sid,name,email,phone from student6"); //  for Oracle(SQL), MYSQL use select sid,sname,.......
+
+			System.out.println("All Records");
+
+			while (rs.next()) {
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+				
+			}
+			
+			System.out.println("Inserting Records");
+			rs.moveToInsertRow();			//create empty row for inserting records
+			rs.updateInt(1, 211);
+			rs.updateString(2, "Purav");
+			rs.updateString(3, "purav@gmail.com");
+			rs.updateLong(4, 8394875757l);
+			rs.insertRow();					//to insert records
+			System.out.println("Row Inserted");
+			
+			
+			System.out.println("Updating 8th Records");
+			rs.absolute(8);
+			rs.updateInt(1, 213);
+			rs.updateString(2, "Manash");
+			rs.updateString(3, "manash@yahoo.com");
+			rs.updateLong(4, 7645565656l);
+			rs.updateRow();
+			System.out.println("Row Updated");
+			
+			
+			System.out.println("Deleting 7th record");
+			rs.absolute(7);
+			rs.deleteRow();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		finally {
+			JDBC_UTIL.mycleanup2(rs, st, con);
+		}
+	}
+
+}
+
+
+
+SQL>  select * from student6;
+
+       SID NAME            EMAIL                     PHONE
+---------- --------------- -------------------- ----------
+       101 Sunny           paul@gmail.com       9393883838
+       102 Ravi            ravi@gmail.com       9383847474
+       103 Aditi           pooja@gmail.com      7585757575
+       107 Naresh          naresh@gmail.com     8373746464
+       201 Rani            rani@gmail.com       8373646464
+       202 Sumit           sumit@gmail.com      9998383834
+       213 Manash          manash@yahoo.com     7645565656
+       215 Rumi
+       211 Purav           purav@gmail.com      8394875757
+
+9 rows selected.
+
+
+
+
+					ResultSet:
+	We can use ResultSet  object to store records returned by SELECT Sql Statement 
+	ResultSet  can be accessed with connection only i.e ResultSet  are connection oriented object 
+	By Default ResultSet  are forward-Only and Read-Only
+	ResultSet  are not elligible for Serialization 
+	ResultSet object are created as follows:
+
+	Connection con=null;
+	ResultSet rs=null;
+	Statement st=null;
+
+	con=DatabaseManagement.getConnection(url,username,password)
+	st=con.createStatement();
+	rs=st.executeQuery();
+
+
+
+We can following methods of Statement interface to find ResultSet type
+	public int getResultSetType()	
+
+Type_Forward_Only			:1003
+Type_SCROLL_INSENSITIVE		:1004
+Type_SCROLL_SENSITIVE		:1005
+
+
+
+We can following methods of Statement interface to find ResultSet concurrency
+	public int getResultSetConcurrency()	
+
+CONCURR_READ_ONLY		:1007
+CONCURR_UPDATABLE		:1008
+
+We can following methods of Statement interface to find ResultSet holdability
+	public int getResultSetHoldability()	
+HOLD_CURSOR_OVER_COMMIT	:1
+HOLD_CURSOR_AT_COMMIT	:2
+
+
+**********************************************************************************************************************************************

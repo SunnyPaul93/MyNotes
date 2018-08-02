@@ -1,0 +1,61 @@
+package stringcls;
+
+public class String2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String st1="JLC";
+		String st2=new String("JLC");
+		String st3=new String("JLC");
+		String st4="JLC";
+		
+		
+		System.out.println(st1);
+		System.out.println(st2);
+		System.out.println(st3);
+		System.out.println(st1==st2);
+		System.out.println(st1==st3);
+		System.out.println(st2==st3);
+		System.out.println();
+		System.out.println(st1==st4);
+		System.out.println(st2==st4);
+		System.out.println(st3==st4);
+
+		System.out.println();
+		System.out.println(st1.equals(st2));		//Compares Content not address
+		System.out.println(st1.equals(st3));
+		System.out.println(st1.equals(st4));
+		System.out.println(st2.equals(st3));
+	
+		System.out.println();
+		
+		String st5=st3.intern();
+		
+		System.out.println(st1==st5);
+		System.out.println(st1.equals(st5));
+		
+		String st6=new String("Sunny");
+		
+		st6=st6.intern();		//This should return the string with same value but from String pool
+		System.out.println(st6);
+		
+	}
+
+}
+/*the string object is creating with new operator then outside SCP a new object will be created and 
+ * internally char array reference variable has to take the address of literal from SCP and newly object 
+ * address has to asign in string reference variable */
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+

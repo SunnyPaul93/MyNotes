@@ -1,0 +1,1163 @@
+select * from tab where tabtype ='TABLE';
+
+************************************************************************************************************************************************************************************************************************************
+By default null will be default value for all columns.Default Constrains can be used to supply other than null values as default values 
+For example we set default city as Bangalore ,Country as India and age as 99 which means if user donot provide values for that city,country and age then it will take
+the default value other wise it will take the value what we will insert explicitly.  
+
+SQL> create table emp3(eid int,emane varchar(20),salary float,city varchar(20) default 'Bangalore',country varchar(20) default 'India',age int default 99);
+
+Table created.
+
+SQL> drop table emp3;
+
+
+
+SQL> create table emp3(eid int,ename varchar(20),salary float,city varchar(20) default 'Bangalore',country varchar(20) default 'India',age int default 99);
+
+Table created.
+
+SQL> insert into emp3 values(101,'Sunny',32000,'Assam','India',23);
+
+1 row created.
+
+SQL> insert into emp3(eid,ename,salary,city) values(102,'Raju',20000,'Mumbai');
+
+1 row created.
+
+SQL> insert into emp3(eid,ename,city,age) values(103,'Ravi','Delhi',25);
+
+1 row created.
+
+SQL> insert into emp3(ename,salary,city,country,age) values('Robin',78000,'San Francisco','California',28);
+
+1 row created.
+
+SQL> insert into emp3 values(105,'Ross',128000,'Ukraine','Kyiv',32);
+
+1 row created.
+
+SQL> delete from emp3 where salary=78000;
+
+1 row deleted.
+
+SQL> insert into emp3(ename,salary,city,country,age) values('Robin',78000,'San Francisco','California',28);
+
+1 row created.
+
+SQL> delete from emp3 where salary=128000;
+
+1 row deleted.
+
+SQL> insert into emp3 values(105,'Ross',128000,'Kyiv','Ukraine',32);
+
+1 row created.
+
+SQL> select * from emp3;
+
+
+
+SQL> set linesize 200;
+SQL> select * from emp3;
+
+       EID ENAME                    SALARY 	CITY                 COUNTRY                     AGE
+---------- -------------------- ---------- -------------------- -------------------- ----------
+       101 Sunny                     32000 	Assam                 India                        	23
+       102 Raju                      20000	Mumbai              India                        	99
+       103 Ravi                                  	Delhi                   India                        	25
+              Robin                     78000 	San Francisco    California                   	28
+       105 Ross                     128000 	Kyiv                    Ukraine                      	32
+***********************************************************************************************************************************
+
+
+
+default + not null		Only in ORACLE	
+SQL> create table stu4(id int default 101 not null,ename varchar(25));
+
+Table created.
+
+SQL> insert into stu4 values(201,'Sunny');
+
+1 row created.
+
+SQL> insert into stu4 values(202,'Ravi');
+
+1 row created.
+
+SQL> insert into stu4(id) values(203);
+
+1 row created.
+
+SQL> insert into stu4(ename) values('Rohit');
+
+1 row created.
+
+SQL> insert into stu4 values(204,'Pawan');
+
+1 row created.
+
+SQL> insert into stu4(ename) values('Ramesh');
+
+1 row created.
+
+SQL> select * from stu4;
+
+        ID ENAME
+---------- -------------------------
+       201 Sunny
+       202 Ravi
+       203
+       101 Rohit
+       204 Pawan
+       101 Ramesh
+
+6 rows selected.
+***********************************************************************************************************
+
+
+
+default + not null and default + not null	IN MYSQL 
+
+SQL>  create table stu5(ename varchar(25) default 'Mohan' not null,city varchar(25) default 'Silchar' not null);
+
+Table created.
+
+SQL> insert into stu5(ename) values('Raj');
+
+1 row created.
+
+SQL>  insert into stu5(city) values('Silchar');
+
+1 row created.
+
+SQL>   insert into stu5 values('Raju','Delhi');
+
+1 row created.
+
+SQL>   insert into stu5 values('Rajesh','Lucknow');
+
+1 row created.
+
+SQL>   insert into stu5 values('Rakhi','Mumbai');
+
+1 row created.
+
+SQL>  insert into stu5(ename) values(null);
+ insert into stu5(ename) values(null)
+                                *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."STU5"."ENAME")
+
+
+SQL>  insert into stu5() values();
+ insert into stu5() values() 	         to take default values we have to pass at least one parameter and provide null in Oracle but we cannot provide null here 
+                  *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL>  insert into stu5(ename) values('Pooja');
+
+1 row created.
+
+SQL> select * from stu5;
+
+ENAME                     CITY
+------------------------- -------------------------
+Raj                       Silchar
+Mohan                     Silchar
+Raju                      Delhi
+Rajesh                    Lucknow
+Rakhi                     Mumbai
+Pooja                     Silchar
+
+6 rows selected.
+*************************************************************************************************************************************
+Check constarints is used to design user define rules 
+
+Syntax=<Colume name> CHECK(condition)
+
+SQL> create table stu6(sid varchar(15) check(sid like 'JLC-%'),name varchar(20) not null,email varchar2(20) check(email like '%@gmail.com'),age int check(age>=20),fee float check(fee>=25000));
+
+Table created.
+
+SQL> insert into stu6 values('JLC-056','Sunny','Sunny@gmail.com',23,28000);
+
+1 row created.
+
+SQL> insert into stu6 values('JLC-153','Rajiv','Rajiv@gmail.com',25,32000);
+
+1 row created.
+
+SQL> insert into stu6 values('JLC-153','Rajiv@gmail.com',25,32000);
+insert into stu6 values('JLC-153','Rajiv@gmail.com',25,32000)
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> insert into stu6 values('JLC-098','Mani','Mani@gmail.com',27,36000);
+
+1 row created.
+
+SQL> insert into stu6 values('JLC-153','Pooja','pooja@gmail.com',23,27000);
+
+1 row created.
+
+SQL> select * from stu6;
+
+SID             NAME                 EMAIL                       AGE        FEE
+--------------- -------------------- -------------------- ---------- ----------
+JLC-056         Sunny                Sunny@gmail.com              23      28000
+JLC-153         Rajiv                Rajiv@gmail.com              25      32000
+JLC-098         Mani                 Mani@gmail.com               27      36000
+JLC-153         Pooja                pooja@gmail.com              23      27000
+****************************************************************************************************************************
+SQL> create table stu7 as select * from customer where 1=2;  
+		here we already have customer table and have some data into it now here so to copy only the design i.e parameter we will give the condition 
+		as false here we give 1=2; in where clause we can take any values 
+		but if we give condition as true i.e say 23=23 than whole table will be copied
+SQL> select * from stu7;
+
+no rows selected   ------------------->since here no data is copies only table format(parameter) is copied
+ 
+
+
+
+SQL> drop table stu7;
+
+Table dropped.
+SQL> create table stu7(cid int,cname varchar(20),email varchar(20),phone number,status varchar(10));
+
+Table created.
+
+
+
+SQL> insert into stu7 values(101,'Sunny','Sunny@gmail.com',8273746576,'Active');
+
+1 row created.
+
+SQL> insert into stu7 values(102,'Ravi','ravi@gmail.com',8293364756,'InActive');
+
+1 row created.
+
+SQL> insert into stu7 values(103,'Pooja','pooja@gmail.com',7283646586,'Active');
+
+1 row created.
+
+SQL> insert into stu7 values(106,'Ankit','ankit@gmail.com',9023746567,'Active');
+
+1 row created.
+
+SQL>  select * from stu7;
+
+       CID CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active
+       102 Ravi                 ravi@gmail.com       8293364756 InActive
+       103 Pooja                pooja@gmail.com      7283646586 Active
+       106 Ankit                ankit@gmail.com      9023746567 Active
+
+SQL>  create table stu7account as select * from customeraccount where 1=2;
+
+Table created.
+
+
+SQL> desc stu7account;
+ Name
+                                   Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ CID
+                                            NUMBER(38)
+ BCODE
+                                            NUMBER(38)
+ ACNO
+                                            NUMBER
+ BAL
+                                            FLOAT(126)
+
+SQL> insert into stu7account values(101,345,2375867089,98000);
+
+1 row created.
+
+SQL> insert into stu7account values(102,783,6354755969,78000);
+
+1 row created.
+
+SQL> insert into stu7account values(103,888,8393465766,52000);
+
+1 row created.
+
+SQL> insert into stu7account values(106,752,2192033737,65000);
+
+1 row created.
+
+SQL> select * from stu7account;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        345 2375867089      98000
+       102        783 6354755969      78000
+       103        888 8393465766      52000
+       106        752 2192033737      65000
+
+SQL>  create table stu7address(cid int,street varchar(20),city varchar(10),country varchar(10));
+
+Table created.
+
+SQL> insert into stu7address values(101,'Rangirkhari','Silchar','India');
+
+1 row created.
+
+SQL> insert into stu7address values(102,'HMT Main','Bangalore','India');
+
+1 row created.
+
+SQL> select * from stu7address;
+
+       CID STREET               CITY       COUNTRY
+---------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India
+       102 HMT Main             Bangalore  India
+
+
+
+					CROSS JOIN
+
+SQL>  select * from stu7,stu7account;
+here it will do cross join stu7 and stu7account i.e stu7 X stu7account or stu7account X stu7;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       101 Sunny                Sunny@gmail.com      8273746576 Active            102        783 6354755969      78000
+       101 Sunny                Sunny@gmail.com      8273746576 Active            103        888 8393465766      52000
+       101 Sunny                Sunny@gmail.com      8273746576 Active            106        752 2192033737      65000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          103        888 8393465766      52000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          106        752 2192033737      65000
+       103 Pooja                pooja@gmail.com      7283646586 Active            101        345 2375867089      98000
+       103 Pooja                pooja@gmail.com      7283646586 Active            102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       103 Pooja                pooja@gmail.com      7283646586 Active            106        752 2192033737      65000
+       106 Ankit                ankit@gmail.com      9023746567 Active            101        345 2375867089      98000
+       106 Ankit                ankit@gmail.com      9023746567 Active            102        783 6354755969      78000
+       106 Ankit                ankit@gmail.com      9023746567 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+16 rows selected.
+
+SQL>  select * from stu7,stu7address;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          101 Rangirkhari       Silchar    India
+       103 Pooja                pooja@gmail.com      7283646586 Active            101 Rangirkhari       Silchar    India
+       106 Ankit                ankit@gmail.com      9023746567 Active            101 Rangirkhari       Silchar    India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            102 HMT Main          Bangalore  India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+       103 Pooja                pooja@gmail.com      7283646586 Active            102 HMT Main          Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active            102 HMT Main          Bangalore  India
+
+8 rows selected.
+
+SQL>  select * from stu7,stu7account,stu7address;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL        CID STREET               CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000        101 Rangirkhari          Silchar    India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            102        783 6354755969      78000        101 Rangirkhari          Silchar    India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            103        888 8393465766      52000        101 Rangirkhari          Silchar    India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            106        752 2192033737      65000        101 Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          101        345 2375867089      98000        101 Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000        101 Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          103        888 8393465766      52000        101 Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          106        752 2192033737      65000        101 Rangirkhari          Silchar    India
+       103 Pooja                pooja@gmail.com      7283646586 Active            101        345 2375867089      98000        101 Rangirkhari          Silchar    India
+       103 Pooja                pooja@gmail.com      7283646586 Active            102        783 6354755969      78000        101 Rangirkhari          Silchar    India
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000        101 Rangirkhari          Silchar    India
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL        CID STREET               CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       103 Pooja                pooja@gmail.com      7283646586 Active            106        752 2192033737      65000        101 Rangirkhari          Silchar    India
+       106 Ankit                ankit@gmail.com      9023746567 Active            101        345 2375867089      98000        101 Rangirkhari          Silchar    India
+       106 Ankit                ankit@gmail.com      9023746567 Active            102        783 6354755969      78000        101 Rangirkhari          Silchar    India
+       106 Ankit                ankit@gmail.com      9023746567 Active            103        888 8393465766      52000        101 Rangirkhari          Silchar    India
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000        101 Rangirkhari          Silchar    India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000        102 HMT Main             Bangalore  India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            102        783 6354755969      78000        102 HMT Main             Bangalore  India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            103        888 8393465766      52000        102 HMT Main             Bangalore  India
+       101 Sunny                Sunny@gmail.com      8273746576 Active            106        752 2192033737      65000        102 HMT Main             Bangalore  India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          101        345 2375867089      98000        102 HMT Main             Bangalore  India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000        102 HMT Main             Bangalore  India
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL        CID STREET               CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          103        888 8393465766      52000        102 HMT Main             Bangalore  India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          106        752 2192033737      65000        102 HMT Main             Bangalore  India
+       103 Pooja                pooja@gmail.com      7283646586 Active            101        345 2375867089      98000        102 HMT Main             Bangalore  India
+       103 Pooja                pooja@gmail.com      7283646586 Active            102        783 6354755969      78000        102 HMT Main             Bangalore  India
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000        102 HMT Main             Bangalore  India
+       103 Pooja                pooja@gmail.com      7283646586 Active            106        752 2192033737      65000        102 HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active            101        345 2375867089      98000        102 HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active            102        783 6354755969      78000        102 HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active            103        888 8393465766      52000        102 HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000        102 HMT Main             Bangalore  India
+
+32 rows selected.
+
+
+			INNER JOIN
+
+			1.Equal Join
+SQL> select * from stu7,stu7address where stu7.cid=stu7address.cid;
+
+       CID CNAME                EMAIL                     PHONE 	STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576	 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 	InActive          102 HMT Main          Bangalore  India
+
+
+
+SQL>  select * from stu7address,stu7account where stu7address.cid=stu7account.cid;
+
+       CID STREET               CITY       COUNTRY           CID      BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             101        345 2375867089      98000
+       102 HMT Main             Bangalore  India             102        783 6354755969      78000
+
+SQL>  select * from stu7,stu7account where stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+
+			2.Innner Join 
+	Here we can use only on caluse
+	Inner Join=Cross Join +Selection of Records
+
+
+SQL> select * from stu7 inner join stu7address on stu7.cid=stu7address.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL> select * from stu7 inner join stu7address where stu7.cid=stu7address.cid;
+select * from stu7 inner join stu7address where stu7.cid=stu7address.cid
+                                          *
+ERROR at line 1:
+ORA-00905: missing keyword
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+SQL> select * from stu7 inner join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+SQL> select * from stu7address inner join stu7account on stu7address.cid=stu7account.cid;
+
+       CID STREET               CITY       COUNTRY           CID      BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             101        345 2375867089      98000
+       102 HMT Main             Bangalore  India             102        783 6354755969      78000
+
+
+
+In inner join and equi join the common member here(cid) is included two time 
+More over here both the table may or may not have the same name
+
+				3.
+
+
+SQL>  select * from stu7 inner join stu7address using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+
+SQL>  select * from stu7 inner join stu7account using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL> select * from stu7address inner join stu7account using(cid);
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+
+
+				4.Natural Join
+
+
+SQL> select * from stu7address natural join stu7account;
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+SQL> select * from stu7 natural join stu7account;
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL> select * from stu7address natural join stu7;
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India      Ravi                 ravi@gmail.com       8293364756 InActive
+
+
+3 and 4 are same.Here in both the case cid should be same
+
+
+
+						OUTER JOIN
+
+Outer join is of three types:
+1:Left Outer Join	:-Marking(Selecting) Record+ Extra data of left 
+2.Right Outer Join	:-Marking(Selecting) Record+ Extra data of right
+3.Full Outer Join	:-Marking(Selecting) Record+ Extra data of left +  Extra data of right
+
+In the above outer keyword is optional
+Equi Join is Not used in Outer Join
+
+				A.Left Outer Join
+				2.Outer Join
+SQL> select * from stu7 left Outer join stu7address on stu7.cid=stu7address.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+
+SQL> select * from stu7address left Outer join stu7 on stu7address.cid=stu7.cid;
+
+       CID STREET               CITY       COUNTRY           CID CNAME                EMAIL             PHONE STATUS
+---------- -------------------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India             101 Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India             102 Ravi                 ravi@gmail.com    8293364756 InActive
+
+here in stu7address there is no extra data which is on the left
+
+
+
+
+SQL> select * from stu7 left Outer join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+SQL> select * from stu7account left Outer join stu7 on stu7account.cid=stu7.cid;
+
+       CID      BCODE       ACNO        BAL        CID CNAME                EMAIL                     PHONE STATUS
+---------- ---------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101        345 2375867089      98000        101 Sunny                Sunny@gmail.com      8273746576 Active
+       102        783 6354755969      78000        102 Ravi                 ravi@gmail.com       8293364756 InActive
+       103        888 8393465766      52000        103 Pooja                pooja@gmail.com      7283646586 Active
+       106        752 2192033737      65000        106 Ankit                ankit@gmail.com      9023746567 Active
+
+
+
+
+
+SQL> select * from stu7address left Outer join stu7account on stu7address.cid=stu7account.cid;
+
+       CID STREET               CITY       COUNTRY           CID      BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             101        345 2375867089      98000
+       102 HMT Main             Bangalore  India             102        783 6354755969      78000
+
+SQL> select * from stu7account left Outer join stu7address on stu7account.cid=stu7address.cid;
+
+       CID      BCODE       ACNO        BAL        CID STREET               CITY       COUNTRY
+---------- ---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101        345 2375867089      98000        101 Rangirkhari          Silchar    India
+       102        783 6354755969      78000        102 HMT Main             Bangalore  India
+       106        752 2192033737      65000
+       103        888 8393465766      52000
+
+
+
+
+
+SQL> select * from stu7 left join stu7address on stu7.cid=stu7address.cid;					//can be used without outer
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+
+
+
+				3.
+
+
+SQL> select * from stu7 left outer join stu7address using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+SQL>  select * from stu7address left outer join stu7 using(cid);
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India      Ravi                 ravi@gmail.com       8293364756 InActive
+
+SQL>  select * from stu7 left outer join stu7account using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL>  select * from stu7account left outer join stu7 using(cid);
+
+       CID      BCODE       ACNO        BAL CNAME                EMAIL                     PHONE STATUS
+---------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Sunny                Sunny@gmail.com      8273746576 Active
+       102        783 6354755969      78000 Ravi                 ravi@gmail.com       8293364756 InActive
+       103        888 8393465766      52000 Pooja                pooja@gmail.com      7283646586 Active
+       106        752 2192033737      65000 Ankit                ankit@gmail.com      9023746567 Active
+
+SQL>  select * from stu7account left outer join stu7address using(cid);
+
+       CID      BCODE       ACNO        BAL STREET               CITY       COUNTRY
+---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Rangirkhari          Silchar    India
+       102        783 6354755969      78000 HMT Main             Bangalore  India
+       106        752 2192033737      65000
+       103        888 8393465766      52000
+
+SQL>  select * from stu7address left outer join stu7account using(cid);
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+
+
+SQL>  select * from stu7address left join stu7account using(cid);  				//without outer keyword
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+
+
+				4.Natural Left Outer
+
+SQL>  select * from stu7 natural left outer join stu7account;
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL>  select * from stu7account natural left outer join stu7;
+
+       CID      BCODE       ACNO        BAL CNAME                EMAIL                     PHONE STATUS
+---------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Sunny                Sunny@gmail.com      8273746576 Active
+       102        783 6354755969      78000 Ravi                 ravi@gmail.com       8293364756 InActive
+       103        888 8393465766      52000 Pooja                pooja@gmail.com      7283646586 Active
+       106        752 2192033737      65000 Ankit                ankit@gmail.com      9023746567 Active
+
+SQL>  select * from stu7 natural left outer join stu7address;
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+SQL> select * from stu7address natural left outer join stu7;
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India      Ravi                 ravi@gmail.com       8293364756 InActive
+
+SQL>  select * from stu7address natural left outer join stu7account;
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+SQL>  select * from stu7address natural left join stu7account;			without outer
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+
+SQL>  select * from stu7 natural left  join stu7address;			without outer
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+
+
+
+					B.Right Outer Join
+					2.Outer Join
+SQL> select * from stu7 right outer join stu7address on stu7.cid=stu7address.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+
+
+SQL> select * from stu7address right outer join stu7 on stu7address.cid=stu7.cid;
+
+       CID STREET               CITY       COUNTRY           CID CNAME                EMAIL             PHONE STATUS
+---------- -------------------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India           	101 Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India        	102 Ravi                 ravi@gmail.com    8293364756 InActive
+                                                    		         	106 Ankit                ankit@gmail.com      9023746567 Active
+                                                     	        	103 Pooja                pooja@gmail.com      7283646586 Active
+
+
+
+
+SQL> select * from stu7 right outer join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+
+
+SQL> select * from stu7 right outer join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+SQL> select * from stu7 right  join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+SQL> select * from stu7address right  join stu7account on stu7address.cid=stu7account.cid;
+
+       CID STREET               CITY       COUNTRY           CID      BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             	101        345 2375867089      98000
+       102 HMT Main             Bangalore  India             	102        783 6354755969      78000
+                                                           		106        752 2192033737      65000
+                                                        		103        888 8393465766      52000
+
+
+
+					3.
+
+SQL> select * from stu7 right outer join stu7address using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+
+SQL> select * from stu7address right outer join stu7 using(cid);
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      	Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India      	Ravi                 ravi@gmail.com       8293364756 InActive
+       106                                          		Ankit                ankit@gmail.com      9023746567 Active
+       103                                            		Pooja                pooja@gmail.com      7283646586 Active
+
+SQL> select * from stu7 right outer join stu7account using(cid);
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL> select * from stu7account right outer join stu7 using(cid);
+
+       CID      BCODE       ACNO        BAL CNAME                EMAIL                     PHONE STATUS
+---------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Sunny                Sunny@gmail.com      8273746576 Active
+       102        783 6354755969      78000 Ravi                 ravi@gmail.com       8293364756 InActive
+       103        888 8393465766      52000 Pooja                pooja@gmail.com      7283646586 Active
+       106        752 2192033737      65000 Ankit                ankit@gmail.com      9023746567 Active
+
+SQL> select * from stu7address right outer join stu7account using(cid);
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India             	345 2375867089      98000
+       102 HMT Main             Bangalore  India             	783 6354755969      78000
+       106                                                   		752 2192033737      65000
+       103                                                   		888 8393465766      52000
+
+
+
+
+				4.Natural Join 
+
+SQL> select * from stu7 natural right outer join stu7address;
+
+       CID CNAME                EMAIL                     PHONE STATUS     STREET               CITY    COUNTRY
+---------- -------------------- -------------------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active     Rangirkhari          Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive   HMT Main             Bangalore  India
+
+SQL> select * from stu7address natural right outer join stu7;
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India      Ravi                 ravi@gmail.com       8293364756 InActive
+       106                                            Ankit                ankit@gmail.com      9023746567 Active
+       103                                            Pooja                pooja@gmail.com      7283646586 Active
+
+SQL> select * from stu7 natural right outer join stu7account;
+
+       CID CNAME                EMAIL                     PHONE STATUS          BCODE       ACNO     BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            752 2192033737      65000
+
+SQL> select * from stu7account natural right outer join stu7;
+
+       CID      BCODE       ACNO        BAL CNAME                EMAIL                     PHONE STATUS
+---------- ---------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Sunny                Sunny@gmail.com      8273746576 Active
+       102        783 6354755969      78000 Ravi                 ravi@gmail.com       8293364756 InActive
+       103        888 8393465766      52000 Pooja                pooja@gmail.com      7283646586 Active
+       106        752 2192033737      65000 Ankit                ankit@gmail.com      9023746567 Active
+
+SQL> select * from stu7account natural right outer join stu7address;
+
+       CID      BCODE       ACNO        BAL STREET               CITY       COUNTRY
+---------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101        345 2375867089      98000 Rangirkhari          Silchar    India
+       102        783 6354755969      78000 HMT Main             Bangalore  India
+
+SQL> select * from stu7address natural right outer join stu7account;
+
+       CID STREET               CITY       COUNTRY         BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar    India 	                345 2375867089      98000
+       102 HMT Main             Bangalore  India             783 6354755969      78000
+       106		                                                   752 2192033737      65000
+       103
+
+
+SQL> select * from stu7address natural right join stu7;
+
+       CID STREET               CITY       COUNTRY    CNAME                EMAIL                     PHONE STATUS
+---------- -------------------- ---------- ---------- -------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India      	Sunny                Sunny@gmail.com      8273746576 Active
+       102 HMT Main             Bangalore  India     	Ravi                 ravi@gmail.com       8293364756 InActive
+       106              		            	     	     Ankit                ankit@gmail.com      9023746567 Active
+       103                                        	         	Pooja                pooja@gmail.com      7283646586 Active
+
+
+
+					C.Full Outer Join
+
+
+SQL> select * from stu7 full outer join stu7address on stu7.cid=stu7address.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID STREET            CITY       COUNTRY
+---------- -------------------- -------------------- ---------- ---------- ---------- -------------------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101 Rangirkhari       Silchar    India
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102 HMT Main          Bangalore  India
+       106 Ankit                ankit@gmail.com      9023746567 Active
+       103 Pooja                pooja@gmail.com      7283646586 Active
+
+SQL> select * from stu7address full outer join stu7 on stu7address.cid=stu7.cid;
+
+       CID STREET               CITY       COUNTRY                CID   CNAME                EMAIL             PHONE 	STATUS
+---------- -------------------- ---------- ---------- ---------- ----------------------- -------------------- ---------- ----------
+       101 Rangirkhari          Silchar    India                             101    Sunny                Sunny@gmail.com   8273746576	 Active
+       102 HMT Main             Bangalore  India 	         102    Ravi                 ravi@gmail.com        8293364756 	InActive
+		                                                              106    Ankit                ankit@gmail.com      9023746567 	Active
+                                   			                           103    Pooja                pooja@gmail.com     7283646586 	Active
+
+
+SQL> select * from stu7 full outer join stu7account on stu7.cid=stu7account.cid;
+
+       CID CNAME                EMAIL                     PHONE STATUS            CID      BCODE       ACNO        BAL
+---------- -------------------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Sunny                Sunny@gmail.com      8273746576 Active            101        345 2375867089      98000
+       102 Ravi                 ravi@gmail.com       8293364756 InActive          102        783 6354755969      78000
+       103 Pooja                pooja@gmail.com      7283646586 Active            103        888 8393465766      52000
+       106 Ankit                ankit@gmail.com      9023746567 Active            106        752 2192033737      65000
+
+SQL> select * from stu7address full outer join stu7account on stu7address.cid=stu7account.cid;
+
+       CID STREET               CITY       COUNTRY           CID      BCODE       ACNO        BAL
+---------- -------------------- ---------- ---------- ---------- ---------- ---------- ----------
+       101 Rangirkhari          Silchar  	India          101        345 	2375867089      98000
+       102 HMT Main             Bangalore  	India          102        783 	6354755969      78000
+                                                             		 106        752 	2192033737      65000
+                                                             		 103        888 	8393465766      52000
+
+************************************************************************************************************************************************************************************************************************************
+
+Assignment of Above Table:
+
+
+1.SQL> select cname,email,acno,bal from stu7,stu7account where stu7.cid=stu7account.cid;
+
+CNAME                EMAIL                      ACNO        BAL
+-------------------- -------------------- ---------- ----------
+Sunny                Sunny@gmail.com      2375867089      98000
+Ravi                 ravi@gmail.com       6354755969      78000
+Pooja                pooja@gmail.com      8393465766      52000
+Ankit                ankit@gmail.com      2192033737      65000
+
+2.SQL> select cname,email,status,city,country from stu7 left outer join stu7address on stu7.cid=stu7address.cid;
+
+CNAME                EMAIL                STATUS     CITY       COUNTRY
+-------------------- -------------------- ---------- ---------- ----------
+Sunny                Sunny@gmail.com      Active     Silchar    India
+Ravi                 ravi@gmail.com       InActive   Bangalore  India
+Ankit                ankit@gmail.com      Active
+Pooja                pooja@gmail.com      Active
+
+
+3.we donot have account type so cannot do this question
+
+4.SQL>  select cname,status,city,country from stu7 natural left outer join stu7address where city= 'Bangalore' and status='InActive';
+
+CNAME                STATUS     CITY       COUNTRY
+-------------------- ---------- ---------- ----------
+Ravi                 InActive   Bangalore  India
+
+5.SQL> select acno,bal,city from stu7account natural left join stu7address where bal between 8000 and 100000 and city in('Bangalore','Silchar')
+  2  ;
+
+      ACNO        BAL CITY
+---------- ---------- ----------
+2375867089      98000 Silchar
+6354755969      78000 Bangalore
+
+
+
+6.SQL> select cname,status,acno,bal,city,country from stu7 natural left join stu7address natural left outer join stu7account;
+
+CNAME                STATUS           ACNO        BAL CITY       COUNTRY
+-------------------- ---------- ---------- ---------- ---------- ----------
+Sunny                Active     2375867089      98000 Silchar    India
+Ravi                 InActive   6354755969      78000 Bangalore  India
+Pooja                Active     8393465766      52000
+Ankit                Active     2192033737      65000
+
+SQL> select cname,status,acno,bal,city,country from stu7 natural  join stu7address natural left outer join stu7account;
+
+CNAME                STATUS           ACNO        BAL CITY       COUNTRY
+-------------------- ---------- ---------- ---------- ---------- ----------
+Sunny                Active     2375867089      98000 Silchar    India
+Ravi                 InActive   6354755969      78000 Bangalore  India
+
+
+7.SQL> select cname,status,acno,bal,city,country from stu7 natural  join stu7address natural left outer join stu7account where status='Inactive' and bal<10000 and country is not null;
+
+no rows selected  since no matching record
+****************************************************************************************************************************************************************************************************************************
+
+
+SELF JOIN:
+
+SQL> create table empself(eid int,ename varchar(20),mgrid int);
+
+Table created.
+
+SQL>  insert into empself values(101,'Mohan',103);
+
+1 row created.
+
+SQL> insert into empself values(102,'Rani',103);
+
+1 row created.
+
+SQL> insert into empself values(103,'Pooja',104);
+
+1 row created.
+
+SQL>  insert into empself values(104,'Ravi',101);
+
+1 row created.
+
+
+
+SQL> select emp1.ename,emp2.ename from empself emp1,empself emp2 where emp1.mgrid=emp2.eid;
+					
+ENAME                ENAME
+-------------------- --------------------
+Ravi                 Mohan
+Rani                 Pooja
+Mohan                Pooja
+Pooja                Ravi
+
+Since self join so change the name of both i.e empself to emp1 and  empself to emp2
+Here we are acessing ename directly by using emp1.ename and emp2.ename
+
+
+SQL> select emp1.ename "Emp Name",emp2.ename as "Manager Name" from empself emp1,empself emp2 where emp1.mgrid=emp2.eid;
+
+Emp Name             Manager Name
+-------------------- --------------------
+Ravi                 Mohan
+Rani                 Pooja
+Mohan                Pooja
+Pooja                Ravi
+
+
+here we change name of ename of emp1 and emp2 as emp name and manager name using alias
+*******************************************************************************************************************************************
+
+
+TO FIND DUPLICATE MULTIPLE RECORDS:
+
+SQL> select * from record3;
+
+        ID NAME
+---------- ---------------
+       101 Sri
+       102
+           DK
+       103 Nivas
+       104
+
+       101 Sri
+
+7 rows selected.
+
+SQL>  select * from record3 group by id,name having count(*)>1;
+
+        ID NAME
+---------- ---------------
+       101 Sri
+
+
+
+SQL>  select id from record3 group by id having count(id)>1;
+
+        ID
+----------
+       101
+
+SQL>  select name from record3 group by name having count(name)>1;
+
+NAME
+---------------
+Sri
+
+
+
+SQL>  select * from studentinfo;
+
+       SID SNAME           COURSE              TOTFEE    FEEPAID     FEEBAL BRANCH          CITY
+---------- --------------- --------------- ---------- ---------- ---------- --------------- ---------------
+         1 Srinivas        FC                   18000      10000       8000 MKR             Blore
+         2 Dande           CoreJava              5000       5000          0 BTM             Pune
+         3 Manish          Android               8000       4000       4000 MHA             Delhi
+         4 DK              Hadoop               18000       9000       9000 MKR             Blore
+         5 Rajeev          Android               8000       5000       3000 BTM             Pune
+         6 Firoj           Hadoop               20000      15000       5000 MKR             Blore
+         7 Kofel           Android               8000       2000       6000 BTM             Delhi
+
+7 rows selected.
+
+SQL> select course from studentinfo group by course having count(course)>1;
+
+COURSE
+---------------
+Hadoop
+Android
+
+
+SQL> select course,totfee,city from studentinfo group by course,totfee,city having count(course,totfee,city)>1;
+select course,totfee,city from studentinfo group by course,totfee,city having count(course,totfee,city)>1
+                                                                              *
+ERROR at line 1:
+ORA-00909: invalid number of arguments
+
+
+SQL> select course,totfee,city from studentinfo group by course,totfee,city having count(*)>1;
+
+COURSE              TOTFEE CITY
+--------------- ---------- ---------------
+Android               8000 	Delhi

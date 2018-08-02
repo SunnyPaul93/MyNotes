@@ -1,0 +1,130 @@
+
+JDBC donot have cache support
+For enterprise application simple JDBC is not suitable we have to go to EJB 
+BUT EJB team developer Gaving King find many problems in EJB
+EJB entity bean has dependency with session beans and both EJP entity and EJB session bean requires Application server i.e without application server EJB cannot
+be run
+
+For small scale industry EJB are not recommended as they must have to buy Application Server which cost much more otherwise they cannot work with EJB and
+also maintainence cost is also more
+
+Than Gavin King develope one tool Hibernate for above problem only and in Hibernate he designed same type of features in EJB-Entity beans i.e Query language
+and Cache support in Hibernate and given many more features
+
+In Hibernate we donot required Application Server i.e simple JDK and JRE and hibernate download jar file is enough 
+
+Servlet can directly talk to Hibernate 
+
+Specially Hibernate is developed for DAO part
+
+In Hibernate all exceptions are runtime exceptions
+
+Hibernate have auto ddl support i.e tables can be created automatically
+It suport DB independent support
+It suport cache support
+It suport PK support
+It suport Data Validation support by using annotation
+It suport ORM support			(ORM desingn for IS A , HAS A RELATIONSHIP )
+It suport hibernate search(index based serach) (from Hibernate 4.0 onwards)
+It is possible to maintain IS A RELATIONSHIP and HAS A RELATIONSHIP 
+OGM(Object Graph Mapping) support (from Hibernate 4.0 onwards)	(Non-Relational DB machine like MongoDB,.....etc)
+It support Connection Pools 
+ORM	:-SQL	(RDMS machine)
+OGM	:-Non-SQL
+
+
+DB must nedd to have one  PK
+
+
+	
+
+Hibernate Object Types:-
+
+	To save,update,delete object is required
+	
+Three types of object :-
+	Persistant 
+	Detatched
+	Transient
+
+session is same like JDBC connection
+
+One Application can have many number of mapping file(mapping resources) 
+
+
+Auto DDL operations:-
+
+Automatically Hibernate can create DB table
+
+hbm2ddl.auto
+
+create,update,validate,create-drop we can do with hbm2ddl.auto
+  
+create	:-drop and create
+update	:-alter and create
+
+If I alter(here add) column than that column is not null
+
+validate	:-check mapping schema against table schema
+mapping column=table column
+mapping column count <=table column count
+
+say in mapping I have sid,sname column and in DB tables are sid,sname,email
+than it will not validate my schema
+
+create-drop:- drop table if exist 
+	create new table
+	drop exist table (when we call sf.close)
+	
+sf	:-sessionfactory
+cfg.buildsessionFactory();	:-It will create tables autoamtically
+
+to see Internally generated queries we use 
+	<property name="show">true<property>
+
+
+
+
+
+To Insert Data	:-save,persist,save or update
+
+save mtd return type is primary key (s.save(stu))
+persist return type is void		(s.persist(stu))
+save or update return type is void	(s.saveorupdate(stu))
+
+
+To Updata	Data	:-update,merge
+
+update mtd is used to update existing record
+merge mts is used to update at any cost (in case if chance  to get any exception by update)
+
+In case if I update with same primary key than in session duplicate value came which is not possible than it will 
+throw exception duplicate exception so instead of this we can use merge
+With merge() session can contain same object also
+
+To Delete Data	:-delete
+
+PK can be int,float,string or any type
+
+Primary Key Auto Generator:-
+
+	1.assigned	(default)	:-user is responsible to pass id
+	2.increment	:-select max id from user and incement(+1) automatically
+	3.native
+	4.sequence
+	5.foreign
+	6.identity
+	7.hilo
+	8.custom generators
+
+
+
+
+
+
+
+
+
+
+
+

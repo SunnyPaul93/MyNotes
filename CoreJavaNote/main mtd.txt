@@ -1,0 +1,60 @@
+whether class contains main or not compiler wonot worry and it will 
+compile sucessfully e.g class test{} ----->compile test is valid but at
+runtime(executing) jvm(check whether class contai main method or not and 
+wheher main method is declared according to according to reqd. or not )
+unable to find main method in the class test error:no such mtd error:main
+
+inside jvm public static void main is configured so jvm always searches for 
+with this prototype only
+if we can design our own jvm and can configured our own prototype then that 
+prototype is valid 
+
+instead of public static we can take static public i.e order of modifiers
+is not important
+
+static final synchronized strictfp public void main(String ...sunny){
+sop("hello");}
+
+
+class test{
+psvm(String[] arg){
+sop("String[]");}
+psvm(int[] arg){
+sop("int[]");}
+}
+
+here overloading of main method is possible but jvm will call string arr arg
+main method only other overloaded method we have to call explecitly like
+normal method call 
+
+
+class p{
+psvm(String []args){			//javac p.java-java p-parent main
+sop("parent main");			//javac c.java-java c-parent main
+}}
+class c extends p{}
+
+inheritanc concept applicable for main method
+
+
+
+
+class p{
+psvm(String []args){			//javac p.java-java p-parent main
+sop("parent main");			//javac c.java-java c-child main
+}}
+class c extends p{
+psvm(String [] args){
+sop("child main");
+}}
+here overriding and this is applicable for main method but it is not 
+overriding it is method hiding
+
+
+ameerpct standart		Hi-tech city standard
+class a{			package com.sun.p1;
+public int m1(int x,int y)	public class calculator{	
+				public static int add(int number1,number2)
+{reurn x+y;}				{return number1+number2;}
+}				}
+

@@ -1,0 +1,85 @@
+The process of creating exactly duplicate object but not duplicate reference variable  is called cloning
+purpose of cloining is to maintain a backup and to preserve state of a object 
+we can perform cloining by using clone method present in object class
+
+protected native  Object clone() throws CloneNotSupportException
+class test implements Clonable{
+int i=10;
+int j=20;
+psvm(String [] arr)
+{
+test t1=new test();
+//test t2=t1;
+//test t2=t1.clone();		return type of clone metthod is object not test  for parent type object child reference we cant use if i use like this compile error incompatable type
+test t2=(test)t1.clone();
+t2.i=888;
+t2.j=999;
+sop(t1.i+"...."+t1.j);
+
+}
+clonenotsupportexception:checked exception
+clone method present in object class but not in cloneable interface
+cloneable interface present in java.lang package and it doesnot  contains no methods so it is a marker
+ interface
+
+Market interface in java is an interface which doesnot have any method
+we can perform cloaning only for cloneable objects 
+a object is  said to be cloneable iff and only iff corrosponding class implements cloneable interface
+if we are trying to perform for non cloneable objects than  we will get run timee excepton saying clone
+not supported exception
+
+
+
+
+
+
+
+
+
+By default,Object class does not have idea about the structure of class on which clone() method will be
+ invoked. So, JVM when called for cloning, do following things:
+
+1) If the class has only primitive data type members then a completely new copy of the object will be
+ created and the reference to the new object copy will be returned.
+
+2) If the class contains members of any class type then only the object references to those members are
+ copied and hence the member references in both the original object as well as the cloned object refer
+ to the same object.
+
+
+
+
+shallow cloaning vs deep cloning:
+object class clone method is only for shallow cloneing 
+
+process of creating exectly duplicate indepemented copy including contained object is called deep cloaning
+in deep cloaning if main obj contains any primitive varisble than in the cloned object duplicate dcopies wil l 
+be craeated if main object conatin any reference var than corrosponding contained objects will be created 
+in the cloned copy 
+by default obj class cloned mtd went for shallow cloaning but we can implement deep cloaning explecitly 
+by overridding clone method in our class
+
+
+
+
+
+if my class contain only primitive variable than go for shallow cloneing 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

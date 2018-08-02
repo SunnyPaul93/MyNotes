@@ -1,0 +1,1332 @@
+************************************************************************************************************************************
+JDBC Statements :
+There are three types of JDBC statements:
+1.Statement
+2.Prepare statements
+3.Callable statements
+
+************************************************************************************************************************************
+1.Statements:
+Statements is an interface available in java.lang.sql package and sub-class of statement interface is provided by Driver vendor
+Goal of statement is to submit query to database
+
+We can create statement objects using the following:
+a.public statements create statement()
+b.public statements create statement(int,int)	:-1st parameter is for result set type and 2nd is for concurrency i.e whether we want static or dynamic  
+c.public statements create statement(int,int,int)	:-1st parameter is for result set type and 2nd is for concurrency i.e whether we want static or dynamic and 
+					   3rd parameter is for transiction managemet i.e close or keep cursor 	
+a and b are mainly used if have some result set 
+
+We can call one of the following method on statement object to submit Sql Statements to database:
+public int executeupdate(String sql1 )
+public ResultSet executeQuery(String sql1)
+public boolen execute(String sql1)
+ 
+
+public int executeupdate(String sql1 ):When we want to Insert or Update or Delete Sql statement then use executeUpdate() method which returns the number of 
+records insrted or deleted or updated 
+
+
+public ResultSet executeQuery(String sql1):When we want to Select Sql statements then use executeQuery() method which return the ResultSet object contains the 
+records returned  by Select statement
+
+public boolen execute(String sql1):When we want to Insert,Delete,Update or Select SQL statements the use execute() methods which return the boolean value 
+	If the value is true which means Select Sql statements is submitted and ResultSet object is created 
+	Use the following methods of ststements to get the ResultSet object
+	>public ResultSet getResultSet()
+	
+	But
+	If the returned value is false which means Insert,Update or Delete Sql statements is submitted amd the integer number is available which represent the
+	number of records Inserted,Deleated or Updated 
+	Use the following methods of ststements to get the integer number available
+	>public int getUpdateCount()
+
+
+Note:View and ResultSet are only differ by that view is object running in database memeory but ResultSet is object running in Java Memeory
+
+If we want to insert,update or delete record than better go for create statement() i.e with  no argument but if we want to select statement than go for 
+create statement with two or three parameters i.e create statement(int,int) or create statement(int,int,int)
+
+Statements may contain the oracle or mysql statements depend on connection to the database
+
+Using single statement object we can submit any type of Sql statements and any number of Sql statements 
+When we submit sql statements using Statement objects then Sql statements willl be compiled and execute every time 
+
+
+When we use dynamic  values for Sql statements then we can use either concatenation operator or Formatter class  or format of String class etc to format the Query
+
+Eg.	int sid=191;
+	String name="Sunny";
+	String email="Sun93@gmail.com"
+	long phone=9292928282;
+
+
+
+Using Statement we can dynamically here insert Sql statements in following ways:
+
+String sql="insert into student values("+sid+", ' "+name+" ' , ' "+email+" ' , "+phone+")";
+			or
+String sql=String.format("insert into student values(%d,%s,%s,%d)",sid,name,email,phone );
+			or
+
+Formatter fmt=new Formatter();
+String sql=fmt.format("insert into student values(%d,%s,%s,%d)",sid,name,email,phone ).toString();
+
+
+mysql> select * from student2;
++------+-------+-----------------+------------+
+| sid  | name  | email           | phone      |
++------+-------+-----------------+------------+
+|  101 | Mohan | mohan@gmail.com | 8393747474 |
+|  102 | Pooja | pooja@gmail.com | 9292929283 |
+|  103 | Ravi  | ravi@gmail.com  | 8374657686 |
++------+-------+-----------------+------------+
+3 rows in set (0.41 sec)
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class JDBC_Lab5 {
+
+	public static void main(String[] args) throws SQLException {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		Statement st=null;
+		//We will use Type IV driver as it has high performance it can communicate directly with the data base by using databases native protocol provided by database vendor it converts jdbc calls into databse specific call directly this driver is also known as pure java
+	
+		
+		try {
+			
+			
+			con=JDBC_UTIL.getMySQLConnection();			//TO CONNECT WITH MYSQL USING TYPE IV DRIVER
+		//	con=JDBC_UTIL.myOracleConnection();			//TO CONNECT WITH ORACLE USING TYPE IV DRIVER
+			
+			//Prepare sql statement We can dynamically here insert Sql statements
+
+			int sid=106;
+			String name="Ankit";
+			String email="ankt@gmail.com";
+			long phone=8273645464l;
+			String qry1=String.format(" insert into student2 values(%d,'%s','%s',%d)",sid,name,email,phone) ;	//dynamically inserted
+			
+			System.out.println(qry1);
+			
+			st=con.createStatement();
+	
+			//submit sql statement to database using JDBC statement
+			int x=st.executeUpdate(qry1);				//return type of executeUpdate(mysql) is integer(int)
+									//here we are only inserting or deleting or updating 		
+			
+			//process the result
+			if(x==1){
+				System.out.println("Record Inserted In mysql");
+			//	System.out.println("Record Inserted In Oracle");
+						
+			}
+		
+			else 
+				System.out.println("No Record Inserted");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		
+		finally{
+			JDBC_UTIL.mycleanup1(st, con);
+		}
+	}
+
+}
+
+
+
+mysql> select * from student2;
++------+-------+-----------------+------------+
+| sid  | name  | email           | phone      |
++------+-------+-----------------+------------+
+|  101 | Mohan | mohan@gmail.com | 8393747474 |
+|  102 | Pooja | pooja@gmail.com | 9292929283 |
+|  103 | Ravi  | ravi@gmail.com  | 8374657686 |
+|  106 | Ankit | ankt@gmail.com  | 8273645464 |
++------+-------+-----------------+------------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+package jdbc1;
+import java.sql.*;
+import java.util.Formatter;
+
+public class JDBC_Lab5a {
+
+
+
+
+		public static void main(String[] args) throws SQLException {
+			// TODO Auto-generated method stub
+			Connection con=null;
+			Statement st=null;
+			ResultSet rs=null;
+			try {
+				
+			//	con=JDBC_UTIL.getMySQLConnection();
+				con=JDBC_UTIL.myOracleConnection();
+				
+				int sid=103;						//dynamically selected
+				Formatter fmt=new Formatter();
+				String qry=fmt.format("select * from student2 where sid=%d ",sid).toString();
+
+				st=con.createStatement();
+				rs=st.executeQuery(qry);					//here we only select 
+				
+				if(rs.next()){
+					int id=rs.getInt(1);
+					String sn=rs.getString(2);
+					String em=rs.getString(3);
+					long pn=rs.getLong(4);
+					
+					System.out.println(id + "\t" +sn + "\t" + em + "\t" + pn);
+				}
+				
+				else {
+					System.out.println("Student not found");
+				}
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
+			
+			finally{
+					
+						JDBC_UTIL.mycleanup2(rs, st, con);
+			
+			}
+		}
+
+	}
+
+
+
+
+
+103	Suraj	suraj@gmail.com	8282736456			//in JavaEclipse console
+
+
+
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;;
+
+public class JDBC_Lab5c {
+
+	public static void main(String[] args) throws SQLException  {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		try {
+			
+			//	con=JDBC_UTIL.getMySQLConnection();
+				con=JDBC_UTIL.myOracleConnection();
+	
+				String qry=null;		
+				
+		//		qry="insert into student2 values(108,'Pranab','pranab@gmail.com',8383837373)";
+			
+				qry="select * from student2 ";
+				
+		//	qry="update student2 set phone=8759167520 where sid=101";
+			
+		//		qry="delete from student2 where sid=110";
+			
+				st=con.createStatement();
+		
+				boolean b1=st.execute(qry);
+				
+				System.out.println(b1);
+				
+				if(b1){
+				rs=st.getResultSet();	
+				
+				
+				if(rs.next()){
+			
+					while(rs.next()){
+					int id=rs.getInt(1);
+					String sn=rs.getString(2);
+					String em=rs.getString(3);
+					long pn=rs.getLong(4);
+					
+					System.out.println(id + "\t" +sn + "\t" + em + "\t" + pn);
+				
+					}
+				}
+				}
+				else {
+					int x=st.getUpdateCount();
+				
+					System.out.println("Result is:"+x);
+				}
+			
+				} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
+			
+			finally{
+					
+						JDBC_UTIL.mycleanup2(rs, st, con);
+			
+			}
+
+	
+	}
+
+	}
+
+
+
+If qry is to insert sttudent in programme 5c
+
+mysql> select * from student2;
++------+--------+------------------+------------+
+| sid  | name   | email            | phone      |
++------+--------+------------------+------------+
+|  101 | Mohan  | mohan@gmail.com  | 8393747474 |
+|  102 | Pooja  | pooja@gmail.com  | 9292929283 |
+|  103 | Ravi   | ravi@gmail.com   | 8374657686 |
+|  106 | Ankit  | ankt@gmail.com   | 8273645464 |
+|  110 | Suraj  | suraj@gmail.com  | 8282736456 |
+|  108 | Pranab | pranab@gmail.com | 8383837373 |
++------+--------+------------------+------------+
+6 rows in set (0.00 sec)
+
+if qry is Phone of sid=101 is updated
+
+mysql> select * from student2;
++------+--------+------------------+------------+
+| sid  | name   | email            | phone      |
++------+--------+------------------+------------+
+|  101 | Mohan  | mohan@gmail.com  | 8759167520 |
+|  102 | Pooja  | pooja@gmail.com  | 9292929283 |
+|  103 | Ravi   | ravi@gmail.com   | 8374657686 |
+|  106 | Ankit  | ankt@gmail.com   | 8273645464 |
+|  110 | Suraj  | suraj@gmail.com  | 8282736456 |
+|  108 | Pranab | pranab@gmail.com | 8383837373 |
++------+--------+------------------+------------+
+6 rows in set (0.00 sec)
+
+if qry is delete where sid =108
+mysql> select * from student2;
++------+-------+-----------------+------------+
+| sid  | name  | email           | phone      |
++------+-------+-----------------+------------+
+|  101 | Mohan | mohan@gmail.com | 8759167520 |
+|  102 | Pooja | pooja@gmail.com | 9292929283 |
+|  103 | Ravi  | ravi@gmail.com  | 8374657686 |
+|  106 | Ankit | ankt@gmail.com  | 8273645464 |
+|  110 | Suraj | suraj@gmail.com | 8282736456 |
++------+-------+-----------------+------------+
+5 rows in set (0.00 sec)
+
+
+Updatecount is 1 means 1 record is updated i.e either insert or delete or updated and nothing is done than updatecount is 0 
+Updatecount is 3 means 3 records is updated i.e either insert or delete or updated 
+
+Updatecount means no of record updated
+
+Note: In statement only 1 record is either insert or delete or update so Updatecount is always 1
+
+**************************************************************************************************************************************
+
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class JDBC_Lab8a {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		Statement st=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+			//con=JDBC_UTIL.myOracleConnection();
+			st=con.createStatement();
+			int x=st.executeUpdate("insert into student3 values(102,'Ravi','ravi@gamil.con',9282873737)");
+			int x1=st.executeUpdate("insert into student3 values(103,'Raju','raju@gamil.con',9393984848)");
+			int x2=st.executeUpdate("insert into student3 values(104,'Pooja','pooja@gamil.con',8282737373)");
+			int x4=st.executeUpdate("update student3 set name='Sunny' where sid=101");
+			int x5=st.executeUpdate("delete from student3 where sid=110");
+			
+		
+			
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		finally {
+			JDBC_UTIL.mycleanup1(st, con);
+		}
+		
+	}
+
+}
+
+mysql> select * from student3;
++------+-------+-----------------+------------+
+| sid  | name  | email           | phone      |
++------+-------+-----------------+------------+
+|  101 | Sunny | mohan@gmail.com | 9181736456 |
+|  102 | Ravi  | ravi@gamil.con  | 9282873737 |
+|  103 | Raju  | raju@gamil.con  | 9393984848 |
+|  104 | Pooja | pooja@gamil.con | 8282737373 |
++------+-------+-----------------+------------+
+4 rows in set (0.00 sec)
+*************************************************************************************************************************************
+
+2.Prepare Statement
+Prepare statement is an interface available in java.sql package 
+PrepareStatement is Extending Statement interface 				so resource cleanup code work for PrepareStatement also 
+Subclass of PrepareStatement is providd by Driver vendor
+
+We can create PrepareStatement object using following method of connnection interface:
+	
+	public PrepareStatement prepareStatement(sql);
+	public PrepareStatement prepareStatement(sql,int,int);	:-2nd parameter is for result set type and 3rd is for concurrency i.e whether we want 
+							static or dynamic
+	public PrepareStatement prepareStatement(sql,int,int);	:-2nd parameter is for result set type and 3rd is for concurrency i.e whether we want 
+							static or dynamic and 4th parameter is for transiction managemet i.e close or keep 
+							cursor 
+
+
+
+We can call one of following method on PrepareStatement Object to submit the Sql to DataBase
+
+
+public int executeupdate(String sql1 ):When we want to Insert or Update or Delete Sql statement then use executeUpdate() method which returns the number of 
+records insrted or deleted or updated 
+
+
+public ResultSet executeQuery(String sql1):When we want to Select Sql statements then use executeQuery() method which return the ResultSet object contains the 
+records returned  by Select statement
+
+public boolen execute(String sql1):When we want to Insert,Delete,Update or Select SQL statements the use execute() methods which return the boolean value 
+	If the value is true which means Select Sql statements is submitted and ResultSet object is created 
+	Use the following methods of ststements to get the ResultSet object
+	>public ResultSet getResultSet()
+	
+	But
+	If the returned value is false which means Insert,Update or Delete Sql statements is submitted amd the integer number is available which represent the
+	number of records Inserted,Deleated or Updated 
+	Use the following methods of ststements to get the integer number available
+	>public int getUpdateCount()
+
+
+
+
+Using single PrepareStatement object we can submit only one Sql statement 
+We can insert or update or delete multiple records using place holders(?)
+
+PrepareStatement gives us the place holder mechanism for providing the data dynamically to Sql statements we just need to use ? symbol for placeholder
+To provide values for placeholder we need to invoke the setter method depending on placeholder datatype
+
+	public void setInt(int parameterIndex,int value)
+	public void setInt(int parameterIndex,float value)
+	public void setInt(int parameterIndex,double value)
+	public void setInt(int parameterIndex,long value)
+	public void setInt(int parameterIndex,String value)
+	etc
+
+
+	Eg.	int sid=191;
+		String name="Sunny";
+		String email="Sun93@gmail.com"
+		long phone=9292928282;
+
+
+
+	Using Statement we can dynamically here insert Sql statements in following ways:
+	String str="insert into student3 values(?,?,?,?)"
+	ps.con.PrepareStatement(sql);
+	ps.setInt(1,sid);	
+	ps.setString(2,name);
+	ps.setInt(3,email);
+	ps.setInt(4,phone);
+
+
+	? :- this is known as place holder
+
+
+
+SQL> create table student3(sid int,name varchar(20),email varchar(20),phone number);
+
+
+Table created.
+
+
+mysql> create table student3(sid int,name varchar(20),email varchar(20),phone bigint);
+Query OK, 0 rows affected (0.24 sec)
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class JDBC_Lab9a {
+
+	public static void main(String[] args) throws SQLException  {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		PreparedStatement ps=null;
+		PreparedStatement ps1=null;
+		PreparedStatement ps2=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+			//con=JDBC_UTIL.myOracleConnection();
+			ps=con.prepareStatement("insert into student3 values(105,'Madhu',',madhu@gamil.con',8767656766)");
+			int x=ps.executeUpdate();
+			
+			ps1=con.prepareStatement("update student3 set name='Mohan' where sid=101");
+			int x1=ps1.executeUpdate();
+			
+			ps2=con.prepareStatement("delete from student3 where sid=103");
+			int x2=ps2.executeUpdate();
+			
+		
+			
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		finally {					//	Since closing the resources explicitly so throw SqlException
+			if(ps!=null){
+				ps.close();
+			}
+				
+			if(ps1!=null){
+				ps1.close();
+			}
+			if(ps2!=null){
+				ps2.close();
+			}
+			if(con!=null){
+				con.close();
+			}
+		}
+		
+	}
+
+}
+
+mysql> select * from student3;
++------+-------+------------------+------------+
+| sid  | name  | email            | phone      |
++------+-------+------------------+------------+
+|  101 | Mohan | mohan@gmail.com  | 9181736456 |
+|  102 | Ravi  | ravi@gamil.con   | 9282873737 |
+|  104 | Pooja | pooja@gamil.con  | 8282737373 |
+|  105 | Madhu | ,madhu@gamil.con | 8767656766 |
++------+-------+------------------+------------+
+4 rows in set (0.00 sec) 
+
+
+
+
+
+
+
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class JDBC_Lab10a {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		PreparedStatement ps=null;
+		try {
+			//con=JDBC_UTIL.myOracleConnection();
+			con=JDBC_UTIL.getMySQLConnection();
+			//Dynamically inserting values
+			int sid=195;
+			String nm="Nivas";
+			String em="nivas@gmail.com";
+			long phone=8282837373l;
+			
+			String qry="insert into Student3 values(?,?,?,?)";
+			ps=con.prepareStatement(qry);
+			ps.setInt(1, sid);
+			ps.setString(2, nm);
+			ps.setString(3, em);
+			ps.setLong(4, phone);
+			int x=ps.executeUpdate();
+			if(x==1)
+				System.out.println("Record inserted Successfully");
+			else 
+				System.out.println("No Record Found");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+}
+
+
+mysql> select * from student3;
++------+-------+------------------+------------+
+| sid  | name  | email            | phone      |
++------+-------+------------------+------------+
+|  101 | Mohan | mohan@gmail.com  | 9181736456 |
+|  102 | Ravi  | ravi@gamil.con   | 9282873737 |
+|  104 | Pooja | pooja@gamil.con  | 8282737373 |
+|  105 | Madhu | ,madhu@gamil.con | 8767656766 |
+|  195 | Nivas | nivas@gmail.com  | 8282837373 |
++------+-------+------------------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class JDBC_Lab10c {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			String sql=null;
+		//	sql="insert into student3 values(201,'Aman','amit@gmail.com',7894523786)";
+			sql="select * from student3";
+		//	sql="update student3 set name='Aditi' where sid=104";
+		//	sql="insert into student3 values(210,'Ramesh','ramesh@gmail.com',7282336363)";
+		//	sql="delete phone,email from student3 where name='Madhu'";
+			
+			ps=con.prepareStatement(sql);
+			boolean b=ps.execute();
+			if(b){
+				rs=ps.getResultSet();
+				if(rs.next()){
+					do{
+					int sid=rs.getInt(1);
+					String nm=rs.getString(2);
+					String eml=rs.getString(3);
+					long phn=rs.getLong(4);
+					System.out.println(sid+"\t"+nm+"\t"+eml+"\t"+phn);
+					}while(rs.next());
+				}
+			}
+			else{
+				int x=ps.getUpdateCount();
+				System.out.println("Number of Updatable Record : "+x);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+			finally {
+				JDBC_UTIL.mycleanup2(rs, ps, con);
+			}
+	
+	}
+	
+	
+
+}
+
+
+mysql> select * from student3;
++------+-------+------------------+------------+
+| sid  | name  | email            | phone      |
++------+-------+------------------+------------+
+|  101 | Mohan | mohan@gmail.com  | 9181736456 |
+|  102 | Ravi  | ravi@gamil.con   | 9282873737 |
+|  104 | Aditi | pooja@gamil.con  | 8282737373 |
+|  105 | Madhu | ,madhu@gamil.con | 8767656766 |
+|  195 | Nivas | nivas@gmail.com  | 8282837373 |
++------+-------+------------------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+/*Insert multiple records using placeholder*/
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class JDBC_Lab9b {
+	public static void main(String[] args) throws SQLException  {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		PreparedStatement ps=null;
+		PreparedStatement ps1=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+			//con=JDBC_UTIL.myOracleConnection();
+			
+			
+			String qry1="insert into student3 values(?,?,?,?)";
+			ps=con.prepareStatement(qry1);
+			ps.setInt(1,201 );
+			ps.setString(2, "Mohit");
+			ps.setString(3,"mohit@gmail.com");
+			ps.setLong(4, 8374562727L);
+			int x=ps.executeUpdate();
+			if(x==1)
+				System.out.println("Record inserted Successfully");
+			else 
+				System.out.println("No Record Found");
+		
+			
+			
+			String qry2="insert into student3 values(?,?,?,?)";
+			ps=con.prepareStatement(qry2);
+			ps.setInt(1,202 );
+			ps.setString(2, "Ramu");
+			ps.setString(3,"ramu@gmail.com");
+			ps.setLong(4,9283746575L);
+			int x1=ps.executeUpdate();
+			if(x1==1)
+				System.out.println("Record inserted Successfully");
+			else 
+				System.out.println("No Record Found");
+		
+			String qry3="insert into student3 values(?,?,?,?)";
+			ps=con.prepareStatement(qry3);
+			ps.setInt(1,203 );
+			ps.setString(2, "Sumit");
+			ps.setString(3,"sumit@gmail.com");
+			ps.setLong(4,7847586786L);
+			int x2=ps.executeUpdate();
+			if(x2==1)
+				System.out.println("Record inserted Successfully");
+			else 
+				System.out.println("No Record Found");
+		
+			
+			
+			ps1=con.prepareStatement("update student3 set name='SriNivas' where sid=195");
+			int x4=ps1.executeUpdate();
+			
+	
+			
+			
+			
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		finally {					//	Since closing the resources explicitly so throw SqlException
+			if(ps!=null){
+				ps.close();
+			}
+				
+			if(ps1!=null){
+				ps1.close();
+			}
+			
+			if(con!=null){
+				con.close();
+			}
+		}
+		
+	}
+
+}
+
+mysql>  select * from student3;
++------+----------+-----------------+------------+
+| sid  | name     | email           | phone      |
++------+----------+-----------------+------------+
+|  101 | Mohan    | mohan@gmail.com | 9181736456 |
+|  102 | Ravi     | ravi@gamil.con  | 9282873737 |
+|  104 | Aditi    | pooja@gamil.con | 8282737373 |
+|  195 | SriNivas | nivas@gmail.com | 8282837373 |
+|  105 | Madhu    | madhu@gamil.con | 8767656766 |
+|  201 | Mohit    | mohit@gmail.com | 8374562727 |
+|  202 | Ramu     | ramu@gmail.com  | 9283746575 |
+|  203 | Sumit    | sumit@gmail.com | 7847586786 |
++------+----------+-----------------+------------+
+8 rows in set (0.00 sec)
+
+
+
+
+
+
+*************************************************************************************************************************************
+3.Callable statement:
+It is mainly used for invoking the stored procedure
+Callable statement is a interface available in java.sql package 
+Callable Statement is extending Prepare Ststement and Prepare Statement is extending Statement 
+Subclass of Callable statement is provided by driver vendors
+
+We can create CallableStatement object using the following mtd of connection interface:
+	public CallableStatement prepareCall(sql)
+	public CallableStatement prepareCall(sql,int)
+	public CallableStatement prepareCall(sql,int,int)
+
+We can call following mtd on CallableStatement object to submit Sql Statement to Database:
+	public boolean execute()
+
+
+Using Single CallableStatement object we can call to only one procedure
+	eg: 
+		String sql="call p1(?,?)";
+		CallableStatement cs=con.prepareCall(sql);
+		cs.SetInt(1,20);
+		cs.SetInt(2,83);
+		cs.execute();
+
+
+When we submit call to stored procedure using CallableStatememnt object then pre-compiled stored procedure will be executed directly 
+
+CallableStatement gives us the place holder mechanism for providing data dynamically to the procedure paramete.We need to use ? symbol for placeholder  
+
+To provide the value for place holder we need to invoke setter method depending on placeholder data-type
+	public void setInt(int parameterindex,int value)
+	public void setString(int parameterindex,String value)
+	public void setLong(int parameterindex,long value)
+	public void setDouble(int parameterindex,double value)
+	etc...............................
+
+We need to use following method to specify OUT parameter 
+	public void registerOutParemeter(int parameterindex,int sqlType)
+Note:	Here sqlType is constants for java.sql.Types class
+
+
+We can use the following mtds to access the result of OutParameter 
+	public int getInt(int parameterindex )	
+	public int getLong(long parameterindex )	
+	public int getString(String parameterindex )	
+	public int getDouble(double parameterindex )	
+	etc.........................
+
+
+
+
+
+
+mysql> create table student4(sid int primary key,sname varchar(15),marks1 int,marks2 int,marks3 int,total int,average float,grade char(2));
+Query OK, 0 rows affected (0.34 sec)
+
+SQL>  create table student4(sid int primary key,sname varchar(15),marks1 int,marks2 int,marks3 int,total int,average float,grade char(2));
+
+Table created.
+
+mysql> create table student4(sid int primary key,sname varchar(15),marks1 int,marks2 int,marks3 int,total int,average float,grade char(2));
+Query OK, 0 rows affected (0.34 sec)
+
+mysql>  insert into student4(sid,sname,marks1,marks2,marks3) values(201,'Sunny',90,99,95);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> insert into student4(sid,sname,marks1,marks2,marks3) values(202,'Ravi',67,78,93);
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into student4(sid,sname,marks1,marks2,marks3) values(203,'Pooja',83,86,98);
+Query OK, 1 row affected (0.07 sec)
+
+mysql>  insert into student4 values(204,'Manish',75,72,83,null,null,null);
+Query OK, 1 row affected (0.09 sec)
+
+
+
+MYSQL:-
+mysql> delimiter $
+mysql> create procedure  updateStudent4Result(id int)
+    -> begin
+    -> declare m1 int;
+    -> declare m2 int;
+    -> declare m3 int;
+    -> declare tot int;
+    -> declare avrg float;
+    -> declare grade char(2);
+    -> select marks1,marks2,marks2 into m1,m2,m3 from student4 where sid=id;
+    -> set tot=m1+m2+m3;
+    -> set avrg=tot/3;
+    -> if(avrg>=85) then
+    -> set grade='A';
+    -> elseif(avrg>=75) then
+    -> set grade='B';
+    -> elseif(avrg>=65) then
+    -> set grade='C';
+    -> else
+    -> set grade='F';
+    -> end if;
+    -> update student4 set total=tot,average=avrg,grade=grade where sid=id;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+mysql> delimiter ;
+
+
+
+ORACLE:-
+  1  create or replace procedure updateStudent4Result(sid in number)
+  2  as
+  3        m1 number;
+  4        m2 number;
+  5        m3 number;
+  6        tot number;
+  7        avrg number;
+  8        gr varchar(2);
+  9  begin
+ 10      select marks1,marks2,marks3 into m1,m2,m3 from student4 where sid=sid;
+ 11      tot := m1+m2+m3;
+ 12      avrg := tot/3;
+ 13      if(avrg>=90) then
+ 14      gr := 'A';
+ 15      elsif(avrg>=80) then
+ 16      gr := 'B';
+ 17      elsif(avrg>=70) then
+ 18      gr := 'C';
+ 19      else
+ 20      gr := 'F';
+ 21       end if;
+ 22      update student4 set total=tot,average=avrg,grade=gr where sid=sid;
+ 23*      end;
+SQL> /
+
+Procedure created.
+
+
+
+package jdbc1;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+
+public class JDBC_Lab11 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Connection con=null;
+		CallableStatement cs=null;
+		try {
+			int sid=201;
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			
+			
+			cs=con.prepareCall("call updateStudent4Result(?)");
+			cs.setInt(1, sid);
+			cs.execute();
+			System.out.println(cs.getClass().getName());
+			System.out.println(con.getClass().getName());
+			
+			System.out.println("Procedure Created Successfully");
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error in Calling Procedure");
+			e.printStackTrace();
+		}
+		
+		
+		finally {
+			JDBC_UTIL.mycleanup1(cs, con);
+		}
+		
+	}
+
+}
+
+
+
+			IN MYSQL
+
+here procedure created for sid=202 i.e change JDBC sid=202
+mysql> select * from student4;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |  NULL |    NULL | NULL     |
+| 202 | Ravi   |     67 |     78 |     93 |   223 | 74.3333 | C     |
+| 203 | Pooja  |     83 |     86 |     98 |  NULL |    NULL | NULL  |
+| 204 | Manish |     75 |     72 |     83 |  NULL |    NULL | NULL  |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+here procedure created for sid=201 i.e change JDBC sid=201
+
+mysql> select * from student4;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   288 |      96 | A     |
+| 202 | Ravi   |     67 |     78 |     93 |   223 | 74.3333 | C     |
+| 203 | Pooja  |     83 |     86 |     98 |  NULL |    NULL | NULL  |
+| 204 | Manish |     75 |     72 |     83 |  NULL |    NULL | NULL  |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+here procedure created for sid=203 i.e change JDBC sid=203
+
+mysql> select * from student4;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   288 |      96 | A     |
+| 202 | Ravi   |     67 |     78 |     93 |   223 | 74.3333 | C     |
+| 203 | Pooja  |     83 |     86 |     98 |   255 |      85 | A     |
+| 204 | Manish |     75 |     72 |     83 |  NULL |    NULL | NULL  |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+here procedure created for sid=204 i.e change JDBC sid=204
+
+mysql> select * from student4;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   288 |      96 | A     |
+| 202 | Ravi   |     67 |     78 |     93 |   223 | 74.3333 | C     |
+| 203 | Pooja  |     83 |     86 |     98 |   255 |      85 | A     |
+| 204 | Manish |     75 |     72 |     83 |   219 |      73 | C     |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+*********************************************************************************************
+mysql> create table student5(sid int primary key,sname varchar(15),marks1 int,marks2 int,marks3 int,total int,average float,grade char(2));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into student5(sid,sname,marks1,marks2,marks3) values(201,'Sunny',90,99,95);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student5(sid,sname,marks1,marks2,marks3) values(205,'Reshmi',76,65,85);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student5(sid,sname,marks1,marks2,marks3) values(208,'Manu',44,89,78);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student5(sid,sname,marks1,marks2,marks3) values(209,'Aditi',97,90,85);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from student5;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |  NULL |    NULL | NULL  |
+| 205 | Reshmi |     76 |     65 |     85 |  NULL |    NULL | NULL  |
+| 208 | Manu   |     44 |     89 |     78 |  NULL |    NULL | NULL  |
+| 209 | Aditi  |     97 |     90 |     85 |  NULL |    NULL | NULL  |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+
+mysql> delimiter ^
+mysql> create procedure updateStudent5(id int,out tot int,out avrg float,out grade char(2))
+    -> begin
+    -> declare m1 int;
+    -> declare m2 int;
+    -> declare m3 int;
+    -> select marks1,marks2,marks3 into m1,m2,m3 from student5 where sid=id;
+    -> set tot=m1+m2+m3;
+    -> set avrg=tot/3;
+    -> if(avrg>=85) then
+    -> set grade='A';
+    -> elseif(avrg>=75) then
+    -> set grade='B';
+    -> elseif(avrg>=65) then
+    -> set grade='C';
+    -> else
+    -> set grade='F';
+    -> end if;
+    -> update student5 set total=tot,average=avrg,grade=grade where sid=id;
+    -> end;
+    -> ^
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+
+
+package jdbc1;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Types;
+
+public class JDBC_Lab12 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		CallableStatement cs=null;
+		try {
+			int sid=209;
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			cs=con.prepareCall("call updateStudent5(?,?,?,?)");
+			
+		//	for IN parameter 
+			cs.setInt(1, sid);
+			
+		//	for OUT parameter 
+			cs.registerOutParameter(2, Types.INTEGER);
+			cs.registerOutParameter(3, Types.FLOAT);
+			cs.registerOutParameter(4, Types.CHAR);
+			
+			cs.execute();
+			System.out.println("Proedure executed successfully ");
+			
+		//	Accessing the value of Out parameters 
+			int total=cs.getInt(2);
+			float avg=cs.getFloat(3);
+			String grade=cs.getString(4);
+			
+			System.out.println("Total is:"+ total);
+			System.out.println("Average is:"+ avg);
+			System.out.println("Grade is:"+ grade);
+			} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error in Calling Procedure Please call again");
+			e.printStackTrace();
+			
+		}
+		
+		finally {
+			JDBC_UTIL.mycleanup1(cs, con);
+		}
+	}
+
+}
+
+here procedure created for sid=209 i.e change JDBC sid=209
+
+mysql> select * from student5;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |  NULL |    NULL | NULL  |
+| 205 | Reshmi |     76 |     65 |     85 |  NULL |    NULL | NULL  |
+| 208 | Manu   |     44 |     89 |     78 |  NULL |    NULL | NULL  |
+| 209 | Aditi  |     97 |     90 |     85 |   272 | 90.6667 | A     |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+here procedure created for sid=201 i.e change JDBC sid=201
+mysql> select * from student5;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   284 | 94.6667 | A     |
+| 205 | Reshmi |     76 |     65 |     85 |  NULL |    NULL | NULL  |
+| 208 | Manu   |     44 |     89 |     78 |  NULL |    NULL | NULL  |
+| 209 | Aditi  |     97 |     90 |     85 |   272 | 90.6667 | A     |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+here procedure created for sid=205 i.e change JDBC sid=205
+mysql> select * from student5;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   284 | 94.6667 | A     |
+| 205 | Reshmi |     76 |     65 |     85 |   226 | 75.3333 | B     |
+| 208 | Manu   |     44 |     89 |     78 |  NULL |    NULL | NULL  |
+| 209 | Aditi  |     97 |     90 |     85 |   272 | 90.6667 | A     |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+here procedure created for sid=205 i.e change JDBC sid=205
+mysql> select * from student5;
++-----+--------+--------+--------+--------+-------+---------+-------+
+| sid | sname  | marks1 | marks2 | marks3 | total | average | grade |
++-----+--------+--------+--------+--------+-------+---------+-------+
+| 201 | Sunny  |     90 |     99 |     95 |   284 | 94.6667 | A     |
+| 205 | Reshmi |     76 |     65 |     85 |   226 | 75.3333 | B     |
+| 208 | Manu   |     44 |     89 |     78 |   211 | 70.3333 | C     |
+| 209 | Aditi  |     97 |     90 |     85 |   272 | 90.6667 | A     |
++-----+--------+--------+--------+--------+-------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+************************************************************************************
+
+
+mysql> delimiter $
+mysql> create procedure JDBCproc(in a int, inout b int)
+    -> begin
+    -> set b=a+b;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+package jdbc1;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+
+public class JDBC_Lab13 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		CallableStatement cs=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+		//	con=JDBC_UTIL.myOracleConnection();
+			cs=con.prepareCall("call JDBCproc(?,?)");
+			cs.setInt(1,20);
+			cs.setInt(2, 25);
+			cs.registerOutParameter(2, Types.TINYINT);
+			
+			
+			
+			
+			
+			cs.executeUpdate();
+			System.out.println("Proceure Created Sucessfully");
+			int y=cs.getInt(2);
+			System.out.println("Output is "+y);
+			
+	}catch(SQLException e){
+	
+		System.out.println("Not Calling Procedure Properly");
+		e.printStackTrace();
+	}
+		finally {
+			JDBC_UTIL.mycleanup1(cs, con);
+		}
+	}
+
+}
+***************************************************************************************
+
+
+mysql> delimiter $
+mysql> create procedure JDBCproc1(in a int,in b int,out c int)
+    -> begin
+    -> set c=a+b;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+
+package jdbc1;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+
+public class JDBC_Lab14 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		CallableStatement cs=null;
+		try {
+			con=JDBC_UTIL.getMySQLConnection();
+	
+			cs=con.prepareCall("call JDBCproc1(?,?,?)");
+			cs.setInt(1,10);
+			cs.setInt(2, 25);
+			cs.registerOutParameter(3, Types.INTEGER);
+			
+			
+			
+			
+			
+			cs.execute();
+			System.out.println("Procedure Created Sucessfully");
+			int y=cs.getInt(3);
+			System.out.println("Output is "+y);
+			
+	}catch(SQLException e){
+	
+		System.out.println("Not Calling Procedure Properly");
+		e.printStackTrace();
+	}
+		finally {
+			JDBC_UTIL.mycleanup1(cs, con);
+		}
+	}
+
+}

@@ -1,0 +1,2036 @@
+
+SQL*Plus: Release 10.2.0.1.0 - Beta on Sun Nov 12 15:15:03 2017
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+SQL> conn
+Enter user-name: system
+Enter password:
+Connected.
+SQL> set linesize 200;
+SQL> select * from student;
+
+SQL> create table student(sid varchar(15),name varchar(15),email varchar(15),fee int,city varchar(25));
+
+SQL>insert into student values('JLC-B9-001','SUNNY','sunny@gmail.com' ,15000,' BLORE');
+1 row created.
+SQL>insert into student values('JLC-B9-002','RAJU','raju@gmail.com' ,12000,' BLORE');
+1 row created.
+SQL>insert into student values('JLC-B9-003','RAVI','ravi@gmail.com' ,18000,' PUNE');
+1 row created.
+SQL> insert into student values('JLC-B9-004','POOJA','pooja@gmail.com' ,17500,'DELHI');
+1 row created.
+SQL> insert into student values('JLC-B9-001','NARESH','narsh@gmail.com' ,12500,'HYD');
+1 row created.
+SQL> insert into student(sid,name,email,city) values('JLC-B9-003','MANU','manu@gmail.com' ,'DELHI');
+1 row created.
+
+SQL> insert all
+	 into student(sid,name,city) values('JLC-B9-123','RAKHI' ,'BLORE')
+	 into student(sid,name,email,city) values('JLC-B9-321','RAJ','raj@gmail,com' ,'ASSAM')
+	 into student(sid,name,email) values('JLC-B9-678','MAHI','mahi@gmail,com')
+	select * from dual;
+3 row created.
+
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+
+11 rows selected.
+
+SQL> insert into student(name) values(null);
+
+1 row created.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+
+
+12 rows selected.
+
+SQL> delete from student where id is null;
+delete from student where id is null
+                          *
+ERROR at line 1:
+ORA-00904: "ID": invalid identifier
+
+
+SQL> delete from student where sid is null;
+
+2 rows deleted.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL> select * from student where city ='BLORE' or city ='PUNE';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-123      RAKHI           NULL                                 BLORE
+
+SQL> select * from student where city in('BLORE','PUNE');
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-123      RAKHI           NULL                                 BLORE
+
+SQL> select * from student where city not in('BLORE','PUNE');
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+
+SQL> select * from student where fee>=18000 and fee<=125000;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+
+SQL> select * from student where fee<=18000 and fee<=125000;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+
+SQL> select * from student where fee<=18000 and fee>=125000;
+
+no rows selected
+
+SQL> select * from student where fee between 18000 and 125000;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+
+SQL> select * from student where fee not between 18000 and 125000;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+
+SQL> select * from student where name like 'r%';
+
+no rows selected
+
+SQL> select * from student where name like 'R%';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+
+SQL> select * from student where name like '_A%';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+8 rows selected.
+
+SQL> select * from student where name like '%A_';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+
+SQL> select * from student where name like '%H_';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+SQL> select * from student where name like '%_U';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+
+SQL> select * from student where name like '%U';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+
+
+Above both are same since % means anything
+
+
+
+
+
+SQL> select * from student where name like '%A__';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-678      MAHI            mk@gmail.com
+
+
+
+
+SQL> select * from student where name like '____';
+
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+SQL> select * from student where name like '___';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+
+SQL> select * from student where name like '__';
+
+no rows selected
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU            raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL> update student
+  2  set name ='RAJU_ROY' where fee=10000;
+
+1 row updated.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-002      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL> update student
+  2  set SID ='JLC-B9-201' where fee=10000;
+
+1 row updated.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJU            raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL> update student
+  2  set name ='RAJUOROY' where fee=12000;
+
+1 row updated.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B9-003      RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-004      POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-003      MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL>  select * from student where name like 'RAJU\_ROY';
+
+no rows selected
+
+SQL>  select * from student where name like 'RAJU\_ROY' escape '\';
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+
+SQL>  select * from student where name like 'SUNNY' ;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+
+
+
+
+ select * from student where name like 'RAJU\_%';
++------------+----------+----------------+-------+-------+
+| sid        | name     | email          | fee   | city  |
++------------+----------+----------------+-------+-------+
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com | 12000 | BLORE |
++------------+----------+----------------+-------+------
+
+
+
+
+SQL>  select * from student where sid like '%1%' ;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-001      NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+
+SQL> update student
+  2  set sid='JLC-B10-001' where name='RAVI';
+
+1 row updated.
+
+SQL> set sid='JLC-B10-002' where name='POOJA';
+SP2-0735: unknown SET option beginning "sid='JLC-B..."
+SQL> update student
+  2  set sid='JLC-B10-002' where name='POOJA';
+
+1 row updated.
+
+SQL> update student
+  2  set sid='JLC-D09-002' where name='MANU';
+
+1 row updated.
+
+SQL> update student
+  2  set sid='JLC-D09-001' where name='NARESH';
+
+1 row updated.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI           NULL                                 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-678      MAHI            mk@gmail.com                         NULL
+
+10 rows selected.
+
+SQL> select * from student where email IS NULL;
+
+no rows selected
+
+SQL> delete from student where name ='RAKHI';
+
+1 row deleted.
+
+SQL> insert into student values('JLC-B9-123','RAKHI',NULL,NULL,'BLORE');
+
+1 row created.
+
+SQL> delete from student where name ='MAHI';
+
+1 row deleted.
+
+SQL> insert into student values('JLC-B9-678','MAHI','mk@gmail.com',NULL,NULL);
+
+1 row created.
+
+SQL> select * from student;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B9-678      MAHI            mk@gmail.com
+
+10 rows selected.
+
+SQL> desc dual;
+ Name
+                           Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ DUMMY
+                                    VARCHAR2(1)
+
+SQL> desc test;
+ERROR:
+ORA-04043: object test does not exist
+
+
+SQL> desc student;
+ Name
+                           Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ SID
+                                    VARCHAR2(15)
+ NAME
+                                    VARCHAR2(15)
+ EMAIL
+                                    VARCHAR2(25)
+ FEE
+                                    NUMBER(38)
+ CITY
+                                    VARCHAR2(15)
+
+SQL> select * from student order by name;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-678      MAHI            mk@gmail.com
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+
+10 rows selected.
+
+SQL> select * from student order by name dec;
+select * from student order by name dec
+                                    *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select * from student order by name desc;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-678      MAHI            mk@gmail.com
+
+10 rows selected.
+
+SQL> select * from student order by email desc;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-B9-678      MAHI            mk@gmail.com
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+
+10 rows selected.
+
+SQL> select * from student order by fee desc;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-678      MAHI            mk@gmail.com
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+
+10 rows selected.
+
+SQL>
+*************************************************************************************************************************************************
+SQL> set linesize 200;
+SQL> select * from book;
+SQL> create table book(bid varchar(10),bname varchar(15),author varchar(15),cost int,edi varchar(8),publication varchar(10),yop int,ISBN varchar(15));
+SQL>insert all
+	2 into book values ('B-001','LEARN JAVA','SRINIVAS',950,'2ND','JLC',2013,'AB45DV41')
+	3 into book values ('B-002','JAVA IN DEPT','RICHARD',1200,'1ST','PS',2010,'AC56DV28')
+	4 into book values ('B-003','LEARN EJB','SMITH',550,'3RD','TATA',2013,'E445DV26')
+	5 into book values ('B-004','MASTER IN JAVA','ROHIT',350,'2ND','JLC',2003,'W38IV241')
+	6 into book values ('B-005','LEARN C++','ELBERT',730,'3RD','TATA',2007,'Q2R5DV21')
+	select * from dual;
+
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-002      JAVA IN DEPT    RICHARD               1200 1ST      PS               2010 AC56DV28
+B-003      LEARN EJB       SMITH                  550 3RD      TATA             2013 E445DV26
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+B-005      LEARN C++       ELBERT                 730 3RD      TATA             2007 Q2R5DV21
+
+SQL> select bid,bname,cost from book;
+
+BID        BNAME                 COST
+---------- --------------- ----------
+B-001      LEARN JAVA             950
+B-002      JAVA IN DEPT          1200
+B-003      LEARN EJB              550
+B-004      MASTER IN JAVA         350
+B-005      LEARN C++              730
+
+SQL> select * from book where publication ='JLC';
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+
+SQL> select * from book where author like 'SRI%';
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+
+
+SQL> select * from book where YOP =2013 and author like'%VAS';
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+
+
+
+
+
+SQL> select * from book where YOP =2013 or author like'%VAS';
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-003      LEARN EJB       SMITH                  550 3RD      TATA             2013 E445DV26
+
+SQL> select * from book where YOP between 2000 and 2011;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-002      JAVA IN DEPT    RICHARD               1200 1ST      PS               2010 AC56DV28
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+B-005      LEARN C++       ELBERT                 730 3RD      TATA             2007 Q2R5DV21
+
+
+SQL>  select * from book where publication ='JLC' order by cost;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+
+SQL>  select * from book where publication ='JLC' order by cost asc;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+
+SQL>  select * from book where yop =2013 order by cost desc;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-003      LEARN EJB       SMITH                  550 3RD      TATA             2013 E445DV26
+
+
+SQL>  select * from book where publication ='JLC' OR 'TATA' OR 'PS';
+ select * from book where publication ='JLC' OR 'TATA' OR 'PS'
+                                                       *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+
+SQL> select * from book where author like'_R%';
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+
+
+
+SQL> select * from book;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-002      JAVA IN DEPT    RICHARD               1200 1ST      PS               2010 AC56DV28
+B-003      LEARN EJB       SMITH                  550 3RD      TATA             2013 E445DV26
+B-004      MASTER IN JAVA  ROHIT                  350 2ND      JLC              2003 W38IV241
+B-005      LEARN C++       ELBERT                 730 3RD      TATA             2007 Q2R5DV21
+
+SQL> update book
+  2   set author='SRINI' where cost=350;
+
+1 row updated.
+
+SQL> select * from book;
+
+BID        BNAME           AUTHOR                COST EDI      PUBLICATIO        YOP ISBN
+---------- --------------- --------------- ---------- -------- ---------- ---------- ---------------
+B-001      LEARN JAVA      SRINIVAS               950 2ND      JLC              2013 AB45DV41
+B-002      JAVA IN DEPT    RICHARD               1200 1ST      PS               2010 AC56DV28
+B-003      LEARN EJB       SMITH                  550 3RD      TATA             2013 E445DV26
+B-004      MASTER IN JAVA  SRINI                  350 2ND      JLC              2003 W38IV241
+B-005      LEARN C++       ELBERT                 730 3RD      TATA             2007 Q2R5DV21
+
+
+
+
+SQL> select mod(12,4) from dual;
+
+ MOD(12,4)
+----------
+         0
+*******************************************************************************************************************************
+SQL> conn
+Enter user-name: system
+Enter password:
+Connected.
+SQL>  create table emp(eid int,ename varchar(15),salary float);
+
+Table created.
+
+SQL> insert all
+  2  into emp values(1,'Sunny',28000.0)
+  3  into emp values(2,'Rakesh',17000.0)
+  4  into emp(eid,ename) values(3,'Ravi')
+  5  into emp(eid,ename) values(4,'Pooja')
+  6  select * from dual;
+
+4 rows created.
+
+SQL> set linesize 200;
+SQL> select * from stu;
+select * from stu
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from emp;
+
+       EID ENAME               SALARY
+---------- --------------- ----------
+         1 Sunny                28000
+         2 Rakesh               17000
+         3 Ravi
+         4 Pooja
+
+
+
+
+
+
+SQL> select * from emp;
+
+       EID ENAME               SALARY
+---------- --------------- ----------
+         1 Sunny                28000
+         2 Rakesh               17000
+         3 Ravi
+         4 Pooja
+
+SQL> select sum(salary) from emp;
+
+SUM(SALARY)
+-----------
+      45000
+
+SQL> select max(salary) from emp;
+
+MAX(SALARY)
+-----------
+      28000
+
+SQL> select min(salary) from emp;
+
+MIN(SALARY)
+-----------
+      17000
+
+SQL> select avg(salary) from emp;
+
+AVG(SALARY)
+-----------
+      22500
+
+
+
+
+
+
+
+SQL>   select *  from student ;
+
+SID             NAME            EMAIL                            FEE CITY
+--------------- --------------- ------------------------- ---------- ---------------
+JLC-B9-001      SUNNY           sunny@gmail.com                15000 BLORE
+JLC-B9-002      RAJUOROY        raju@gmail.com                 12000 BLORE
+JLC-B10-001     RAVI            ravi@gmail.com                 18000 PUNE
+JLC-B10-002     POOJA           pooja@gmail.com               175000 DELHI
+JLC-B9-201      RAJU_ROY        raju@gmail.com                 10000 CHENNAI
+JLC-D09-001     NARESH          naresh@gmail.com              125000 HYD
+JLC-D09-002     MANU            manu@gmail.com                       DELHI
+JLC-B9-321      RAJ             raj@gmail.com                        ASSAM
+JLC-B9-123      RAKHI                                                BLORE
+JLC-B9-678      MAHI            mk@gmail.com
+
+10 rows selected
+
+
+
+
+SQL>   select count(distinct city)  from student ;
+
+COUNT(DISTINCTCITY)
+-------------------
+                  6
+
+SQL>
+SQL>   select count( city)  from student ;
+
+COUNT(CITY)
+-----------
+          9
+
+
+
+
+SQL> select avg(2+4+8) from dual;
+
+AVG(2+4+8)
+----------
+        14
+
+SQL> select sum(2+4+8) from dual;
+
+SUM(2+4+8)
+----------
+        14
+
+SQL> select sum('Pooja'+'Sunny') from dual;
+select sum('Pooja'+'Sunny') from dual
+           *
+ERROR at line 1:
+ORA-01722: invalid number
+
+
+SQL> select avg('Pooja'+'Sunny') from dual;
+select avg('Pooja'+'Sunny') from dual
+           *
+ERROR at line 1:
+ORA-01722: invalid number
+
+
+
+
+SQL> insert all
+  2  into record3 values(101,'Sri')
+  3  into record3 values(102,null)
+  4  into record3 values(null,'DK')
+  5  into record3 values(103,'Nivas')
+  6  into record3 values(104,null)
+  7  into record3 values(null,null)
+  8  into record3 values(101,'Sri')
+  9  select * from dual;
+
+7 rows created.
+
+
+
+
+SQL> set linesize 200;
+SQL> select * from record3;
+
+        ID NAME
+---------- ---------------
+       101 Sri
+       102
+           DK
+       103 Nivas
+       104
+
+       101 Sri
+
+7 rows selected.
+
+SQL> select count(id) from record3;
+
+ COUNT(ID)
+----------
+         5
+
+SQL> select count(name) from record3;
+
+COUNT(NAME)
+-----------
+          4
+
+SQL> select count(distinct name) from record3;
+
+COUNT(DISTINCTNAME)
+-------------------
+                  3
+
+SQL> select count(distinct id) from record3;
+
+COUNT(DISTINCTID)
+-----------------
+                4
+
+SQL> select count(*) from record3;
+
+  COUNT(*)
+----------
+         7
+
+
+
+SQL> select distinct id from record3;
+
+        ID
+----------
+
+       102
+       101
+       104
+       103
+
+SQL> select distinct name from record3;
+
+NAME
+---------------
+
+Nivas
+DK
+Sri
+
+
+
+
+
+SQL> select  name from record3;
+
+NAME
+---------------
+Sri
+
+DK
+Nivas
+
+
+Sri
+
+7 rows selected.
+
+
+
+SQL> create table record4(totfee int,city varchar(12));
+
+
+SQL> insert all
+	2 into record4 values(18000,'BLORE');
+	3 into record4 values(5000,'PUNE');
+	4 into record4 values(8000,'DELHI');
+	5 into record4 values(18000,'BLORE');
+	6 into record4 values(8000,'PUNE');
+	7 into record4 values(20000,'BLORE');
+	8 into record4 values(8000,'DELHI');
+7 rows created.
+
+
+SQL> select * from record4;
+
+     TOFEE CITY
+---------- ----------
+     18000 Blore
+      5000 Pune
+      8000 Delhi
+     18000 Blore
+      8000 Pune
+     20000 Blore
+      8000 Delhi
+
+7 rows selected.
+
+SQL> select sum(tofee),city from record4 group by city;
+
+SUM(TOFEE) CITY
+---------- ----------
+     16000 Delhi
+     56000 Blore
+     13000 Pune
+
+
+SQL> select sum(tofee),city from record4 group by city having city in('Blore','Pune');
+
+SUM(TOFEE) CITY
+---------- ----------
+     56000 Blore
+     13000 Pune
+
+
+ select sum(tofee) city from record4 where city in('Blore','Pune');
+
+      CITY
+----------
+     69000
+
+
+
+
+
+
+SQL> select sum(tofee), totfee from record4 group by city having city in('Blore','Pune');
+select sum(tofee), totfee from record4 group by city having city in('Blore','Pune')
+                   *
+ERROR at line 1:
+ORA-00904: "TOTFEE": invalid identifier
+
+SQL> select sum(city), totfee from record4 group by totfee having totfee(18000);
+select sum(city), totfee from record4 group by totfee having totfee(18000)
+                                                                         *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+
+
+
+
+
+SQL> create table studentinfo(sid int,sname varchar(15),course varchar(15),totfee int,feepaid int,feebal int,branch varchar(15),city varchar(15));
+
+Table created.
+
+SQL>  insert into studentinfo values(1,'Srinivas','FC',18000,10000,8000,'MKR','Blore');
+
+1 row created.
+
+SQL>  insert into studentinfo values(2,'Dande','CoreJava',5000,5000,0,'BTM','Pune');
+
+1 row created.
+
+SQL>  insert into studentinfo values(3,'Manish','Android',8000,4000,4000,'MHA','Delhi');
+
+1 row created.
+
+SQL> insert into studentinfo values(4,'DK','Hadoop',18000,9000,9000,'MKR','Blore');
+
+1 row created.
+
+SQL> insert into studentinfo values(5,'Rajeev','Android',8000,5000,3000,'BTM','Pune');
+
+1 row created.
+
+SQL>  insert into studentinfo values(6,'Firoj','Hadoop',20000,15000,5000,'MKR','Blore');
+
+1 row created.
+
+SQL> insert into studentinfo values(7,'Kofel','Android',8000,2000,6000,'BTM','Delhi');
+
+1 row created.
+
+
+
+
+
+
+SQL> select city,sum(feepaid) from studentinfo group by city;
+
+CITY            SUM(FEEPAID)
+--------------- ------------
+Delhi                   6000
+Blore                  34000
+Pune                   10000
+
+SQL> select branch,sum(feepaid) from studentinfo group by branch;
+
+BRANCH          SUM(FEEPAID)
+--------------- ------------
+BTM                    12000
+MHA                     4000
+MKR                    34000
+
+SQL> select branch as branch_name,sum(feepaid) from studentinfo group by branch;
+
+BRANCH_NAME     SUM(FEEPAID)
+--------------- ------------
+BTM                    12000
+MHA                     4000
+MKR                    34000
+
+SQL> select city,sum(feepaid) from studentinfo group by city having city in('Blore','Pune');
+
+CITY            SUM(FEEPAID)
+--------------- ------------
+Blore                  34000
+Pune                   10000
+
+
+
+
+
+
+
+SQL> select city,sum(feepaid) from studentinfo where city in('Blore','Pune') group by city;
+
+CITY            SUM(FEEPAID)
+--------------- ------------
+Blore                  34000
+Pune                   10000
+
+SQL> select course,count(sid) from studentinfo group by course;
+
+COURSE          COUNT(SID)
+--------------- ----------
+Hadoop                   2
+CoreJava                 1
+Android                  3
+FC                       1
+
+SQL> select city,avg(feepaid) from studentinfo where city in('Blore','Pune') group by city;
+
+CITY            AVG(FEEPAID)
+--------------- ------------
+Blore             11333.3333
+Pune                    5000
+
+
+
+
+SQL> select city,sum(feepaid) from studentinfo where city in('Blore','Pune') group by city order by city;
+CITY            SUM(FEEPAID)
+--------------- ------------
+Blore                  34000
+Pune                   10000
+
+SQL>  select course,max(feepaid) from studentinfo group by course;
+
+COURSE          MAX(FEEPAID)
+--------------- ------------
+Hadoop                 15000
+CoreJava                5000
+Android                 5000
+FC                     10000
+
+
+
+
+
+
+
+SQL>  select course,min(feepaid) from studentinfo group by course;
+
+COURSE          MIN(FEEPAID)
+--------------- ------------
+Hadoop                  9000
+CoreJava                5000
+Android                 2000
+FC                     10000
+
+
+select * from tab where tabtype ='TABLE';
+
+
+
+*************************************************************************************************************************************
+SQL> create table record5(id int,name varchar(15));
+
+Table created.
+
+SQL> drop table record5;
+
+Table dropped.
+
+SQL>  create table record5(id int,name varchar(15),phone number not null);
+
+Table created.
+
+SQL> insert into record5(id,name) values(101,'Mohan');
+insert into record5(id,name) values(101,'Mohan')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."RECORD5"."PHONE")
+
+since phone is provided as not null so error if we donot provide any value for phone but we can make sid and name as null
+
+
+
+SQL> insert into record5 values(101,'Mohan',null);
+insert into record5 values(101,'Mohan',null)
+                                       *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."RECORD5"."PHONE")
+since phone is provided as not null so error if we donot provide any value for phone but we can make sid and name as null
+
+SQL> insert into record5 values(101,'Mohan',8765687678);
+
+1 row created.
+
+SQL> insert into record5 values(102,'Ravi',7895645654);
+
+1 row created.
+
+SQL> insert into record5 values(104,'Sunny',9874565789);
+
+1 row created.
+
+SQL> select * from record5;
+
+        ID NAME                 PHONE
+---------- --------------- ----------
+       101 Mohan           8765687678
+       102 Ravi            7895645654
+       104 Sunny           9874565789
+
+SQL> set linesize 200;
+
+
+
+SQL> insert into record5(id,phone) values(105,8923748569);
+
+1 row created.
+
+SQL> insert into record5 values(108,null,7182738374);
+
+1 row created.
+
+SQL> select * from record5;
+
+        ID NAME                 PHONE
+---------- --------------- ----------
+       101 Mohan           8765687678
+       102 Ravi            7895645654
+       104 Sunny           9874565789
+       105                 8923748569
+       108                 7182738374
+
+SQL> insert into record5 values(null,'Rohan',8273748556);
+
+SQL> insert into record5(name,phone) values('Rohan',8273748556);
+
+1 row created.
+
+
+SQL> select * from record5;
+
+        ID NAME                 PHONE
+---------- --------------- ----------
+       101 Mohan           8765687678
+       102 Ravi            7895645654
+       104 Sunny           9874565789
+       105                 8923748569
+       108                 7182738374
+           Rohan           8273748556
+           Rohan           8273748556
+
+7 rows selected.
+
+
+
+
+SQL>  create table emp2(eid int UNIQUE,ename varchar(15),phone long);
+
+
+SQL> insert into emp2 values(101,'Sunny',9876789876);
+insert into emp2 values(101,'Sunny',9876789876)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C003904) violated
+
+Since we restrict int value as unique so duplicate value i.e101 is not allowed but duplicate name and phone is valid
+Also null is treated as differently so it is not treated as unique
+
+SQL> insert into emp2 values(102,'Sunny',9876789876);
+
+1 row created.
+
+SQL> insert into emp2 values(null,'Rohit',8798789876);
+
+1 row created.
+
+SQL> insert into emp2 values(null,'Suraj',9878654565);
+
+1 row created.
+
+SQL> insert into emp2(ename,phone) values('Kiran',986576787);
+
+1 row created.
+
+SQL> insert into emp2 values(105,'Kiran',986576787);
+
+1 row created.
+
+SQL> select * from emp2;
+
+       EID ENAME           PHONE
+---------- --------------- --------------------------------------------------------------------------------
+       101 Sunny           9876789876
+       102 Sunny           9876789876
+           Rohit           8798789876
+           Suraj           9878654565
+           Kiran           986576787
+       105 Kiran           986576787
+
+6 rows selected.
+
+
+
+SQL>  create table myorder(oid int PRIMARY KEY,itemname varchar(15),price int);
+
+Primary Key:Unique+NotNull
+Primary Key doesnot appear two time i.e only one primary key is alllowed
+
+SQL> set linesize 200;
+SQL>  insert into myorder values(null,'Tea',123);
+ insert into myorder values(null,'Tea',123)
+                            *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."MYORDER"."OID")
+
+
+SQL>  insert into myorder(name,price) values('Tea',123);
+ insert into myorder(name,price) values('Tea',123)
+                     *
+ERROR at line 1:
+ORA-00904: "NAME": invalid identifier
+
+
+SQL>  insert into myorder(itemname,price) values('Tea',123);
+ insert into myorder(itemname,price) values('Tea',123)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."MYORDER"."OID")
+
+
+SQL>  insert into myorder values(1,'Tea',123);
+
+1 row created.
+
+SQL>  insert into myorder values(1,'Tea',123);
+ insert into myorder values(1,'Tea',123)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C003913) violated
+
+
+SQL>  insert into myorder values(2,'Tea',253);
+
+1 row created.
+
+SQL>  insert into myorder values(null,'Tea',253);
+ insert into myorder values(null,'Tea',253)
+                            *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."MYORDER"."OID")
+
+
+SQL>  insert into myorder values(2,null,152);
+ insert into myorder values(2,null,152)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C003913) violated
+
+
+SQL>  insert into myorder values(3,null,152);
+
+1 row created.
+
+SQL>  insert into myorder values(4,'Soap',30);
+
+1 row created.
+
+SQL>  insert into myorder values(5,'Soap',30);
+
+1 row created.
+
+SQL>  insert into myorder values(6,'Water',null);
+
+1 row created.
+
+SQL>  insert into myorder values(7,'Detergent',45);
+
+1 row created.
+
+SQL> desc myorder;
+ Name
+                                   Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ OID
+                                   NOT NULL NUMBER(38)
+ ITEMNAME
+                                            VARCHAR2(15)
+ PRICE
+                                            NUMBER(38)
+
+SQL> set linesize 200;
+SQL> desc myorder;
+ Name                                                                                                      Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ OID                                                                                                       NOT NULL NUMBER(38)
+ ITEMNAME                                                                                                           VARCHAR2(15)
+ PRICE                                                                                                              NUMBER(38)
+
+SQL> select * from myorder;
+
+       OID ITEMNAME             PRICE
+---------- --------------- ----------
+         1 Tea                    123
+         2 Tea                    253
+         3                        152
+         4 Soap                    30
+         5 Soap                    30
+         6 Water
+         7 Detergent               45
+
+7 rows selected.
+
+
+
+
+SQL> create table accounttable(bcode int,accno int,balance float,PRIMARY KEY(bcode,accno));
+
+Table created.
+
+SQL> insert into accounttable values(856,827263646,23446.99);
+
+1 row created.
+
+SQL> insert into accounttable values(856,827263646,23446.99);
+insert into accounttable values(856,827263646,23446.99)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C003914) violated
+
+
+SQL> insert into accounttable values(56,827263646,23446.99);
+
+1 row created.
+
+SQL> insert into accounttable values(439,827263646,23446.99);
+
+1 row created.
+
+SQL> delete * from accounttable where bcode=56;
+delete * from accounttable where bcode=56
+       *
+ERROR at line 1:
+ORA-00903: invalid table name
+
+
+SQL> delete from accounttable where bcode=56;
+
+1 row deleted.
+
+SQL> insert into accounttable values(null,895432345,880);
+insert into accounttable values(null,895432345,880)
+                                *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."ACCOUNTTABLE"."BCODE")
+
+
+SQL> insert into accounttable values(950,null,1230);
+insert into accounttable values(950,null,1230)
+                                    *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."ACCOUNTTABLE"."ACCNO")
+
+
+SQL> insert into accounttable values(231,8756409812,4389.09);
+
+1 row created.
+
+SQL> insert into accounttable values(560,8756409812,781);
+
+1 row created.
+
+SQL> select * from accounttable;
+
+     BCODE      ACCNO    BALANCE
+---------- ---------- ----------
+       856  827263646   23446.99
+       439  827263646   23446.99
+       231 8756409812    4389.09
+       560 8756409812        781
+
+SQL> insert into accounttable values(321,8763453,null);
+
+1 row created.
+
+SQL> insert into accounttable values(321,null,null);
+insert into accounttable values(321,null,null)
+                                    *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."ACCOUNTTABLE"."ACCNO")
+
+
+SQL> insert into accounttable values(540,8763453,null);
+
+1 row created.
+
+SQL> select * from accounttable;
+
+     BCODE      ACCNO    BALANCE
+---------- ---------- ----------
+       856  827263646   23446.99
+       439  827263646   23446.99
+       231 8756409812    4389.09
+       560 8756409812        781
+       321    8763453
+       540    8763453
+
+6 rows selected.
+
+
+
+
+SQL> select * from accounttable;
+
+     BCODE      ACCNO    BALANCE
+---------- ---------- ----------
+       856  827263646   23446.99
+       439  827263646   23446.99
+       231 8756409812    4389.09
+       560 8756409812        781
+       321    8763453
+       540    8763453
+       560 9182736475        781
+
+7 rows selected.
+
+composite primary combination should be unique here combination of bcode and accno
+
+
+*****************************************************************************************************************************************************
+
+SQL>  create table department(dno int primary key,dname varchar(10));
+
+Table created.
+
+SQL> insert into department values(1,'IT');
+
+1 row created.
+
+SQL>  insert into department values(2,'CSE');
+
+1 row created.
+
+SQL> insert into department values(3,'ECE');
+
+1 row created.
+
+SQL>  insert into department values(4,'EEE');
+
+1 row created.
+
+SQL> insert into department values(5,'ME');
+
+1 row created.
+
+SQL> select * from department;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 EEE
+         5 ME
+
+SQL> set linesize 200;
+SQL> create table employee(eid int,ename varchar(15),dno int,foreign key(dno) references department(dno));
+
+Table created.
+
+SQL>  insert into employee values(101,'Mohan',3);
+
+1 row created.
+
+SQL>  insert into employee values(102,'Ravi',2);
+
+1 row created.
+
+SQL> insert into employee values(103,'Raju',2);
+
+1 row created.
+
+SQL> insert into employee values(104,'Rani',1);
+
+1 row created.
+
+SQL>  insert into employee values(105,'Suresh',4);
+
+1 row created.
+
+SQL>  select * from employee;
+
+       EID ENAME                  DNO
+---------- --------------- ----------
+       101 Mohan                    3
+       102 Ravi                     2
+       103 Raju                     2
+       104 Rani                     1
+       105 Suresh                   4
+
+SQL> delete from department where dno=5;
+
+1 row deleted.
+
+SQL> select * from department;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 EEE
+
+SQL> select * from employee;
+
+       EID ENAME                  DNO
+---------- --------------- ----------
+       101 Mohan                    3
+       102 Ravi                     2
+       103 Raju                     2
+       104 Rani                     1
+       105 Suresh                   4
+
+We can delete the record of master table if we are not using in child 
+
+SQL> delete from department where dno=4;
+delete from department where dno=4
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C003935) violated - child record found
+
+We cannot delete the record of master table if we are using in child  if we try to do so we get above error
+
+**************************************************************************
+SQL> create table customer( cid int Primary key,cname varchar(15),email varchar(30),phone bigint);
+
+SQL> insert into customer values(101,'Sunny','SunnyPaul@gmail.com',8759167520);
+
+SQL> insert into customer values(102,'Raju','Raju@gmail.com',8273747474);
+
+SQL> insert into customer values(103,'Rani','Rani@gmail.com',9182746758);
+
+SQL> insert into customer values(104,'Sumit','Sumit@gmail.com',7182738945);
+
+SQL> insert into customer values(105,'Ravi','Ravi@gmail.com',9018249056);
+
+
+
+SQL> select * from customer;
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju  | Raju@gmail.com      | 8273747474 |
+| 103 | Rani  | Rani@gmail.com      | 9182746758 |
+| 104 | Sumit | Sumit@gmail.com     | 7182738945 |
+| 105 | Ravi  | Ravi@gmail.com      | 9018249056 |
++-----+-------+---------------------+------------+
+
+SQL>create table customeraccount(cid int,bcode int,acno bigint,bal float,primary key(bcode,acno),foreign key(cid) references customer(cid) ON DELETE SET NULL);
+
+SQL> insert into  customeraccount values(101,272,21062712,85650);
+
+SQL> insert into  customeraccount values(102,653,72833645,67524.89);
+
+SQL> insert into  customeraccount values(104,888,65746586,98000);
+
+SQL> insert into  customeraccount values(105,231, 27683019,178000);
+
+SQL> select * from customeraccount;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        272   21062712      85650
+       102        653   72833645   67524.89
+       104        888   65746586      98000
+       105        231   27683019     178000
+
+SQL> create table customertransiction(bcode int,acno number,tx_date date,amt float,tx_id int primary key,foreign key(bcode,acno) references customeraccount(bcode,acno) ON DELETE SET NULL);
+SQL>insert into customertransiction values( 231,27683019,'20-DEC-14',1243450,001);
+SQL>insert into customertransiction values( 272, 21062712,'15-JUL-05',  873450 ,002);
+SQL>insert into customertransiction values( 888, 65746586,'02-MAR-17',981230 , 003);
+SQL> select * from customertransiction;
+
+     BCODE       ACNO TX_DATE          AMT      TX_ID
+---------- ---------- --------- ---------- ----------
+       231   27683019 20-DEC-14    1243450          1
+       272   21062712 15-JUL-05     873450          2
+       888   65746586 02-MAR-17     981230          3
+
+
+SQL> select * from customer;
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+       102 Raju            Raju@gmail.com                 8273747474
+       103 Rani            Rani@gmail.com                 9182746758
+       104 Sumit           Sumit@gmail.com                7182738945
+       105 Ravi            Ravi@gmail.com                 9018249056
+
+SQL> select * from customeraccount;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        272   21062712      85650
+       102        653   72833645   67524.89
+       104        888   65746586      98000
+       105        231   27683019     178000
+
+SQL> select * from customeraccount;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        272   21062712      85650
+       102        653   72833645   67524.89
+       104        888   65746586      98000
+       105        231   27683019     178000
+
+SQL> delete from customer where cid=105;
+
+1 row deleted.
+
+SQL> select * from customer;
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+       102 Raju            Raju@gmail.com                 8273747474
+       103 Rani            Rani@gmail.com                 9182746758
+       104 Sumit           Sumit@gmail.com                7182738945
+
+SQL> select * from customeraccount;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       101        272   21062712      85650
+       102        653   72833645   67524.89
+       104        888   65746586      98000
+
+
+SQL> select * from customertransiction;
+
+     BCODE       ACNO TX_DATE          AMT      TX_ID
+---------- ---------- --------- ---------- ----------
+                      20-DEC-14    1243450          1
+       272   21062712 15-JUL-05     873450          2
+       888   65746586 02-MAR-17     981230          3
+
+SQL> delete from customeraccount where bcode=272;
+
+1 row deleted.
+
+SQL> select * from customer;
+
+       CID CNAME           EMAIL                               PHONE
+---------- --------------- ------------------------------ ----------
+       101 Sunny           SunnyPaul@gmail.com            8759167520
+       102 Raju            Raju@gmail.com                 8273747474
+       103 Rani            Rani@gmail.com                 9182746758
+       104 Sumit           Sumit@gmail.com                7182738945
+
+SQL> select * from customeraccount;
+
+       CID      BCODE       ACNO        BAL
+---------- ---------- ---------- ----------
+       102        653   72833645   67524.89
+       104        888   65746586      98000
+
+SQL> select * from customertransiction;
+
+     BCODE       ACNO TX_DATE          AMT      TX_ID
+---------- ---------- --------- ---------- ----------
+                      20-DEC-14    1243450          1
+                      15-JUL-05     873450          2
+       888   65746586 02-MAR-17     981230          3
+
+***********************************************************************************************************************************
+SQL>
+SQL> create table department1(dno int primary key,dname varchar(10));
+
+Table created.
+
+SQL>  insert into department1 values(1,'IT');
+
+1 row created.
+
+SQL>  insert into department1 values(2,'CSE');
+
+1 row created.
+
+SQL>  insert into department1 values(3,'ECE');
+
+1 row created.
+
+SQL>  insert into department1 values(4,'ME');
+
+1 row created.
+
+SQL> select * from department1;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 ME
+
+SQL> set linesize 200;
+SQL>  create table employee1(eid int,ename varchar(15),dno int,foreign key(dno) references department(dno) ON DELETE SET NULL);
+
+Table created.
+
+SQL> insert into employee1 values(101,'Mohan',3);
+
+1 row created.
+
+SQL> insert into employee1 values(102,'Ravi',2);
+
+1 row created.
+
+SQL> insert into employee1 values(103,'Raju',2);
+
+1 row created.
+
+SQL> insert into employee1 values(104,'Rani',1);
+
+1 row created.
+
+SQL> insert into employee1 values(105,'Suresh',4);
+
+1 row created.
+
+SQL> select * from employee1;
+
+       EID ENAME                  DNO
+---------- --------------- ----------
+       101 Mohan                    3
+       102 Ravi                     2
+       103 Raju                     2
+       104 Rani                     1
+       105 Suresh                   4
+
+SQL> select * from department1;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 ME
+
+SQL> delete from department1 where dno=4;
+
+1 row deleted.
+
+SQL> select * from department1;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+
+SQL> select * from employee1;
+
+       EID ENAME                  DNO
+---------- --------------- ----------
+       101 Mohan                    3
+       102 Ravi                     2
+       103 Raju                     2
+       104 Rani                     1
+       105 Suresh                   4
+
+**************************************************************************************************
+
+SQL> create table mydept(dno int primary key,dname varchar(10));
+
+Table created.
+
+SQL>  insert into mydept values(1,'IT');
+
+1 row created.
+
+SQL>  insert into mydept values(2,'CSE');
+
+1 row created.
+
+SQL>  insert into mydept values(3,'ECE');
+
+1 row created.
+
+SQL>  insert into mydept values(4,'EEE');
+
+1 row created.
+
+SQL>  insert into mydept values(5,'ME');
+
+1 row created.
+
+SQL> select * from mydept;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 EEE
+         5 ME
+
+SQL> create table myadd(ano int primary key,street varchar(10));
+
+Table created.
+
+SQL>  insert into myadd values(16,'BTM');
+
+1 row created.
+
+SQL>  insert into myadd values(23,'MKR');
+
+1 row created.
+
+SQL>  insert into myadd values(34,'KLR');
+
+1 row created.
+
+SQL> select * from myadd;
+
+       ANO STREET
+---------- ----------
+        16 BTM
+        23 MKR
+        34 KLR
+
+SQL> create table myemp(eid int primary key,ename varchar(15),dno int referencesmydept(dno) on delete set null,aid int, foreign key(ano) references myadd(ano) on delete cascade);
+create table myemp(eid int primary key,ename varchar(15),dno int referencesmydept(dno) on delete set null,aid int, foreign key(ano) references myadd(ano) on delete cascade)
+                                                                 *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> create table myemp(eid int primary key,ename varchar(15),dno int references mydept(dno) ON DELETE SET NULL,aid int references myadd(ano) ON DELETE CASCADE);
+
+Table created.
+
+SQL> insert into myemp values(101,'Mohan',3,16);
+
+1 row created.
+
+SQL> insert into myemp values(102,'Ravi',5,16);
+
+1 row created.
+
+SQL> insert into myemp values(103,'Raju',4,23);
+
+1 row created.
+
+SQL> insert into myemp values(104,'Pooja',2,34);
+
+1 row created.
+
+SQL> insert into myemp values(105,'Anil',1,34);
+
+1 row created.
+
+SQL> select * from myemp;
+
+       EID ENAME                  DNO        AID
+---------- --------------- ---------- ----------
+       101 Mohan                    3         16
+       102 Ravi                     5         16
+       103 Raju                     4         23
+       104 Pooja                    2         34
+       105 Anil                     1         34
+
+SQL> delete from mydept where dno=5;
+
+1 row deleted.
+SQL> select * from mydept;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 EEE
+
+SQL> select * from myadd;
+
+       ANO STREET
+---------- ----------
+        16 BTM
+        23 MKR
+        34 KLR
+
+SQL> select * from myemp;
+
+       EID ENAME                  DNO        AID
+---------- --------------- ---------- ----------
+       101 Mohan                    3         16
+       102 Ravi                               16
+       103 Raju                     4         23
+       104 Pooja                    2         34
+       105 Anil                     1         34
+
+
+SQL> delete from myadd where ano=34;
+
+1 row deleted.
+
+SQL> select * from mydept;
+
+       DNO DNAME
+---------- ----------
+         1 IT
+         2 CSE
+         3 ECE
+         4 EEE
+
+SQL> select * from myemp;
+
+       EID ENAME                  DNO        AID
+---------- --------------- ---------- ----------
+       101 Mohan                    3  	          16
+       102 Ravi                               	          16
+       103 Raju                       4                23
+
+SQL> select * from myadd;
+
+       ANO STREET
+---------- ----------
+        16 BTM
+        23 MKR
+
+***************************************************************************************************************************

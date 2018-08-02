@@ -1,0 +1,85 @@
+Normal import::
+explicit import::::import packagename.classname
+implicit import::::import packagename.*
+
+normal import cannot talk about member level it can be upto class level
+
+
+System.out.println
+System::is a class prresent in java.lang package
+out::is a static variablr present in system class of the type printstrem hence we can access by using class name system
+but whenever we use static import it is not required to use class name and we can access out directly
+println::is a merthod present in printstream class
+
+ similar  like
+class test{
+static String s="java";
+}
+
+test.s.length();
+test is class name
+s is a static variable present in test class of type java.lang.String
+length() is a method present in String class
+
+import static java.lang.System.out;
+class test 
+{
+psvm(String []ase){
+	out.println("hello");
+	out.println("mohan");
+}}
+Normal import:
+1st priority: explicit class import
+2nd priority:classes prent in current working directory
+3rd:	implicit class import
+
+
+Static import::
+explicit Static import::::import Static packagename.classname.staticmember
+implicit Static import::::import Static packagename.classname*
+
+
+import static java.lang.Integer.*;
+import static java.lang.Byte.*;
+public class test{
+psvm(String []ss){
+sop(MAX_VALUE);
+}//error since MAX_VALUE is available in both classes :reference to MAX_VALUE is ambiigious
+ 
+import static java.lang.Integer.MAX_VALUE; 		explicit
+import static java.lang.Byte.*;			implicit
+public class test{
+	static int MAX_VALUE=99;
+psvm(String []ss){
+sop(MAX_VALUE);
+}//o/p:99
+highest priority current class static members
+if current doesnot contain static members than explicit static import
+if explicit static import  doesnot contain static members than implicit static import
+
+
+two packages a class or interface with same name is very rare and hance ambiguity problem is 
+very rare in normal import
+but two classes or iinterfaces containg a  variable or method with same name very common
+and hence ambiguity problem is also very commom problem in static import
+
+
+we can use normal import to import classes and interface of a particular package whenever 
+we are using normal import it is not reqd. to use fully qualified names and we can use short names
+directly
+
+we can use static import to import static members of a particular class or interface whenever we are writing 
+static import it is not reqd to use class name to access static members and we can access directly
+
+
+class test {
+static int x=10;
+int y=20;
+psvm(String []arsg){
+test t1=new test();
+t1.x=223;
+t1.y=982;
+test t2=new test();
+sop(t2.x+" and  "+t2.y);
+}}//o/p:223 and   20   since for static variable change in last variable will effect the 1st one but
+		for instance variable change in last variable will not effect the 1st one

@@ -1,0 +1,538 @@
+mysql> select * from customeraccount;
++------+-------+----------+---------+
+| cid  | bcode | acno     | bal     |
++------+-------+----------+---------+
+| NULL |   231 | 27361819 |  178000 |
+|  102 |   653 | 72833645 | 67524.9 |
+|  104 |   888 | 65746583 |   98000 |
++------+-------+----------+---------+
+3 rows in set (0.11 sec)
+
+mysql> create table accountspecial as select * from customeraccount;
+Query OK, 3 rows affected (0.16 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from accountspecial;
++------+-------+----------+---------+
+| cid  | bcode | acno     | bal     |
++------+-------+----------+---------+
+| NULL |   231 | 27361819 |  178000 |
+|  102 |   653 | 72833645 | 67524.9 |
+|  104 |   888 | 65746583 |   98000 |
++------+-------+----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> drop table accountspecial;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table accountspecial as select * from customeraccount where 22=29;
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> select * from accountspecial;
+Empty set (0.00 sec)
+
+mysql> insert into accountspecial values(101,233,36363737,182877);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into accountspecial values(102,363,234422327,283744);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into accountspecial values(103,736,736464656,928373);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into accountspecial values(104,888,837465747,744847);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into accountspecial values(105,929,626365454,120003);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into accountspecial values(106,100,819235465,625353);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from accountspecial;
++------+-------+-----------+--------------+
+| cid  | bcode | acno      | bal          |
++------+-------+-----------+--------------+
+|  101 |   233 |  36363737 |  182877 |
+|  102 |   363 | 234422327 | 283744 |
+|  103 |   736 | 736464656 | 928373 |
+|  104 |   888 | 837465747 | 744847 |
+|  105 |   929 | 626365454 | 120003 |
+|  106 |   100 | 819235465 | 625353 |
++------+-------+-----------+--------------+
+6 rows in set (0.00 sec)
+
+Display record of nth highest balance
+mysql> select * from accountspecial acc where 2=(select count(distinct bal) from accountspecial where acc.bal<=bal);		2nd highest bal
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  104 |   888 | 837465747 | 744847 |
++------+-------+-----------+--------+
+1 row in set (0.11 sec)
+
+mysql> select * from accountspecial acc where 3=(select count(distinct bal) from accountspecial where acc.bal<=bal);		3rd highest bal
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  106 |   100 | 819235465 | 625353 |
++------+-------+-----------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from accountspecial acc where 1=(select count(distinct bal) from accountspecial where acc.bal<=bal);		highest bal
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  103 |   736 | 736464656 | 928373 |
++------+-------+-----------+--------+
+1 row in set (0.00 sec)
+
+here i have change the name of accountspecial to acc and so we have also access balance with acc
+
+
+Display record of mth to nth row
+
+select * from accountspecial limit starting index,number of records;
+
+mysql> select * from accountspecial limit 2,4;
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  103 |   736 | 736464656 | 928373 |
+|  104 |   888 | 837465747 | 744847 |
+|  105 |   929 | 626365454 | 120003 |
+|  106 |   100 | 819235465 | 625353 |
++------+-------+-----------+--------+
+4 rows in set (0.02 sec)
+
+mysql> select * from accountspecial limit 3,2;
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  104 |   888 | 837465747 | 744847 |
+|  105 |   929 | 626365454 | 120003 |
++------+-------+-----------+--------+
+2 rows in set (0.00 sec)
+
+Display the nth record			(here 6th records)
+mysql> select * from accountspecial limit 5,1;
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  106 |   100 | 819235465 | 625353 |
++------+-------+-----------+--------+
+1 row in set (0.00 sec)
+
+
+Display the top n records
+select * from accountspecial limit n; 
+
+mysql> select * from accountspecial limit 4;
++------+-------+-----------+--------+
+| cid  | bcode | acno      | bal    |
++------+-------+-----------+--------+
+|  101 |   233 |  36363737 | 182877 |
+|  102 |   363 | 234422327 | 283744 |
+|  103 |   736 | 736464656 | 928373 |
+|  104 |   888 | 837465747 | 744847 |
++------+-------+-----------+--------+
+4 rows in set (0.00 sec)
+
+
+
+*************************************************************************************************************************************
+
+Alter Statement:
+
+
+
+mysql> use sunny;
+Database changed
+mysql> create table stualter(sid int,sname char(20));
+Query OK, 0 rows affected (0.22 sec)
+
+
+1.Adding a new column
+	alter table table_name add column_name type,column_name type  after sname
+
+
+mysql> select * from stualter;
++------+-------+
+| sid  | sname |
++------+-------+
+|  101 | Sunny |
++------+-------+
+1 row in set (0.00 sec)
+
+mysql> insert into stualter values(101,'Sunny');
+Query OK, 1 row affected (0.06 sec)
+
+
+mysql> alter table stualter add phone bigint,email varchar(20) after sname;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'email varchar(20) after sname' at line 1
+
+Here we cannot add to column unlike Oracle(SQL)
+
+mysql> alter table stualter add email varchar(20) after sname;
+Query OK, 1 row affected (0.27 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> alter table stualter add phone bigint after sname;
+Query OK, 1 row affected (0.22 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> insert into stualter values(102,'Ravi',9876789234,'ravi@gmial.com');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from stualter;
++------+-------+------------+----------------+
+| sid  | sname | phone      | email          |
++------+-------+------------+----------------+
+|  101 | Sunny |       NULL | NULL           |
+|  102 | Ravi  | 9876789234 | ravi@gmial.com |
++------+-------+------------+----------------+
+2 rows in set (0.00 sec)
+
+mysql>  insert into stualter values(103,'Karan',78374674747,'karan@gmial.com');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from stualter;
++------+-------+-------------+-----------------+
+| sid  | sname | phone       | email           |
++------+-------+-------------+-----------------+
+|  101 | Sunny |        NULL | NULL            |
+|  102 | Ravi  |  9876789234 | ravi@gmial.com  |
+|  103 | Karan | 78374674747 | karan@gmial.com |
++------+-------+-------------+-----------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+2.Dropping the column
+
+	alter table table_name drop column column_name;
+
+mysql> alter table stualter drop column phone;
+Query OK, 3 rows affected (0.23 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>  insert into stualter values(104,'Rakesh',78374674747,'rakesh@gmial.com');		since we drop column phone so e cannot phone to that table
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+
+mysql>  insert into stualter values(104,'Rakesh','rakesh@gmial.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from stualter;
++------+--------+------------------+
+| sid  | sname  | email            |
++------+--------+------------------+
+|  101 | Sunny  | NULL             |
+|  102 | Ravi   | ravi@gmial.com   |
+|  103 | Karan  | karan@gmial.com  |
+|  104 | Rakesh | rakesh@gmial.com |
++------+--------+------------------+
+4 rows in set (0.00 sec)
+
+
+
+3.Modifying the column
+
+	alter table table_name modify column_name type
+
+
+mysql> alter table stualter modify sid varchar(15);			even though sid is not empty so unlike Oracle we can modify sid from int to varchar
+Query OK, 4 rows affected (0.20 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql>  insert into stualter values('B9-104','Kajal','kajal@gmial.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from stualter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| B9-104 | Kajal  | kajal@gmial.com  |
++--------+--------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> alter table stualter modify sid int;		as we enter sid in varchar type so again we cannot modify sid to int 
+ERROR 1366 (HY000): Incorrect integer value: 'B9-104' for column 'sid' at row 5
+
+
+
+4.Adding primary key:
+	alter table table_name add primary key(column_name);
+
+
+mysql> alter table stualter add primary key(sid);
+Query OK, 5 rows affected (0.23 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+mysql> insert into stualter values(105,'Pooja','pooja@gmial.com');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into stualter values(105,'Navin','navin@gmial.com');		since primary key so duploicate is not allowed
+ERROR 1062 (23000): Duplicate entry '105' for key 'PRIMARY'	
+
+
+
+mysql>   select * from stualter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
++--------+--------+------------------+
+6 rows in set (0.00 sec)
+
+
+
+5.Dropping primary key:
+		alter table table_name drop primary key;
+
+
+mysql> alter table stualter drop primary key;
+Query OK, 6 rows affected (0.22 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql>   insert into stualter values(105,'Navin','navin@gmial.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into stualter values(105,'Navin','navin@gmial.com');		after dropping primary key for sid duplicate sid value is allowed
+Query OK, 1 row affected (0.03 sec)
+
+mysql>   select * from stualter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
++--------+--------+------------------+
+8 rows in set (0.00 sec)
+
+
+mysql>   insert into stualter(sname,email) values('Ashish','ash@gmial.com');		even null value is allowed
+Query OK, 1 row affected (0.05 sec)
+
+mysql>   select * from stualter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+|        | Ashish | ash@gmial.com    |
++--------+--------+------------------+
+9 rows in set (0.00 sec)
+
+
+
+6.Adding the constraint
+
+
+	alter table table_name add constraint constraint_name our constraint here	;
+
+
+
+mysql> create table stu99(sid int primary key,name char(15));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql>  insert into stu99(name) values('Sunny');			since sid is primary key so cannot insert null 
+ERROR 1364 (HY000): Field 'sid' doesn't have a default value
+mysql>  insert into stu99 values(101,'Sunny');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into stu99 values(101,'Sunny');
+ERROR 1062 (23000): Duplicate entry '101' for key 'PRIMARY'	since sid is primary key so duplicate sid is also not allowed	
+mysql> insert into stu99 values(102,'Ravi');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into stu99 values(103,'Nitin');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into stu99 values(104,'Praveen');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into stu99 values(105,'Raju');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from stu99;
++-----+---------+
+| sid | name    |
++-----+---------+
+| 101 | Sunny   |
+| 102 | Ravi    |
+| 103 | Nitin   |
+| 104 | Praveen |
+| 105 | Raju    |
++-----+---------+
+5 rows in set (0.00 sec)
+
+mysql> create table fee99(sid int,tfee int);
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into fee99 values(101,25000);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into fee99 values(102,13000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into fee99 values(105,22000);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> alter table fee99 add constraint ck1 foreign key(sid) references stu99(sid);
+Query OK, 3 rows affected (0.22 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+Now with this adding constraints table fee99 become child table(foreign key) of stu99 
+
+
+mysql> delete from stu99 where sid=103;			sid=103 of stu99 is unused in child table fee99 so we can delete 103 
+Query OK, 1 row affected (0.06 sec)
+
+mysql> delete from stu99 where sid=102;			sid=102 of stu99 is used in child table fee99 so we cannot delete 102
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`sunny`.`fee99`, CONSTRAINT `ck1` FOREIGN KEY (`sid`) 
+REFERENCES `stu99` (`sid`))
+
+mysql> delete from stu99 where sid=105;			sid=105 of stu99 is used in child table fee99 so we cannot delete 105
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`sunny`.`fee99`, CONSTRAINT `ck1` FOREIGN KEY (`sid`) 
+REFERENCES `stu99` (`sid`))
+
+
+
+7. Dropping the constraint
+
+
+
+
+
+
+
+8.Renaming the table
+	alter table table_name rename to new_table_name;
+
+
+
+
+mysql> select * from stualter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+|        | Ashish | ash@gmial.com    |
++--------+--------+------------------+
+9 rows in set (0.00 sec)
+
+mysql> alter table stualter rename to studentalter;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from stualter;
+ERROR 1146 (42S02): Table 'sunny.stualter' doesn't exist
+mysql> select * from studentalter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+|        | Ashish | ash@gmial.com    |
++--------+--------+------------------+
+9 rows in set (0.00 sec)
+
+
+
+9.Renaming the column:
+	alter table table_name change old_column_name  new_column_name  datatype;
+
+
+mysql> select * from studentalter;
++--------+--------+------------------+
+| sid    | sname  | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+|        | Ashish | ash@gmial.com    |
++--------+--------+------------------+
+9 rows in set (0.00 sec)
+
+mysql> alter table studentalter change sname name char(20);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table studentalter change sid id int;
+ERROR 1366 (HY000): Incorrect integer value: 'B9-104' for column 'id' at row 6
+
+NOTE:	Remember we have modify our column sid from int to varchar so error
+
+mysql> alter table studentalter change sid id varchar(20);
+Query OK, 9 rows affected (0.20 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> select * from studentalter;
++--------+--------+------------------+
+| id     | name   | email            |
++--------+--------+------------------+
+| 101    | Sunny  | NULL             |
+| 102    | Ravi   | ravi@gmial.com   |
+| 103    | Karan  | karan@gmial.com  |
+| 104    | Rakesh | rakesh@gmial.com |
+| 105    | Pooja  | pooja@gmial.com  |
+| B9-104 | Kajal  | kajal@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+| 105    | Navin  | navin@gmial.com  |
+|        | Ashish | ash@gmial.com    |
++--------+--------+------------------+
+9 rows in set (0.00 sec)
+
+
+
+10.Removing structure of table
+	.By using delete command we can delete only records of table but
+	.By using drop command we can remove table structure 
+
+	drop table table_name;
+
+
+***************************************************************************************************************************************

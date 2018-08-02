@@ -1,0 +1,456 @@
+condition should be boolean type
+int x=10;
+if(x=20)//invalid since assignment operator not comparision operator
+
+int x=10;
+if(x==20)//valid    false 
+
+boolean b=true;
+if(b=false)// valid false
+
+boolean b=false;
+if(b==false)//valid true 
+
+if(true)
+sop("hello");//valid
+
+if(true);//valid entry statement wont provide any output
+
+if(true)
+int x=10;invalid without{} we can take only one statement which should not be declarative statement
+
+if(true)
+{
+int x=10;
+}	//valid  no output   (local variable)
+
+
+if(true)
+	if(true)
+	sop("hello");
+	else
+	sop("hi");			//valid
+
+else consider(mapped) to the nearest if 
+
+
+
+
+switch(x){}
+
+x can be byte,short,int,char,string,enum
+
+default we can take or we can ignored
+empty switch statement is valid
+
+switch(x){
+sop("hello");
+}//invalid case or default or } excepcted
+independent statement not allowed for switch
+
+int x=10;
+int y=20;
+switch(x){
+case 10:sop("10");
+case y:sop("20");
+}//invalid
+every case lebel should be constant expression
+
+
+int x=10;
+final int y=20;
+switch(x){
+case 10:sop("10");break;
+case y:sop("20");break;
+}//valid
+every case lebel should be constant expression
+
+int x=10;
+switch(x+1){
+case 10:sop("10");break;
+case 10+20*10:sop("210");break;
+}
+
+both switch argument and case lebels can be expressions but case 
+lebel should be constant expression
+
+
+
+byte b=10;				//byte: -128 to 127
+switch(b){				//byte
+case 10:sop("10");break;
+case 100:sop("100");break;
+case 1000:sop("1000");break;	//out of range of byte
+}//invalid
+
+
+byte b=10;				//byte
+switch(b+1){				//int
+case 10:sop("10");break;
+case 100:sop("100");break;
+case 1000:sop("1000");break;
+}//valid
+
+
+
+int x=10;
+switch(x){				
+case 97:sop("10");break;
+case 98:sop("100");break;
+case 'a':sop("1000");break;
+}//invalid char can be in int but 'a' will convert to 97 and 97 case is already there so duplicate case lebel not allowed
+
+int x=10;
+switch(x){				
+case 97:sop("10");break;
+case 98:sop("98");break;
+case 'f':sop("1000");break;
+}//valid char can be in int
+
+
+
+case lebel:
+1.it should be constant
+2.the value should be in range of switch argument type
+3.duplicate case lebels are not allowed
+
+
+
+switch(x){
+case 0:sop("0");
+case 1:sop("1");break;
+case 2:sop("2");
+default:sop("def");
+}
+x=0 ------0 1
+x=1 ------1
+x=2 ------2 def
+x=3 ------def
+
+switch(x){
+case 1:sop("0");
+case 2:sop("1");
+case 3:sop("2");
+	break;
+case 4:sop("4");
+case 5:sop("5");
+	break;
+case 6:sop("6");
+}
+
+within the  awitch if any case is matched from thar case onwards all statements will be executed until break or end of the switch
+this is called fall through inside a switch
+the main advantage of fall through is we can define common action for multiple cases(code reusuability)
+
+
+switch(x){
+default:sop("def");
+case 0:sop("0");break;
+case 1:sop("1");
+case 2:sop("2");
+}
+x=0 ------0
+x=1 ------1 2
+x=2 ------2 
+x=3 ------def
+
+
+default will be checked at last even it may be in any position
+
+
+
+
+
+
+
+for loop:
+{} are optional and without {} we can take only one statement unde for loop 
+which should not be declarative statement
+for(int i=0;i<10;i++)
+int x=10;// ivalid
+
+
+int i=0;
+for(sop("");i<3;i++){
+sop();}//valid
+
+condition: we can take any value java expression but should be of type 
+boolean this part is optional and if we are not take anything then compiler
+will always place true
+
+increment/decrement:we can take sop statement
+for(sop("");i<3;sop("")){
+i++}//valid
+
+all three parts of for loop are optional and independent of each other
+for(;;); //infnite
+for(;;)sop("")//infinite
+
+for(int i=0;true;i+=)
+{sop("");}	//infinite
+sop();		//unrechable so invalid
+
+
+for(int i=0;false;i+=)
+{sop("");}	
+sop();		//unrechable so invalid since atleast one time condition may be true
+
+
+for(int i=0;;i+=)
+{sop("");}	//infinite  since by default true
+sop();		//unrechable so invalid
+
+int a=10,b=20;
+for(int i=0;a<b;i+=)
+{sop("");}	//infinite
+sop();		// valid  here value of a and b may change somewhere and if 
+		condition becomes false somewhere than it will come out of
+		 loop and print statement which is out of loop
+
+int a=10,b=20;
+for(int i=0;a>b;i+=)
+{sop("c");}	
+sop("d");		//valid print sop("d") here compiler will find there
+			might be a chance whel condition is true beacuse value
+			of a and b is not fixed
+
+final int a=10,b=20;
+for(int i=0;a<b;i+=)
+{sop("");}	//infinite since value of is always true
+sop();		//unreachable
+
+final int a=10,b=20;
+for(int i=0;a>b;i+=)
+{sop("");}	//false
+sop();		//unreachable because atleast one time condition may be true
+
+for-each loop(enhanced for loop):
+specially desined loop to retrive elements of only:arrays and collection
+sequantial execution is only possible
+int[] x={10,20,30,40};
+for(int x1:x){
+sop(x1);}
+
+print elements of 2-d array
+int[][] x={{10,20,30},{40,50}}
+for(int[] x1:x){
+for(int x2:x1){
+sop(x2);
+}
+}
+
+3-d 
+for(int[] x1:x){
+for(int[] x2:x1){
+for(int x3:x2){
+sop(x3);
+}
+}
+}
+
+reverse printing is not possible by for each loop
+while loop:
+while(1){
+sop();}//invlalid
+{} are optional 
+without {} we can write only one statement under while which should be declarative statement
+while()true;//valid
+
+while(true)
+int x=10;//invalid
+
+while(true)
+{
+int x=10;//valid
+}
+
+while(true)
+{
+sop("a");
+}
+sop(b);//invalid unreachable
+
+while(false)
+{
+sop("a");
+}
+sop(b);//invalid atleast once condition should be true
+
+int a=10,b=20;
+while(a<b)
+{
+sop("a");
+}
+sop(b);//valid there may be a chance condition is false
+
+
+
+int a=10,b=20;
+while(a>b)
+{
+sop("a");
+}
+sop(b);//valid there may be a chance condition is true
+
+
+
+final int a=10,b=20;
+while(a<b)
+{
+sop("a");//infinite
+}
+sop(b);//invalid unreachable
+
+
+
+final int a=10,b=20;
+while(a>b)
+{
+sop("a");
+}
+sop(b);//invalid atleast once the condition should be true
+
+dowhile:if we want to execute loop body atleast once
+do{
+body}while(b);
+
+
+
+
+do{
+int x=10;//valid
+}while(true)
+
+
+do
+sop("a");
+while(true);	//valid 
+
+do;
+while(true);//valid b/w do and while atleast body or ; be there or both
+
+do
+int a=10;declarative
+while(true);//invalid since taking declarative
+
+do
+{int a=10;
+}while(true);//valid 
+
+
+do
+while(true);//invalid b/w do and while atleast body or ; be there or both
+
+do
+while(true)
+sop("");
+while(false);// valid 
+rewriting above one:
+do
+	while(true)
+	sop("");		//the above two line is not a statement but a while loop
+while(false);// valid
+
+
+
+
+do{
+sop("a");//infinite since true
+}while(true)
+sop(b);//invalid unreachable
+
+do{
+sop("a");
+}while(false)
+sop(b);//valid 
+
+int a=10,b=20;
+do{
+sop("a");
+}while(a<b)
+sop(b);//valid there may be a chance condition is false
+
+
+
+int a=10,b=20;
+do{
+sop("a");
+}while(a>b)
+sop(b);//valid there may be a chance condition is true
+
+
+
+final int a=10,b=20;
+do{
+sop("a");//infinite
+}while(a<b)
+sop(b);//invalid unreachable
+
+
+
+final int a=10,b=20;
+do{
+sop("a");
+}while(a>b)
+sop(b);//valid 
+
+
+
+Transfer statement:
+break:break current statement and after that it will not execute anything
+can be in switch or in loop
+lebel break:can be in loop
+we can use break in follwing places:
+1.inside switch to stop fallthrough
+int x=0;
+switch(x){
+case 0:sop(0);
+case 1:sop(1);break;
+case 2:sop(2);
+defaylt:sop(def);}o/p:0 1
+
+2.inside loops to break loop execution based on some condition
+for(int i=0;i<10;i++){
+if(i==5)
+break;
+sop(i);
+} o/p:0 1 2 3 4
+ 
+3:inside lebelled block or loop to break block or loop execution based on some condition
+int x=10;
+l1:
+{
+sop("begin");
+if(x==10)
+break l1;
+sop("end");
+}
+sop("hello");  o/p:begin hello
+
+continue:skip current iteration
+for(int i=10;i<10;i++){
+if(i%2==0)
+continue;
+sop(i);} o/p:1,3,5,7,9
+}
+use continue statement only inside loop to skip current iteration and 
+continue for next iteration
+
+nested loops:
+for(;;){
+for(;;){
+for(;;){
+break;
+}}}		//break inner for loop
+
+l1:
+for(;;){
+l2:
+for(;;){
+l3:
+for(;;){
+break l2;
+}}}		//break for loop lebelled with l2
+
+similar for continue instead of break it will skip loop and execute other
+

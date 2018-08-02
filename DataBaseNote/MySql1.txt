@@ -1,0 +1,2150 @@
+mysql> use sunny;
+Database changed
+
+To Drop database	:-drop database myorder
+***************************************************************************************************************
+mysql> create table student(sid varchar(15),name varchar(15),email varchar(15),fee int,city varchar(25));
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into student values('JLC-B9-001','SUNNY','sunny@gmail.com' ,15000,' BLORE');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into student values('JLC-B9-002','RAJU','raju@gmail.com' ,12000,' BLORE');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into student values('JLC-B9-003','RAVI','ravi@gmail.com' ,18000,' PUNE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into student values('JLC-B9-004','POOJA','pooja@gmail.com' ,17500,'DELHI');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student values('JLC-D9-004','NARESH','naresh@gmail.com' ,12500,'HYD');
+ERROR 1406 (22001): Data too long for column 'email' at row 1
+mysql> insert into student values('JLC-D9-004','NARESH','narsh@gmail.com' ,12500,'HYD');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student(sid,name,email,city) values('JLC-D9-003','MANU','manu@gmail.com' ,'HYD');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into student(sid,name,city) values('JLC-B9-123','RAKHI' ,'BLORE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into student(sid,name,email,city) values('JLC-B9-321','RAJ','raj@gmail,com' ,'ASSAM');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into student(sid,name,email) values('JLC-B9-678','MAHI','mahi@gmail,com');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from student;
++------------+--------+-----------------+-------+--------+
+| sid        | name   | email           | fee   | city   |
++------------+--------+-----------------+-------+--------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 |  BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 |  BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 |  PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI  |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD    |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD    |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE  |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM  |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL   |
++------------+--------+-----------------+-------+--------+
+9 rows in set (0.00 sec)
+
+mysql> insert into student(name) values(null);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into student values();
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from student;
++------------+--------+-----------------+-------+--------+
+| sid        | name   | email           | fee   | city   |
++------------+--------+-----------------+-------+--------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 |  BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 |  BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 |  PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI  |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD    |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD    |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE  |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM  |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL   |
+| NULL       | NULL   | NULL            |  NULL | NULL   |
+| NULL       | NULL   | NULL            |  NULL | NULL   |
++------------+--------+-----------------+-------+--------+
+11 rows in set (0.00 sec)
+
+mysql> delete from student where id sid null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sid null' at line 1
+mysql>  delete from student where sid is null;
+Query OK, 2 rows affected (0.03 sec)
+
+mysql> select * from student;
++------------+--------+-----------------+-------+--------+
+| sid        | name   | email           | fee   | city   |
++------------+--------+-----------------+-------+--------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 |  BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 |  BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 |  PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI  |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD    |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD    |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE  |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM  |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL   |
++------------+--------+-----------------+-------+--------+
+9 rows in set (0.00 sec)
+
+mysql>  select * from student where city ='BLORE' or city ='PUNE';
++------------+-------+-------+------+-------+
+| sid        | name  | email | fee  | city  |
++------------+-------+-------+------+-------+
+| JLC-B9-123 | RAKHI | NULL  | NULL | BLORE |
++------------+-------+-------+------+-------+
+1 row in set (0.05 sec)
+
+mysql> select * from student where city in('BLORE','PUNE');
++------------+-------+-------+------+-------+
+| sid        | name  | email | fee  | city  |
++------------+-------+-------+------+-------+
+| JLC-B9-123 | RAKHI | NULL  | NULL | BLORE |
++------------+-------+-------+------+-------+
+1 row in set (0.06 sec)
+
+mysql> select * from student where city not in('BLORE','PUNE');
++------------+--------+-----------------+-------+---------+
+| sid        | name   | email           | fee   | city    |
++------------+--------+-----------------+-------+---------+
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI   |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD     |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-D9-002 | RAJU   | oraju@gmail.com | 10000 | CHENNAI |
++------------+--------+-----------------+-------+---------+
+mysql> update student set city='BLORE' where name='SUNNY' or name='RAJU';
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from student;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 |  PUNE |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL  |
++------------+--------+-----------------+-------+-------+
+9 rows in set (0.00 sec)
+
+mysql> update student set city='PUNE' where name='RAVI';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL  |
++------------+--------+-----------------+-------+-------+
+9 rows in set (0.00 sec)
+
+mysql>  select * from student where city not in('BLORE','PUNE');
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM |
++------------+--------+-----------------+-------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student where city in('BLORE','PUNE');
++------------+-------+-----------------+-------+-------+
+| sid        | name  | email           | fee   | city  |
++------------+-------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU  | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI  | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-123 | RAKHI | NULL            |  NULL | BLORE |
++------------+-------+-----------------+-------+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from student where city ='BLORE' or city ='PUNE';
++------------+-------+-----------------+-------+-------+
+| sid        | name  | email           | fee   | city  |
++------------+-------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU  | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI  | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-123 | RAKHI | NULL            |  NULL | BLORE |
++------------+-------+-----------------+-------+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from student where fee>=18000 and fee<=120000;
++------------+------+----------------+-------+------+
+| sid        | name | email          | fee   | city |
++------------+------+----------------+-------+------+
+| JLC-B9-003 | RAVI | ravi@gmail.com | 18000 | PUNE |
++------------+------+----------------+-------+------+
+1 row in set (0.00 sec)
+
+mysql>  select * from student where fee>=10000 and fee<=120000;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
++------------+--------+-----------------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student where fee<=18000 and fee<=125000;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
++------------+--------+-----------------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student where fee<=18000 and fee>=125000;
+Empty set (0.00 sec)
+
+mysql> select * from student where fee between 18000 and 125000;
++------------+------+----------------+-------+------+
+| sid        | name | email          | fee   | city |
++------------+------+----------------+-------+------+
+| JLC-B9-003 | RAVI | ravi@gmail.com | 18000 | PUNE |
++------------+------+----------------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from student where fee between 10000 and 125000;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
++------------+--------+-----------------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql>  select * from student where name like 'r%';
++------------+-------+----------------+-------+-------+
+| sid        | name  | email          | fee   | city  |
++------------+-------+----------------+-------+-------+
+| JLC-B9-002 | RAJU  | raju@gmail.com | 12000 | BLORE |
+| JLC-B9-003 | RAVI  | ravi@gmail.com | 18000 | PUNE  |
+| JLC-B9-123 | RAKHI | NULL           |  NULL | BLORE |
+| JLC-B9-321 | RAJ   | raj@gmail,com  |  NULL | ASSAM |
++------------+-------+----------------+-------+-------+
+4 rows in set (0.06 sec)
+
+mysql> select * from student where name like 'R%';
++------------+-------+----------------+-------+-------+
+| sid        | name  | email          | fee   | city  |
++------------+-------+----------------+-------+-------+
+| JLC-B9-002 | RAJU  | raju@gmail.com | 12000 | BLORE |
+| JLC-B9-003 | RAVI  | ravi@gmail.com | 18000 | PUNE  |
+| JLC-B9-123 | RAKHI | NULL           |  NULL | BLORE |
+| JLC-B9-321 | RAJ   | raj@gmail,com  |  NULL | ASSAM |
++------------+-------+----------------+-------+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from student where name like '_A%';
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL  |
++------------+--------+-----------------+-------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student where name like '%A_';
++------------+------+---------------+------+-------+
+| sid        | name | email         | fee  | city  |
++------------+------+---------------+------+-------+
+| JLC-B9-321 | RAJ  | raj@gmail,com | NULL | ASSAM |
++------------+------+---------------+------+-------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from student where name like '%A__';
++------------+------+-----------------+-------+---------+
+| sid        | name | email           | fee   | city    |
++------------+------+-----------------+-------+---------+
+| JLC-B9-003 | RAVI | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-D9-003 | MANU | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-678 | MAHI | mahi@gmail,com  |  NULL | NULL    |
+| JLC-D9-002 | RAJU | oraju@gmail.com | 10000 | CHENNAI |
++------------+------+-----------------+-------+---------+
+
+
+
+mysql>  select * from student where name like '%H_';
++------------+-------+----------------+------+-------+
+| sid        | name  | email          | fee  | city  |
++------------+-------+----------------+------+-------+
+| JLC-B9-123 | RAKHI | NULL           | NULL | BLORE |
+| JLC-B9-678 | MAHI  | mahi@gmail,com | NULL | NULL  |
++------------+-------+----------------+------+-------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from student where name like '%_U';
++------------+------+----------------+-------+-------+
+| sid        | name | email          | fee   | city  |
++------------+------+----------------+-------+-------+
+| JLC-B9-002 | RAJU | raju@gmail.com | 12000 | BLORE |
+| JLC-D9-003 | MANU | manu@gmail.com |  NULL | HYD   |
++------------+------+----------------+-------+-------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from student where name like '%U';
++------------+------+----------------+-------+-------+
+| sid        | name | email          | fee   | city  |
++------------+------+----------------+-------+-------+
+| JLC-B9-002 | RAJU | raju@gmail.com | 12000 | BLORE |
+| JLC-D9-003 | MANU | manu@gmail.com |  NULL | HYD   |
++------------+------+----------------+-------+-------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from student where name like '___';
++------------+------+---------------+------+-------+
+| sid        | name | email         | fee  | city  |
++------------+------+---------------+------+-------+
+| JLC-B9-321 | RAJ  | raj@gmail,com | NULL | ASSAM |
++------------+------+---------------+------+-------+
+1 row in set (0.00 sec)
+
+mysql>  select * from student where name like '__';
+Empty set (0.00 sec)
+
+mysql> select * from student;
++------------+--------+-----------------+-------+-------+
+| sid        | name   | email           | fee   | city  |
++------------+--------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY  | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU   | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI   | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA  | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU   | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-123 | RAKHI  | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ    | raj@gmail,com   |  NULL | ASSAM |
+| JLC-B9-678 | MAHI   | mahi@gmail,com  |  NULL | NULL  |
++------------+--------+-----------------+-------+-------+
+9 rows in set (0.00 sec)
+
+mysql> update studentset name ='RAJU_ROY' where fee=10000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '='RAJU_ROY' where fee=10000' at line 1
+mysql> update studentset name ='RAJU_ROY' where fee=12000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '='RAJU_ROY' where fee=12000' at line 1
+
+
+mysql> update student set name ='RAJU_ROY' where fee=12000;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++------------+----------+-----------------+-------+-------+
+| sid        | name     | email           | fee   | city  |
++------------+----------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE  |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD   |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD   |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL  |
++------------+----------+-----------------+-------+-------+
+9 rows in set (0.00 sec)
+
+mysql> insert into student values('JLC-D9-002','RAJU','rajuori@gmail.com' ,10000,'CHENNAI');
+ERROR 1406 (22001): Data too long for column 'email' at row 1
+mysql> insert into student values('JLC-D9-002','RAJU','oraju@gmail.com' ,10000,'CHENNAI');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from student;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+mysql>  select * from student where name like 'RAJU\_ROY';
++------------+----------+----------------+-------+-------+
+| sid        | name     | email          | fee   | city  |
++------------+----------+----------------+-------+-------+
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com | 12000 | BLORE |
++------------+----------+----------------+-------+-------+
+1 row in set (0.02 sec)
+
+mysql>   select * from student where name like 'SUNNY' ;
++------------+-------+-----------------+-------+-------+
+| sid        | name  | email           | fee   | city  |
++------------+-------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY | sunny@gmail.com | 15000 | BLORE |
++------------+-------+-----------------+-------+-------+
+1 row in set (0.00 sec)
+
+
+ select * from student where name like 'RAJU\_%';
++------------+----------+----------------+-------+-------+
+| sid        | name     | email          | fee   | city  |
++------------+----------+----------------+-------+-------+
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com | 12000 | BLORE |
++------------+----------+----------------+-------+------
+
+
+
+
+
+mysql>   select * from student where sid like '%1%' ;
++------------+-------+-----------------+-------+-------+
+| sid        | name  | email           | fee   | city  |
++------------+-------+-----------------+-------+-------+
+| JLC-B9-001 | SUNNY | sunny@gmail.com | 15000 | BLORE |
+| JLC-B9-123 | RAKHI | NULL            |  NULL | BLORE |
+| JLC-B9-321 | RAJ   | raj@gmail,com   |  NULL | ASSAM |
++------------+-------+-----------------+-------+-------+
+3 rows in set (0.00 sec)
+
+mysql>  select * from student where email IS NULL;
++------------+-------+-------+------+-------+
+| sid        | name  | email | fee  | city  |
++------------+-------+-------+------+-------+
+| JLC-B9-123 | RAKHI | NULL  | NULL | BLORE |
++------------+-------+-------+------+-------+
+1 row in set (0.00 sec)
+
+mysql> desc student;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| sid   | varchar(15) | YES  |     | NULL    |       |
+| name  | varchar(15) | YES  |     | NULL    |       |
+| email | varchar(15) | YES  |     | NULL    |       |
+| fee   | int(11)     | YES  |     | NULL    |       |
+| city  | varchar(25) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.06 sec)
+
+mysql>  select * from student order by name;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+mysql>  select * from student order by name desc;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+mysql>  select * from student order by email desc;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+mysql> select * from student order by fee desc;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+
+***********************************************************************************************************************************************************
+
+
+
+
+
+mysql> create table book(bid varchar(10),bname varchar(15),author varchar(15),cost int,edi varchar(8),publication varchar(10),yop int,ISBN varchar(15));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into book values ('B-001','LEARN JAVA','SRINIVAS',950,'2ND','JLC',2013,'AB45DV41'),('B-002','JAVA IN DEPT','RICHARD',1200,'1ST','PS',2010,'AC56DV28'),('B-003','LEARN EJB','SMITH',550,'3RD','TATA',2013,'E445DV26'),('B-004','MASTER IN JAVA','ROHIT',350,'2ND','JLC',2003,'W38IV241'),('B-005','LEARN C++','ELBERT',730,'3RD','TATA',2007,'Q2R5DV21');
+Query OK, 5 rows affected (0.08 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from book;
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
+| B-002 | JAVA IN DEPT   | RICHARD  | 1200 | 1ST  | PS          | 2010 | AC56DV28 |
+| B-003 | LEARN EJB      | SMITH    |  550 | 3RD  | TATA        | 2013 | E445DV26 |
+| B-004 | MASTER IN JAVA | ROHIT    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
+| B-005 | LEARN C++      | ELBERT   |  730 | 3RD  | TATA        | 2007 | Q2R5DV21 |
++-------+----------------+----------+------+------+-------------+------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select bid,bname,cost from book;
++-------+----------------+------+
+| bid   | bname          | cost |
++-------+----------------+------+
+| B-001 | LEARN JAVA     |  950 |
+| B-002 | JAVA IN DEPT   | 1200 |
+| B-003 | LEARN EJB      |  550 |
+| B-004 | MASTER IN JAVA |  350 |
+| B-005 | LEARN C++      |  730 |
++-------+----------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from book where publication ='JLC';
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
+| B-004 | MASTER IN JAVA | ROHIT    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
++-------+----------------+----------+------+------+-------------+------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from book where author like 'SRI%';
++-------+------------+----------+------+------+-------------+------+----------+
+| bid   | bname      | author   | cost | edi  | publication | yop  | ISBN     |
++-------+------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
++-------+------------+----------+------+------+-------------+------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from book where YOP =2013 and author like'%VAS';
++-------+------------+----------+------+------+-------------+------+----------+
+| bid   | bname      | author   | cost | edi  | publication | yop  | ISBN     |
++-------+------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
++-------+------------+----------+------+------+-------------+------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from book where publication ='JLC' order by cost;
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-004 | MASTER IN JAVA | ROHIT    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
++-------+----------------+----------+------+------+-------------+------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from book where publication ='JLC' order by cost asc;
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-004 | MASTER IN JAVA | ROHIT    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
++-------+----------------+----------+------+------+-------------+------+----------+
+2 rows in set (0.00 sec)
+mysql> select * from book where yop =2013 order by cost desc;
++-------+------------+----------+------+------+-------------+------+----------+
+| bid   | bname      | author   | cost | edi  | publication | yop  | ISBN     |
++-------+------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
+| B-003 | LEARN EJB  | SMITH    |  550 | 3RD  | TATA        | 2013 | E445DV26 |
++-------+------------+----------+------+------+-------------+------+----------+
+2 rows in set (0.01 sec)
+mysql> select * from book where publication ='JLC' or 'TATA'or 'PS';
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
+| B-004 | MASTER IN JAVA | ROHIT    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
++-------+----------------+----------+------+------+-------------+------+----------+
+2 rows in set, 2 warnings (0.00 sec)
+
+mysql> select * from book where publication ='JLC' AND 'TATA'AND 'PS';
+Empty set, 1 warning (0.00 sec)
+
+mysql> update book
+    -> set author='SRINI' where cost=350;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from book;
++-------+----------------+----------+------+------+-------------+------+----------+
+| bid   | bname          | author   | cost | edi  | publication | yop  | ISBN     |
++-------+----------------+----------+------+------+-------------+------+----------+
+| B-001 | LEARN JAVA     | SRINIVAS |  950 | 2ND  | JLC         | 2013 | AB45DV41 |
+| B-002 | JAVA IN DEPT   | RICHARD  | 1200 | 1ST  | PS          | 2010 | AC56DV28 |
+| B-003 | LEARN EJB      | SMITH    |  550 | 3RD  | TATA        | 2013 | E445DV26 |
+| B-004 | MASTER IN JAVA | SRINI    |  350 | 2ND  | JLC         | 2003 | W38IV241 |
+| B-005 | LEARN C++      | ELBERT   |  730 | 3RD  | TATA        | 2007 | Q2R5DV21 |
++-------+----------------+----------+------+------+-------------+------+----------+
+5 rows in set (0.00 sec)
+*********************************************************************************************
+
+
+
+mysql> select mod(12,4);
++-----------+
+| mod(12,4) |
++-----------+
+|         0 |
++-----------+
+1 row in set (0.00 sec)
+
+
+***************************************************************************************************
+mysql> create table emp(eid int,ename varchar(15),salary float);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> insert into values(1,'Sunny',28000.0),(2,'Rakesh',17000.0);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'values(1,'Sunny',28000.0),(2,'Rakesh',17000.0)' at line 1
+
+
+
+mysql> insert into emp values(1,'Sunny',28000.0),(2,'Rakesh',17000.0);
+Query OK, 2 rows affected (0.09 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into emp(eid,ename) values(2,'Ravi'),(4,'Pooja');
+Query OK, 2 rows affected (0.06 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp;
++------+--------+--------+
+| eid  | ename  | salary |
++------+--------+--------+
+|    1 | Sunny  |  28000 |
+|    2 | Rakesh |  17000 |
+|    2 | Ravi   |   NULL |
+|    4 | Pooja  |   NULL |
++------+--------+--------+
+4 rows in set (0.05 sec)
+
+
+
+mysql> select * from emp;
++------+--------+--------+
+| eid  | ename  | salary |
++------+--------+--------+
+|    1 | Sunny  |  28000 |
+|    2 | Rakesh |  17000 |
+|    2 | Ravi   |   NULL |
+|    4 | Pooja  |   NULL |
++------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql>  select sum(salary) from emp;
++-------------+
+| sum(salary) |
++-------------+
+|       45000 |
++-------------+
+1 row in set (0.05 sec)
+
+mysql>  select max(salary) from emp;
++-------------+
+| max(salary) |
++-------------+
+|       28000 |
++-------------+
+1 row in set (0.02 sec)
+
+mysql>  select min(salary) from emp;
++-------------+
+| min(salary) |
++-------------+
+|       17000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql>  select avg(salary) from emp;
++-------------+
+| avg(salary) |
++-------------+
+|       22500 |
++-------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select *  from student ;
++------------+----------+-----------------+-------+---------+
+| sid        | name     | email           | fee   | city    |
++------------+----------+-----------------+-------+---------+
+| JLC-B9-001 | SUNNY    | sunny@gmail.com | 15000 | BLORE   |
+| JLC-B9-002 | RAJU_ROY | raju@gmail.com  | 12000 | BLORE   |
+| JLC-B9-003 | RAVI     | ravi@gmail.com  | 18000 | PUNE    |
+| JLC-B9-004 | POOJA    | pooja@gmail.com | 17500 | DELHI   |
+| JLC-D9-004 | NARESH   | narsh@gmail.com | 12500 | HYD     |
+| JLC-D9-003 | MANU     | manu@gmail.com  |  NULL | HYD     |
+| JLC-B9-123 | RAKHI    | NULL            |  NULL | BLORE   |
+| JLC-B9-321 | RAJ      | raj@gmail,com   |  NULL | ASSAM   |
+| JLC-B9-678 | MAHI     | mahi@gmail,com  |  NULL | NULL    |
+| JLC-D9-002 | RAJU     | oraju@gmail.com | 10000 | CHENNAI |
++------------+----------+-----------------+-------+---------+
+10 rows in set (0.01 sec)
+
+mysql> select count(distinct city)  from student ;
++----------------------+
+| count(distinct city) |
++----------------------+
+|                    6 |
++----------------------+
+1 row in set (0.12 sec)
+
+mysql> select count( city)  from student ;
++--------------+
+| count( city) |
++--------------+
+|            9 |
++--------------+
+1 row in set (0.00 sec)
+
+
+mysql>  select 2+3;
++-----+
+| 2+3 |
++-----+
+|   5 |
++-----+
+1 row in set (0.00 sec)
+
+mysql>  select sum(2+3);
++----------+
+| sum(2+3) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+mysql>  select avg(2+3+8+5);
++--------------+
+| avg(2+3+8+5) |
++--------------+
+|      18.0000 |
++--------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+Note:In mysql error won't be there but the below o/p is incorrect
+
+mysql>  select avg('Pooja'+'Sunny');
++----------------------+
+| avg('Pooja'+'Sunny') |
++----------------------+
+|                    0 |
++----------------------+
+1 row in set, 2 warnings (0.00 sec)
+
+
+
+Note:In mysql error won't be there but the below o/p is incorrect
+
+mysql>  select sum('Pooja'+'Sunny');
++----------------------+
+| sum('Pooja'+'Sunny') |
++----------------------+
+|                    0 |
++----------------------+
+1 row in set, 2 warnings (0.00 sec)
+*************************************************************************************************************************
+
+mysql> use sunny;
+Database changed
+mysql> create table record3(id int,name varchar(10));
+Query OK, 0 rows affected (0.05 sec)
+mysql> insert into record3 values(101,'Sri'),(102,null),(null,'DK'),(103,'Nivas'),(104,null),(null,null),(101,'Sri');
+Query OK, 7 rows affected (0.05 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from record3;
++------+-------+
+| id   | name  |
++------+-------+
+|  101 | Sri   |
+|  102 | NULL  |
+| NULL | DK    |
+|  103 | Nivas |
+|  104 | NULL  |
+| NULL | NULL  |
+|  101 | Sri   |
++------+-------+
+7 rows in set (0.00 sec)
+
+
+mysql> select count(id) from record3;
++-----------+
+| count(id) |
++-----------+
+|         5 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select count(name) from record3;
++-------------+
+| count(name) |
++-------------+
+|           4 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select count(distinct name) from record3;
++----------------------+
+| count(distinct name) |
++----------------------+
+|                    3 |
++----------------------+
+1 row in set (0.05 sec)
+
+mysql> select count(distinct id) from record3;
++--------------------+
+| count(distinct id) |
++--------------------+
+|                  4 |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) from record3;
++----------+
+| count(*) |
++----------+
+|        7 |
++----------+
+1 row in set (0.00 sec)
+
+
+mysql> select distinct name from record3;
++-------+
+| name  |
++-------+
+| Sri   |
+| NULL  |
+| DK    |
+| Nivas |
++-------+
+4 rows in set (0.05 sec)
+
+mysql> select distinct id from record3;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+| NULL |
+|  103 |
+|  104 |
++------+
+5 rows in set (0.00 sec)
+
+
+mysql> select  id from record3;
++------+
+| id   |
++------+
+|  101 |
+|  102 |
+| NULL |
+|  103 |
+|  104 |
+| NULL |
+|  101 |
++------+
+7 rows in set (0.00 sec)
+*************************************************************************************************************************
+
+mysql> create table record4(totfee int,city varchar(12));
+Query OK, 0 rows affected (0.14 sec)
+mysql> insert into record4 values(18000,'BLORE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into record4 values(5000,'PUNE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into record4 values(8000,'DELHI');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into record4 values(18000,'BLORE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into record4 values(8000,'PUNE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into record4 values(20000,'BLORE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into record4 values(8000,'DELHI');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from record4;
++--------+-------+
+| totfee | city  |
++--------+-------+
+|  18000 | BLORE |
+|   5000 | PUNE  |
+|   8000 | DELHI |
+|  18000 | BLORE |
+|   8000 | PUNE  |
+|  20000 | BLORE |
+|   8000 | DELHI |
++--------+-------+
+7 rows in set (0.00 sec)
+
+mysql>  select sum(totfee),city from record4 group by city;
++------------+-------+
+| sum(tofee) | city  |
++------------+-------+
+|      56000 | Blore |
+|      16000 | Delhi |
+|      13000 | Pune  |
++------------+-------+
+3 rows in set (0.11 sec)
+
+mysql> select sum(totfee),city from record4 group by city having city in('Blore','Pune');
++------------+-------+
+| sum(tofee) | city  |
++------------+-------+
+|      56000 | Blore |
+|      13000 | Pune  |
++------------+-------+
+2 rows in set (0.06 sec)
+
+*******************************************************
+mysql> create table studentinfo(sid int,sname varchar(15),course varchar(15),totfee int,feepaid int,feebal int,branch varchar(15),city varchar(15));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into studentinfo values(1,'Srinivas','FC',18000,10000,8000,'MKR','Blore');
+Query OK, 1 row affected (0.05 sec)
+
+mysql>  insert into studentinfo values(2,'Dande','CoreJava',5000,5000,0,'BTM','Pune');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into studentinfo values(3,'Manish','Android',8000,4000,4000,'MHA','Delhi');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into studentinfo values(4,'DK','Hadoop',18000,9000,9000,'MKR','Blore');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into studentinfo values(5,'Rajeev','Android',8000,5000,3000,'BTM','Pune');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into studentinfo values(6,'Firoj','Hadoop',20000,15000,5000,'MKR','Blore');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into studentinfo values(7,'Kofel','Android',8000,2000,6000,'BTM','Delhi');
+Query OK, 1 row affected (0.08 sec)
+
+
+mysql>  select city,sum(feepaid) from studentinfo group by city;
++-------+--------------+
+| city  | sum(feepaid) |
++-------+--------------+
+| Blore |        34000 |
+| Delhi |         6000 |
+| Pune  |        10000 |
++-------+--------------+
+3 rows in set (0.00 sec)
+
+mysql>  select branch,sum(feepaid) from studentinfo group by branch;
++--------+--------------+
+| branch | sum(feepaid) |
++--------+--------------+
+| BTM    |        12000 |
+| MHA    |         4000 |
+| MKR    |        34000 |
++--------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select branch as branch_name,sum(feepaid) from studentinfo group by branch;
++-------------+--------------+
+| branch_name | sum(feepaid) |
++-------------+--------------+
+| BTM         |        12000 |
+| MHA         |         4000 |
+| MKR         |        34000 |
++-------------+--------------+
+3 rows in set (0.05 sec)
+
+mysql>  select city,sum(feepaid) from studentinfo group by city having city in('Blore','Pune');
++-------+--------------+
+| city  | sum(feepaid) |
++-------+--------------+
+| Blore |        34000 |
+| Pune  |        10000 |
++-------+--------------+
+2 rows in set (0.00 sec)
+
+mysql>  select city,sum(feepaid) from studentinfo where city in('Blore','Pune') group by city;
++-------+--------------+
+| city  | sum(feepaid) |
++-------+--------------+
+| Blore |        34000 |
+| Pune  |        10000 |
++-------+--------------+
+2 rows in set (0.02 sec)
+
+mysql>  select course,count(sid) from studentinfo group by course;
++----------+------------+
+| course   | count(sid) |
++----------+------------+
+| Android  |          3 |
+| CoreJava |          1 |
+| FC       |          1 |
+| Hadoop   |          2 |
++----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select city,avg(feepaid) from studentinfo where city in('Blore','Pune') group by city;
++-------+--------------+
+| city  | avg(feepaid) |
++-------+--------------+
+| Blore |   11333.3333 |
+| Pune  |    5000.0000 |
++-------+--------------+
+2 rows in set (0.05 sec)
+
+mysql> select city,sum(feepaid) from studentinfo where city in('Blore','Pune') group by city order by city;
++-------+--------------+
+| city  | sum(feepaid) |
++-------+--------------+
+| Blore |        34000 |
+| Pune  |        10000 |
++-------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> select city,sum(feepaid) from studentinfo where city in('Blore','Pune') group by city order by city desc;
++-------+--------------+
+| city  | sum(feepaid) |
++-------+--------------+
+| Pune  |        10000 |
+| Blore |        34000 |
++-------+--------------+
+2 rows in set (0.00 sec)
+
+
+mysql>  select course,max(feepaid) from studentinfo group by course;
++----------+--------------+
+| course   | max(feepaid) |
++----------+--------------+
+| Android  |         5000 |
+| CoreJava |         5000 |
+| FC       |        10000 |
+| Hadoop   |        15000 |
++----------+--------------+
+4 rows in set (0.05 sec)
+
+
+
+mysql> select course,min(feepaid) from studentinfo group by course;
++----------+--------------+
+| course   | min(feepaid) |
++----------+--------------+
+| Android  |         2000 |
+| CoreJava |         5000 |
+| FC       |        10000 |
+| Hadoop   |         9000 |
++----------+--------------+
+4 rows in set (0.00 sec)
+***************************************************************************
+
+mysql> create table record5(id int,name varchar(15),phone bigint not null);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql>  insert into record5(id,name) values(101,'Mohan',null);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql>  insert into record5 values(101,'Mohan',null);
+ERROR 1048 (23000): Column 'phone' cannot be null
+mysql>  insert into record5(id,name) values(101,'Mohan');
+ERROR 1364 (HY000): Field 'phone' doesn't have a default value
+since phone is provided as not null so error if we donot provide any value for phone but we can make sid and name as null
+mysql>  insert into record5 values(101,'Mohan',8876765676);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into record5 values(102,'Ravi',7895645654);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into record5 values(104,'Sunny',9874565789);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from record5;
++------+-------+------------+
+| id   | name  | phone      |
++------+-------+------------+
+|  101 | Mohan | 8876765676 |
+|  102 | Ravi  | 7895645654 |
+|  104 | Sunny | 9874565789 |
++------+-------+------------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into record5(id,phone) values(105,8923748569);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into record5 values(108,null,7182738374);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from record5;
++------+-------+------------+
+| id   | name  | phone      |
++------+-------+------------+
+|  101 | Mohan | 8876765676 |
+|  102 | Ravi  | 7895645654 |
+|  104 | Sunny | 9874565789 |
+|  105 | NULL  | 8923748569 |
+|  108 | NULL  | 7182738374 |
++------+-------+------------+
+5 rows in set (0.00 sec)
+
+
+mysql> insert into record5(name,phone) values('Rohan',8273645768);
+
+mysql> insert into record5 values(null,'Rohan',8273645768);
+Query OK, 1 row affected (0.06 sec)
+
+
+
+mysql> select * from record5;
++------+-------+------------+
+| id   | name  | phone      |
++------+-------+------------+
+|  101 | Mohan | 8876765676 |
+|  102 | Ravi  | 7895645654 |
+|  104 | Sunny | 9874565789 |
+|  105 | NULL  | 8923748569 |
+|  108 | NULL  | 7182738374 |
+| NULL | Rohan | 8273645768 |
+| NULL | Rohan | 8273645768 |
++------+-------+------------+
+7 rows in set (0.00 sec)
+******************************************************************************8
+
+
+
+
+mysql> create table emp2(eid int UNIQUE,ename varchar(15),phone long);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into emp2 values(101,'Sunny',9876789876);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into emp2 values(101,'Sunny',9876789876);
+ERROR 1062 (23000): Duplicate entry '101' for key 'eid'
+
+Since we restrict int value as unique so duplicate value i.e101 is not allowed but duplicate name and phone is valid
+Also null is treated as differently so it is not treated as unique
+
+mysql>  insert into emp2 values(null,'Rohit',8798789876);
+Query OK, 1 row affected (0.09 sec)
+
+mysql>  insert into emp2 values(null,'Suraj',9878654565);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into emp2(ename,phone) values('Kiran',986576787);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into emp2 values(105,'Kiran',986576787);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from emp2;
++------+-------+------------+
+| eid  | ename | phone      |
++------+-------+------------+
+|  101 | Sunny | 9876789876 |
+|  102 | Sunny | 9876789876 |
+| NULL | Rohit | 8798789876 |
+| NULL | Suraj | 9878654565 |
+| NULL | Kiran | 986576787  |
+|  105 | Kiran | 986576787  |
++------+-------+------------+
+6 rows in set (0.00 sec)
+*******************************************************************************************************************************
+
+mysql>create table myorder(oid int PRIMARY KEY,itemname varchar(15),price int);
+
+Primary Key:Unique+NotNull
+Primary Key doesnot appear two time i.e only one primary key is alllowed
+
+
+
+mysql> insert into myorder values(null,'Tea',123);
+ERROR 1048 (23000): Column 'oid' cannot be null
+mysql>  insert into myorder(itemname,price) values('Tea',123);
+ERROR 1364 (HY000): Field 'oid' doesn't have a default value
+mysql>  insert into myorder values(1,'Tea',123);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into myorder values(1,'Tea',123);
+ERROR 1062 (23000): Duplicate entry '1' for key 'PRIMARY'
+mysql>  insert into myorder values(2,'Tea',253);
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into myorder values(null,'Tea',253);
+ERROR 1048 (23000): Column 'oid' cannot be null
+mysql>  insert into myorder values(2,null,152);
+ERROR 1062 (23000): Duplicate entry '2' for key 'PRIMARY'
+mysql>  insert into myorder values(3,null,152);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> desc myorder;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| oid      | int(11)     | NO   | PRI | NULL    |       |
+| itemname | varchar(15) | YES  |     | NULL    |       |
+| price    | int(11)     | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> insert into myorder values(4,'Soap',30);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into myorder values(5,'Soap',30);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into myorder values(6,'Water',null);
+Query OK, 1 row affected (0.02 sec)
+
+mysql>  insert into myorder values(7,'Detergent',45);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  select * from myorder;
++-----+-----------+-------+
+| oid | itemname  | price |
++-----+-----------+-------+
+|   1 | Tea       |   123 |
+|   2 | Tea       |   253 |
+|   3 | NULL      |   152 |
+|   4 | Soap      |    30 |
+|   5 | Soap      |    30 |
+|   6 | Water     |  NULL |
+|   7 | Detergent |    45 |
++-----+-----------+-------+
+7 rows in set (0.00 sec)
+******************************************************************************************************************************
+
+
+mysql> create table accounttable(bcode int,accno int,balance float,PRIMARY KEY(bcode,accno));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into accounttable values(856,827263646,23446.99);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into accounttable values(856,827263646,23446.99);
+ERROR 1062 (23000): Duplicate entry '856-827263646' for key 'PRIMARY'
+mysql>  insert into accounttable values(439,827263646,23446.99);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into accounttable values(null,895432345,880);
+ERROR 1048 (23000): Column 'bcode' cannot be null
+mysql>  insert into accounttable values(950,null,1230);
+ERROR 1048 (23000): Column 'accno' cannot be null
+mysql>  insert into accounttable values(231,8756409812,4389.09);
+ERROR 1264 (22003): Out of range value for column 'accno' at row 1
+mysql>  insert into accounttable values(560,8756409812,781);
+ERROR 1264 (22003): Out of range value for column 'accno' at row 1
+mysql>  insert into accounttable values(560,875640,781);
+Query OK, 1 row affected (0.05 sec)
+
+mysql>  select * from accounttable;
++-------+-----------+---------+
+| bcode | accno     | balance |
++-------+-----------+---------+
+|   439 | 827263646 |   23447 |
+|   560 |    875640 |     781 |
+|   856 | 827263646 |   23447 |
++-------+-----------+---------+
+3 rows in set (0.05 sec)
+
+
+
+
+
+mysql>  insert into accounttable values(321,8763453,null);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into accounttable values(321,null,null);
+ERROR 1048 (23000): Column 'accno' cannot be null
+mysql>  insert into accounttable values(540,8763453,null);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  select * from accounttable;
++-------+-----------+---------+
+| bcode | accno     | balance |
++-------+-----------+---------+
+|   321 |   8763453 |    NULL |
+|   439 | 827263646 |   23447 |
+|   540 |   8763453 |    NULL |
+|   560 |    875640 |     781 |
+|   856 | 827263646 |   23447 |
++-------+-----------+---------+
+5 rows in set (0.00 sec)
+
+
+
+mysql>  select * from accounttable;
++-------+-----------+---------+
+| bcode | accno     | balance |
++-------+-----------+---------+
+|   321 |   8763453 |    NULL |
+|   439 | 827263646 |   23447 |
+|   540 |   8763453 |    NULL |
+|   560 |    875640 |     781 |
+|   856 | 827263646 |   23447 |
++-------+-----------+---------+
+5 rows in set (0.00 sec)
+
+Composite primary combination should be unique here combination of bcode and accno
+
+**********************************************************************************
+mysql> create table department1(dno int primary key,dname varchar(10));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert into department1 values(1,'IT');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into department1 values(2,'CSE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into department1 values(3,'ECE');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into department1 values(4,'EEE');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into department1 values(5,'ME');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from department1;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+5 rows in set (0.00 sec)
+
+mysql> create table employee1(eid int,ename varchar(15),dno int,foreign key(dno) references department1(dno));
+Query OK, 0 rows affected (0.21 sec)
+
+mysql> insert into employee1 values(101,'Mohan',3);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee1 values(102,'Ravi',1);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee1 values(103,'Raju',1);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee1 values(104,'Rani',2);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into employee1 values(105,'Suresh',4);
+Query OK, 1 row affected (0.08 sec)
+
+
+
+mysql> select * from employee1;
++------+--------+------+
+| eid  | ename  | dno  |
++------+--------+------+
+|  101 | Mohan  |    3 |
+|  102 | Ravi   |    1 |
+|  103 | Raju   |    1 |
+|  104 | Rani   |    2 |
+|  105 | Suresh |    4 |
++------+--------+------+
+5 rows in set (0.01 sec)
+
+mysql> delete from department1 where dno=2;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`sunny`.`employee1`, CONSTRAINT `employee1_ibfk_1` FOREIGN KEY (`dno`) REFERENCES `department1` (`dno`))
+
+we cannot delete a main or parent key if child key is using main key's reference
+
+mysql> delete from department1 where dno=5;
+Query OK, 1 row affected (0.06 sec)
+
+We can delete the record of master table if we are not using in child 
+
+mysql> select * from employee1;
++------+--------+------+
+| eid  | ename  | dno  |
++------+--------+------+
+|  101 | Mohan  |    3 |
+|  102 | Ravi   |    1 |
+|  103 | Raju   |    1 |
+|  104 | Rani   |    2 |
+|  105 | Suresh |    4 |
++------+--------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from department1;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql> delete from department1 where dno=4;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`sunny`.`employee1`, CONSTRAINT `employee1_ibfk_1` FOREIGN KEY (`dno`) REFERENCES `department1` (`dno`))
+
+We cannot delete the record of master table if we are using in child  if we try to do so we get above error
+
+
+**************************************************************************************************************************
+
+
+
+mysql> create table customer( cid int Primary key,cname varchar(15),email varchar(30),phone bigint);
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> insert into customer values(101,'Sunny','SunnyPaul@gmail.com',8759167520);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into customer values(102,'Raju','Raju@gmail.com',8273747474);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into customer values(103,'Rani','Rani@gmail.com',9182746758);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into customer values(104,'Sumit','Sumit@gmail.com',7182738945);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into customer values(105,'Ravi','Ravi@gmail.com',9018249056);
+Query OK, 1 row affected (0.08 sec)
+
+
+
+mysql> select * from customer;
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju  | Raju@gmail.com      | 8273747474 |
+| 103 | Rani  | Rani@gmail.com      | 9182746758 |
+| 104 | Sumit | Sumit@gmail.com     | 7182738945 |
+| 105 | Ravi  | Ravi@gmail.com      | 9018249056 |
++-----+-------+---------------------+------------+
+5 rows in set (0.00 sec)
+
+create table customeraccount(cid int,bcode int,acno bigint,bal float,primary key(bcode,acno),foreign key(cid) references customer(cid) ON DELETE SET NULL);
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into  customeraccount values(101,272,21062721,85650);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into  customeraccount values(102,653,72833645,67524.89);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into  customeraccount values(104,888,65746583,98000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into  customeraccount values(105,231,27361819,178000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from customeraccount;
++------+-------+----------+---------+
+| cid  | bcode | acno     | bal     |
++------+-------+----------+---------+
+|  105 |   231 | 27361819 |  178000 |
+|  101 |   272 | 21062721 |   85650 |
+|  102 |   653 | 72833645 | 67524.9 |
+|  104 |   888 | 65746583 |   98000 |
++------+-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> create table customertransiction(bcode int,acno bigint,tx_date date,amt float,tx_id int primary key,foreign key(bcode,acno) references customeraccount(bcode,acno) ON DELETE SET NULL);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql>  insert into customertransiction values(231, 27361819 ,'2014-12-20',1243450,001);
+Query OK, 1 row affected (0.08 sec)
+mysql>  insert into customertransiction values(272, 21062721,'2012-5-15',873450,002);
+Query OK, 1 row affected (0.06 sec)
+mysql> insert into customertransiction values(888,65746583,'2015-9-02',981230,003);
+Query OK, 1 row affected (0.08 sec)
+
+
+
+
+
+mysql> select * from customer;
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju  | Raju@gmail.com      | 8273747474 |
+| 103 | Rani  | Rani@gmail.com      | 9182746758 |
+| 104 | Sumit | Sumit@gmail.com     | 7182738945 |
+| 105 | Ravi  | Ravi@gmail.com      | 9018249056 |
++-----+-------+---------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from customeraccount;
++------+-------+----------+---------+
+| cid  | bcode | acno     | bal     |
++------+-------+----------+---------+
+|  105 |   231 | 27361819 |  178000 |
+|  101 |   272 | 21062721 |   85650 |
+|  102 |   653 | 72833645 | 67524.9 |
+|  104 |   888 | 65746583 |   98000 |
++------+-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select * from customertransiction;
++-------+----------+------------+--------------+-------+
+| bcode | acno     | tx_date    | amt          | tx_id |
++-------+----------+------------+--------------+-------+
+|   231 | 27361819 | 2014-12-20 | 1.24345e+006 |     1 |
+|   272 | 21062721 | 2012-05-15 |       873450 |     2 |
+|   888 | 65746583 | 2015-09-02 |       981230 |     3 |
++-------+----------+------------+--------------+-------+
+3 rows in set (0.00 sec)
+
+
+mysql> delete from customer where cid=105;
+Query OK, 1 row affected (0.06 sec)
+
+mysql> delete from customeraccount where bcode=272;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from customer;
++-----+-------+---------------------+------------+
+| cid | cname | email               | phone      |
++-----+-------+---------------------+------------+
+| 101 | Sunny | SunnyPaul@gmail.com | 8759167520 |
+| 102 | Raju  | Raju@gmail.com      | 8273747474 |
+| 103 | Rani  | Rani@gmail.com      | 9182746758 |
+| 104 | Sumit | Sumit@gmail.com     | 7182738945 |
++-----+-------+---------------------+------------+
+
+here we delete sid=105;
+4 rows in set (0.00 sec)
+
+mysql> select * from customeraccount;
++------+-------+----------+---------+
+| cid  | bcode | acno     | bal     |
++------+-------+----------+---------+
+| NULL |   231 | 27361819 |  178000 |       here we delete cid=105 and set null
+|  102 |   653 | 72833645 | 67524.9 |
+|  104 |   888 | 65746583 |   98000 |
++------+-------+----------+---------+
+
+
+here we delete bcode=272;
+3 rows in set (0.00 sec)
+
+mysql> select * from customertransiction;
++-------+----------+------------+--------------+-------+
+| bcode | acno     | tx_date    | amt          | tx_id |
++-------+----------+------------+--------------+-------+
+|   231 | 27361819 | 2014-12-20 | 1.24345e+006 |     1 |
+|  NULL |     NULL | 2012-05-15 |       873450 |     2 |   here we delete record for bcode=272 and set null	
+|   888 | 65746583 | 2015-09-02 |       981230 |     3 |
++-------+----------+------------+--------------+-------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*********************************************************************************************************
+mysql> create table department(dno int primary key,dname varchar(10));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>  insert into department values(1,'IT');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into department values(2,'CSE');
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into department values(3,'ECE');
+Query OK, 1 row affected (0.11 sec)
+
+mysql>  insert into department values(4,'EEE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into department values(5,'ME');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from department;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+5 rows in set (0.00 sec)
+
+
+mysql> create table employee(eid int,ename varchar(15),dno int,foreign key(dno) references department(dno) ON DELETE SET NULL);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into employee values(101,'Mohan',3);
+Query OK, 1 row affected (0.05 sec)
+
+mysql>  insert into employee values(102,'Ravi',2);
+Query OK, 1 row affected (0.38 sec)
+
+mysql> insert into employee values(103,'Raju',2);
+Query OK, 1 row affected (0.09 sec)
+
+mysql>  insert into employee values(104,'Rani',1);
+Query OK, 1 row affected (0.30 sec)
+
+mysql>  insert into employee values(105,'Suresh',4);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from employee;
++------+--------+------+
+| eid  | ename  | dno  |
++------+--------+------+
+|  101 | Mohan  |    3 |
+|  102 | Ravi   |    2 |
+|  103 | Raju   |    2 |
+|  104 | Rani   |    1 |
+|  105 | Suresh |    4 |
++------+--------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+5 rows in set (0.00 sec)
+
+mysql> delete from department where dno=2;
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select * from department;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee;
++------+--------+------+
+| eid  | ename  | dno  |
++------+--------+------+
+|  101 | Mohan  |    3 |
+|  102 | Ravi   | NULL |
+|  103 | Raju   | NULL |
+|  104 | Rani   |    1 |
+|  105 | Suresh |    4 |
++------+--------+------+
+5 rows in set (0.00 sec)
+
+**********************************************************************************************************************************
+Here all the output are incorrect since dno int references mydept(dno) ON DELETE SET NULL,aid int references myadd(ano) ON DELETE CASCADE in mysql is 
+invalid but it is valid for Oracle(SQL)
+
+
+mysql> create table mydept(dno int primary key,dname varchar(10));
+Query OK, 0 rows affected (0.20 sec)
+
+mysql>  insert into mydept values(1,'IT');
+Query OK, 1 row affected (0.09 sec)
+
+mysql>  insert into mydept values(2,'CSE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>   insert into mydept values(3,'ECE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into mydept values(4,'EEE');
+Query OK, 1 row affected (0.05 sec)
+
+mysql>   insert into mydept values(5,'ME');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+5 rows in set (0.00 sec)
+
+mysql>  create table myadd(ano int primary key,street varchar(10));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql>  insert into myadd values(16,'BTM');
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into myadd values(23,'MKR');
+Query OK, 1 row affected (0.09 sec)
+
+mysql>  insert into myadd values(34,'KLR');
+Query OK, 1 row affected (0.09 sec)
+
+mysql> select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
+|  34 | KLR    |
++-----+--------+
+3 rows in set (0.00 sec)
+
+mysql>  create table myemp(eid int primary key,ename varchar(15),dno int references mydept(dno) ON DELETE SET NULL,aid int references myadd(ano) ON DELETE CASCADE);
+Query OK, 0 rows affected (0.23 sec)
+
+mysql>  insert into myemp values(101,'Mohan',3,16);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into myemp values(102,'Ravi',5,16);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into myemp values(103,'Raju',4,23);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into myemp values(104,'Pooja',2,34);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into myemp values(105,'Anil',1,34);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql>  delete from mydept where dno=5;
+Query OK, 1 row affected (0.10 sec)
+
+mysql>  select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
+|  34 | KLR    |
++-----+--------+
+3 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> delete from myadd where ano=34;
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
++-----+--------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> delete from myadd where ano=34;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql>  select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
++-----+--------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql>  delete from mydept where dno=5;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | aid  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+Here all the output are incorrect since dno int references mydept(dno) ON DELETE SET NULL,aid int references myadd(ano) ON DELETE CASCADE in mysql is 
+invalid but it is valid for Oracle(SQL)
+**********************************************************************************************************
+mysql> drop table mydept;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> drop table myadd;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> drop table myemp;
+Query OK, 0 rows affected (0.06 sec)
+*************************************************************************************************************
+mysql> create table mydept(dno int primary key,dname varchar(10));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>  insert into mydept values(1,'IT');
+Query OK, 1 row affected (0.08 sec)
+
+mysql>  insert into mydept values(2,'CSE');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>   insert into mydept values(3,'ECE');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into mydept values(4,'EEE');
+Query OK, 1 row affected (0.09 sec)
+
+mysql>   insert into mydept values(5,'ME');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
+|   5 | ME    |
++-----+-------+
+5 rows in set (0.00 sec)
+
+mysql>  create table myadd(ano int primary key,street varchar(10));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql>  insert into myadd values(16,'BTM');
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into myadd values(23,'MKR');
+Query OK, 1 row affected (0.09 sec)
+
+mysql>  insert into myadd values(34,'KLR');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
+|  34 | KLR    |
++-----+--------+
+3 rows in set (0.00 sec)
+
+mysql>  create table myemp(eid int primary key,
+    -> ename varchar(15),
+    -> dno int,
+    -> ano int,
+    -> foreign key(dno) references mydept(dno) ON DELETE SET NULL,
+    -> foreign key(ano) references myadd(ano) ON DELETE CASCADE);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql>  insert into myemp values(101,'Mohan',3,16);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into myemp values(102,'Ravi',5,16);
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into myemp values(103,'Raju',4,23);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into myemp values(104,'Pooja',2,34);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into myemp values(105,'Anil',1,34);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | ano  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  |    5 |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql>  delete from mydept where dno=5;
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
+|  34 | KLR    |
++-----+--------+
+3 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | ano  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  | NULL |   16 |
+| 103 | Raju  |    4 |   23 |
+| 104 | Pooja |    2 |   34 |
+| 105 | Anil  |    1 |   34 |
++-----+-------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> delete from myadd where ano=34;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from mydept;
++-----+-------+
+| dno | dname |
++-----+-------+
+|   1 | IT    |
+|   2 | CSE   |
+|   3 | ECE   |
+|   4 | EEE   |
++-----+-------+
+4 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | ano  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  | NULL |   16 |
+| 103 | Raju  |    4 |   23 |
++-----+-------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from myadd;
++-----+--------+
+| ano | street |
++-----+--------+
+|  16 | BTM    |
+|  23 | MKR    |
++-----+--------+
+2 rows in set (0.00 sec)
+
+mysql>  select * from myemp;
++-----+-------+------+------+
+| eid | ename | dno  | ano  |
++-----+-------+------+------+
+| 101 | Mohan |    3 |   16 |
+| 102 | Ravi  | NULL |   16 |
+| 103 | Raju  |    4 |   23 |
++-----+-------+------+------+
+3 rows in set (0.00 sec)
+
+**************************************************************************************************************************
+

@@ -1,0 +1,775 @@
+mysql> use sunny;
+Database changed
+
+
+**************************************************************************************************************************************
+Arithmetic Function
+
+mysql> select ceil(28278);
++-------------+
+| ceil(28278) |
++-------------+
+|       28278 |
++-------------+
+1 row in set (0.42 sec)
+
+mysql> select ceil(274.278);
++---------------+
+| ceil(274.278) |
++---------------+
+|           275 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select ceil(28.987);
++--------------+
+| ceil(28.987) |
++--------------+
+|           29 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select floor(37);
++-----------+
+| floor(37) |
++-----------+
+|        37 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select floor(9384.9384);
++------------------+
+| floor(9384.9384) |
++------------------+
+|             9384 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select floor(7565.2364);
++------------------+
+| floor(7565.2364) |
++------------------+
+|             7565 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select round(8346);
++-------------+
+| round(8346) |
++-------------+
+|        8346 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select round(9485.8575);
++------------------+
+| round(9485.8575) |
++------------------+
+|             9486 |
++------------------+
+1 row in set (0.05 sec)
+
+mysql> select round(126.223);
++----------------+
+| round(126.223) |
++----------------+
+|            126 |
++----------------+
+1 row in set (0.00 sec)
+
+
+mysql> select power(233,3);
++--------------+
+| power(233,3) |
++--------------+
+|     12649337 |
++--------------+
+1 row in set (0.06 sec)
+
+mysql> select power(233,.3);
++------------------+
+| power(233,.3)    |
++------------------+
+| 5.13105625715621 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select power(1828,02.33);
++-------------------+
+| power(1828,02.33) |
++-------------------+
+|  39847816.2396816 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select power(2,455.55);
++-----------------------+
+| power(2,455.55)       |
++-----------------------+
+| 1.36211734976073e+137 |
++-----------------------+
+1 row in set (0.00 sec)
+
+
+**********************************************************************************************************************************
+
+
+String Function:
+
+mysql> select char(22);
++----------+
+| char(22) |
++----------+
+|         |
++----------+
+1 row in set (0.06 sec)
+
+mysql> select char(234);
++-----------+
+| char(234) |
++-----------+
+| O         |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select char(120);
++-----------+
+| char(120) |
++-----------+
+| x         |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select concat('Sunny','Is','Good');
++-----------------------------+
+| concat('Sunny','Is','Good') |
++-----------------------------+
+| SunnyIsGood                 |
++-----------------------------+
+1 row in set (0.04 sec)
+
+mysql> select concat('Hello ','Guys');
++-------------------------+
+| concat('Hello ','Guys') |
++-------------------------+
+| Hello Guys              |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> select length('Happy Birthday Sunny');
++--------------------------------+
+| length('Happy Birthday Sunny') |
++--------------------------------+
+|                             20 |
++--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select length('Pooja');
++-----------------+
+| length('Pooja') |
++-----------------+
+|               5 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select lcase('KshItI MohaN Paul');
++----------------------------+
+| lcase('KshItI MohaN Paul') |
++----------------------------+
+| kshiti mohan paul          |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select lower('KshItI MohaN Paul');
++----------------------------+
+| lower('KshItI MohaN Paul') |
++----------------------------+
+| kshiti mohan paul          |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select lcase('RAJU ROY');
++-------------------+
+| lcase('RAJU ROY') |
++-------------------+
+| raju roy          |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select lower('RAJU ROY');
++-------------------+
+| lower('RAJU ROY') |
++-------------------+
+| raju roy          |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select ucase('KshItI MohaN Paul');
++----------------------------+
+| ucase('KshItI MohaN Paul') |
++----------------------------+
+| KSHITI MOHAN PAUL          |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select upper('KshItI MohaN Paul');
++----------------------------+
+| upper('KshItI MohaN Paul') |
++----------------------------+
+| KSHITI MOHAN PAUL          |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select upper('reshmi');
++-----------------+
+| upper('reshmi') |
++-----------------+
+| RESHMI          |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select upper('RaNi');
++---------------+
+| upper('RaNi') |
++---------------+
+| RANI          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select ucase('RaNi');
++---------------+
+| ucase('RaNi') |
++---------------+
+| RANI          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select ucase('reshmi');
++-----------------+
+| ucase('reshmi') |
++-----------------+
+| RESHMI          |
++-----------------+
+1 row in set (0.00 sec)
+
+
+Ltrim():Return string after removing leading space
+Rtrim():Return string after removing tailing space
+trim():Return string after removing both leading tailing space
+
+But trim,ltrim,rtrim will not remove the space betweed two words i.e donot trim in between
+
+mysql> select ltrim('                  abcd');
++---------------------------------+
+| ltrim('                  abcd') |
++---------------------------------+
+| abcd                            |
++---------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim('Mohaaaaaaaaaaaaaaaaaaaaaaaaaaaan');
++-------------------------------------------+
+| ltrim('Mohaaaaaaaaaaaaaaaaaaaaaaaaaaaan') |
++-------------------------------------------+
+| Mohaaaaaaaaaaaaaaaaaaaaaaaaaaaan          |
++-------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim('                                 K      s     hit                    i');
++---------------------------------------------------------------------------------+
+| ltrim('                                 K      s     hit                    i') |
++---------------------------------------------------------------------------------+
+| K      s     hit                    i                                           |
++---------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim('  JLCI NDIA');
++----------------------+
+| ltrim('  JLCI NDIA') |
++----------------------+
+| JLCI NDIA            |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> select rtrim('         abcd                                       ');
++---------------------------------------------------------------+
+| rtrim('         abcd                                       ') |
++---------------------------------------------------------------+
+|          abcd                                                 |
++---------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select rtrim('  JLCI NDIA');
++----------------------+
+| rtrim('  JLCI NDIA') |
++----------------------+
+|   JLCI NDIA          |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> select rtrim('  JLC  INDIA         ');
++--------------------------------+
+| rtrim('  JLC  INDIA         ') |
++--------------------------------+
+|   JLC  INDIA                   |
++--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select rtrim('Mohan        ');
++------------------------+
+| rtrim('Mohan        ') |
++------------------------+
+| Mohan                  |
++------------------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select trim('                  abcd');
++--------------------------------+
+| trim('                  abcd') |
++--------------------------------+
+| abcd                           |
++--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select trim('Mohan        ');
++-----------------------+
+| trim('Mohan        ') |
++-----------------------+
+| Mohan                 |
++-----------------------+
+1 row in set (0.00 sec)
+
+mysql> select trim('  JLC  INDIA         ');
++-------------------------------+
+| trim('  JLC  INDIA         ') |
++-------------------------------+
+| JLC  INDIA                    |
++-------------------------------+
+1 row in set (0.00 sec)
+
+
+
+
+SubString:Returns a sub string of a given length from specified position
+substr(str,position,length)
+
+
+mysql> select substr('Kshiti Mohan Paul',7,10);
++----------------------------------+
+| substr('Kshiti Mohan Paul',7,10) |
++----------------------------------+
+|  Mohan Pau                       |
++----------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select substr('Raju Roy',0,5);
++------------------------+
+| substr('Raju Roy',0,5) |					in mysql counting starts  from 1 and 0 means no to select any letter
++------------------------+
+|                        |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql> select substr('Raju Roy',1,5);
++------------------------+
+| substr('Raju Roy',1,5) |
++------------------------+
+| Raju                   |
++------------------------+
+1 row in set (0.00 sec)
+
+
+INSTR():Searches a string in to another string and return its position
+mysql> select instr('CORPORATE FLOOR OR NOOR','OR');
++---------------------------------------+
+| instr('CORPORATE FLOOR OR NOOR','OR') |
++---------------------------------------+
+|                                     2 |					here at 2nd position OR is there
++---------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select instr('CORPORATE FLOOR OR NOOR','F');
++--------------------------------------+
+| instr('CORPORATE FLOOR OR NOOR','F') |
++--------------------------------------+
+|                                   11 |
++--------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select instr('CORPORATE FLOOR OR NOOR','R');
++--------------------------------------+
+| instr('CORPORATE FLOOR OR NOOR','R') |
++--------------------------------------+
+|                                    3 |					give the 1st position occurence of letter R
++--------------------------------------+
+1 row in set (0.00 sec)
+
+Left():Returns the left most string upto the given length 
+mysql> select left('Sunny Paul',3);
++----------------------+
+| left('Sunny Paul',3) |
++----------------------+
+| Sun                  |
++----------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select left('                          Sunny Paul',3);
++------------------------------------------------+
+| left('                          Sunny Paul',3) |
++------------------------------------------------+
+|                                                |
++------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select left(' Sunny Paul',4);
++-----------------------+
+| left(' Sunny Paul',4) |
++-----------------------+
+|  Sun                  |
++-----------------------+
+1 row in set (0.00 sec)
+
+
+
+Right():Returns the rigth most string upto the given length 
+
+mysql> select right('Sunny Paul',8);
++-----------------------+
+| right('Sunny Paul',8) |
++-----------------------+
+| nny Paul              |
++-----------------------+
+1 row in set (0.01 sec)
+
+mysql> select right('                          Sunny Paul',24);
++--------------------------------------------------+
+| right('                          Sunny Paul',24) |
++--------------------------------------------------+
+|               Sunny Paul                         |
++--------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select right('                          Sunny Paul                         ',5);
++--------------------------------------------------------------------------+
+| right('                          Sunny Paul                         ',5) |
++--------------------------------------------------------------------------+
+|                                                                          |
++--------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select right('Sunny Paul                         ',10);
++-------------------------------------------------+
+| right('Sunny Paul                         ',10) |
++-------------------------------------------------+
+|                                                 |
++-------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mid():Returns the substring upto given length from given position
+mid(str,position,length)
+mysql> select mid(' Sunny Paul',4,3);
++------------------------+
+| mid(' Sunny Paul',4,3) |
++------------------------+
+| nny                    |
++------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select mid('Sunny Paul  ',4,9);
++-------------------------+
+| mid('Sunny Paul  ',4,9) |
++-------------------------+
+| ny Paul                 |
++-------------------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+mysql> select lpad('Kshiti',20,'Hello');
++---------------------------+
+| lpad('Kshiti',20,'Hello') |
++---------------------------+
+| HelloHelloHellKshiti      |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> select rpad('Kshiti',20,'Hello');
++---------------------------+
+| rpad('Kshiti',20,'Hello') |
++---------------------------+
+| KshitiHelloHelloHell      |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> select rpad('SUNNYPAUL',8,'Hello');
++-----------------------------+
+| rpad('SUNNYPAUL',8,'Hello') |
++-----------------------------+
+| SUNNYPAU                    |
++-----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select lpad('SUNNYPAUL',8,'Hello');
++-----------------------------+
+| lpad('SUNNYPAUL',8,'Hello') |
++-----------------------------+
+| SUNNYPAU                    |
++-----------------------------+
+1 row in set (0.00 sec)
+
+
+
+
+*************************************************************************************************************************************
+
+
+
+Conversion Function:
+
+mysql> create table functable(id int,dob date);
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into functable values(101,'1992-02-15');
+Query OK, 1 row affected (0.08 sec)
+mysql> insert into functable values(102,str_to_date('12-5-1990','%d-%m-%Y'));
+Query OK, 1 row affected (0.06 sec)
+mysql> insert into functable values(103,str_to_date('5-12-1990','%m-%d-%Y'));
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into functable values(103,str_to_date('1990-12-22','%Y-%m-%d'));
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from functable;
++------+------------+
+| id   | dob        |
++------+------------+
+|  101 | 1992-02-15 |
+|  102 | 1990-05-12 |
+|  103 | 1990-05-12 |
+|  103 | 1990-12-22 |
++------+------------+
+4 rows in set (0.00 sec)
+
+We can insert our date in any format,just we have to specify the format as given above
+
+
+*************************************************************************************************************************************
+Date Function:
+
+
+Format Specifier:
+%a	:	say Thu
+%b	:	Sep
+%c	:	Month in digit
+%d	:	Date(00 to 31)
+%D	:	Date with suffix st,th,nd,rd
+%e	:	Date(01 to 31)
+%r	:	Time in 12 hours
+%T	:	Time in 24 hours
+%W	:	say Thrusday
+%Y	:	YYYY
+%y	:	YY
+%M	:	say August
+%m	:	Month in two digit%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+	
+
+Display MyToday's system date
+
+mysql> select sysdate();
++---------------------+
+| sysdate()           |
++---------------------+
+| 2017-12-02 21:03:15 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2017-12-02 21:03:21 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select date(sysdate());
++-----------------+
+| date(sysdate()) |
++-----------------+
+| 2017-12-02      |
++-----------------+
+1 row in set (0.05 sec)
+
+mysql> select time(sysdate());
++-----------------+
+| time(sysdate()) |
++-----------------+
+| 21:03:50        |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select month(now());
++--------------+
+| month(now()) |
++--------------+
+|           12 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select day(now());
++------------+
+| day(now()) |
++------------+
+|          2 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select year(now());
++-------------+
+| year(now()) |
++-------------+
+|        2017 |
++-------------+
+1 row in set (0.00 sec)
+
+
+mysql> select current_date();
++----------------+
+| current_date() |
++----------------+
+| 2017-12-02     |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select current_time();
++----------------+
+| current_time() |
++----------------+
+| 21:06:54       |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select current_time(),current_date();
++----------------+----------------+
+| current_time() | current_date() |
++----------------+----------------+
+| 21:07:41       | 2017-12-02     |
++----------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select current_date(),current_time();
++----------------+----------------+
+| current_date() | current_time() |
++----------------+----------------+
+| 2017-12-02     | 21:08:30       |
++----------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select date_format(sysdate(),'%D %M %Y ');
++------------------------------------+
+| date_format(sysdate(),'%D %M %Y ') |
++------------------------------------+
+| 2nd December 2017                  |
++------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select str_to_date('1,5,2017','%d,%m,%Y');
++------------------------------------+
+| str_to_date('1,5,2017','%d,%m,%Y') |
++------------------------------------+
+| 2017-05-01                         |
++------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+Table 12.13 Date and Time Functions
+
+	Name						Description
+	ADDDATE()					Add time values (intervals) to a date value
+	ADDTIME()					Add time
+	CONVERT_TZ()					Convert from one time zone to another
+	CURDATE()					Return the current date
+	CURRENT_DATE(), CURRENT_DATE			Synonyms for CURDATE()
+	CURRENT_TIME(), CURRENT_TIME			Synonyms for CURTIME()
+	CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP	Synonyms for NOW()
+	CURTIME()					Return the current time
+	DATE()						Extract the date part of a date or datetime expression
+	DATE_ADD()					Add time values (intervals) to a date value	
+	DATE_FORMAT()					Format date as specified
+	DATE_SUB()					Subtract a time value (interval) from a date
+	DATEDIFF()					Subtract two dates
+	DAY()						Synonym for DAYOFMONTH()
+	DAYNAME()					Return the name of the weekday
+	DAYOFMONTH()					Return the day of the month (0-31)
+	DAYOFWEEK()					Return the weekday index of the argument
+	DAYOFYEAR()					Return the day of the year (1-366)
+	EXTRACT()					Extract part of a date
+	FROM_DAYS()					Convert a day number to a date
+	FROM_UNIXTIME()				Format Unix timestamp as a date
+	GET_FORMAT()					Return a date format string
+	HOUR()						Extract the hour
+	LAST_DAY					Return the last day of the month for the argument
+	LOCALTIME(), LOCALTIME				Synonym for NOW()
+	LOCALTIMESTAMP, LOCALTIMESTAMP()		Synonym for NOW()
+	MAKEDATE()					Create a date from the year and day of year
+	MAKETIME()					Create time from hour, minute, second
+	MICROSECOND()					Return the microseconds from argument
+	MINUTE()					Return the minute from the argument
+	MONTH()						Return the month from the date passed
+	MONTHNAME()					Return the name of the month
+	NOW()						Return the current date and time
+	PERIOD_ADD()					Add a period to a year-month
+	PERIOD_DIFF()					Return the number of months between periods
+	QUARTER()					Return the quarter from a date argument
+	SEC_TO_TIME()					Converts seconds to 'HH:MM:SS' format
+	SECOND()					Return the second (0-59)
+	STR_TO_DATE()					Convert a string to a date
+	SUBDATE()					Synonym for DATE_SUB() when invoked with three arguments
+	SUBTIME()					Subtract times
+	SYSDATE()					Return the time at which the function executes
+	TIME()						Extract the time portion of the expression passed
+	TIME_FORMAT()					Format as time
+	TIME_TO_SEC()					Return the argument converted to seconds
+	TIMEDIFF()					Subtract time
+	TIMESTAMP()					With a single argument, this function returns the date or datetime expression; with two
+							 arguments, the sum of the arguments
+	
+	TIMESTAMPADD()					Add an interval to a datetime expression
+	TIMESTAMPDIFF()					Subtract an interval from a datetime expression
+	TO_DAYS()					Return the date argument converted to days
+	TO_SECONDS()					Return the date or datetime argument converted to seconds since Year 0
+	UNIX_TIMESTAMP()				Return a Unix timestamp
+	UTC_DATE()					Return the current UTC date
+	UTC_TIME()					Return the current UTC time
+	UTC_TIMESTAMP()				Return the current UTC date and time
+	WEEK()						Return the week number
+	WEEKDAY()					Return the weekday index
+	WEEKOFYEAR()					Return the calendar week of the date (1-53)
+	YEAR()						Return the year
+	YEARWEEK()					Return the year and week
+	
+
+
+
+
+*************************************************************************************************************************************
+

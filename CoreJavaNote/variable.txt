@@ -1,0 +1,11 @@
+instance variable should be declared within the class directly but outside of 
+any method or block or any constructor
+instance variable created at time of object creation
+instance variable stored in heap memory at part of object
+
+
+static variable at class level only one copy is created and shared for all oject  
+static variable should be declared within the class directly but outside of
+any method or block or any constructor
+static variabe created at the time of class loading
+scope of static variable is exactly same as scope of that class 

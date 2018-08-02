@@ -1,0 +1,697 @@
+*************************************************************************************************************************************
+Arithmetic Function
+SQL> select ceil(23.33) from dual;
+
+CEIL(23.33)
+-----------
+         24
+
+SQL> select ceil(18273.39338) from dual;
+
+CEIL(18273.39338)
+-----------------
+            18274
+
+SQL> select floor(18273.39338) from dual;
+
+FLOOR(18273.39338)
+------------------
+             18273
+
+SQL> select floor(18.938465) from dual;
+
+FLOOR(18.938465)
+----------------
+              18
+
+SQL> select floor(374.484757) from dual;
+
+FLOOR(374.484757)
+-----------------
+              374
+
+SQL> select round(374.484757) from dual;
+
+ROUND(374.484757)
+-----------------
+              374
+
+SQL> select round(2828373) from dual;
+
+ROUND(2828373)
+--------------
+       2828373
+
+SQL> select round(282.8373) from dual;
+
+ROUND(282.8373)
+---------------
+            283
+
+SQL> select ceil(333) from dual;
+
+ CEIL(333)
+----------
+       333
+
+SQL> select floor(929) from dual;
+
+FLOOR(929)
+----------
+       929
+
+
+SQL> select power(22,2) from dual;
+
+POWER(22,2)
+-----------
+        484
+
+SQL> select power(22,5) from dual;
+
+POWER(22,5)
+-----------
+    5153632
+
+SQL> select power(22,5.4) from dual;
+
+POWER(22,5.4)
+-------------
+   17745264.5
+
+SQL> select power(22,.5) from dual;
+
+POWER(22,.5)
+------------
+  4.69041576
+
+SQL> select power(3737,.5) from dual;
+
+POWER(3737,.5)
+--------------
+    61.1310069
+
+SQL> select power(3737,8.3) from dual;
+
+POWER(3737,8.3)
+---------------
+     4.4869E+29
+
+
+*********************************************************************************************************************************************
+
+String Function
+
+SQL> select char(33) from dual;
+select char(33) from dual
+       *
+ERROR at line 1:
+ORA-00936: missing expression
+
+Above is not valid for Oracle but valid for mysql
+
+
+
+SQL> select ascii('W') from dual;
+
+ASCII('W')
+----------
+        87
+
+SQL> select ascii('@') from dual;
+
+ASCII('@')
+----------
+        64
+
+SQL> select ascii('%') from dual;
+
+ASCII('%')
+----------
+        37
+
+SQL> select ascii('h') from dual;
+
+ASCII('H')
+----------
+       104
+
+SQL> select ascii('7') from dual;
+
+ASCII('7')
+----------
+        55
+
+SQL> select lower('EnAme') from dual;
+
+LOWER
+-----
+ename
+
+
+SQL> select lower('HAI') from dual;
+
+LOW
+---
+hai
+
+unlike mysql here lcase or ucase is not used to change to upper or lower case 
+In oracle only upper and lower is used
+
+SQL> select lower('Sunny') from dual;
+
+LOWER
+-----
+sunny
+
+
+SQL> select upper('EnAme') from dual;
+
+UPPER
+-----
+ENAME
+
+SQL> select upper('ravi') from dual;
+
+UPPE
+----
+RAVI
+
+SQL> select upper('Mohan') from dual;
+
+UPPER
+-----
+MOHAN
+
+
+
+
+SQL> select length('Kshiti Mohan Paul') from dual;
+
+LENGTH('KSHITIMOHANPAUL')
+-------------------------
+                       17
+
+SQL> select length('Welcome to Oracle') from dual;
+
+LENGTH('WELCOMETOORACLE')
+-------------------------
+                       17
+
+SQL> select length('Raju') from dual;
+
+LENGTH('RAJU')
+--------------
+             4
+
+
+
+initcap(): here 1st letter should be capital
+
+SQL> select initcap('welcome To OracLe') from dual;
+
+INITCAP('WELCOMET
+-----------------
+Welcome To Oracle
+
+
+SQL> select initcap('welcome To OracLe')  "MSG" from dual;			change column name to desired name
+
+MSG
+-----------------
+Welcome To Oracle 
+
+
+
+
+SQL> select initcap('sunny paul')  "Name" from dual;
+
+Name
+----------
+Sunny Paul
+
+SQL> select initcap('RAJU ROY')  "Name" from dual;
+
+Name
+--------
+Raju Roy
+
+SQL> select initcap('RAJUROY')  "Name" from dual;
+
+Name
+-------
+Rajuroy
+
+SQL> select initcap('suNNYPauL')  "Name" from dual;
+
+Name
+---------
+Sunnypaul
+
+
+
+Translate('str','source','target'):
+It will covert source letter to destination latter 
+
+SQL> select translate('Welcome','ec','ab') from dual;
+
+TRANSLA
+-------
+Walboma
+
+SQL> select translate('Sunny Paul','Sunny','Mohan') from dual;		translate (S-M	u-o	n-h	n-a	y-n)		
+
+TRANSLATE(
+----------
+Mohhn Paol
+
+
+SQL> select translate('Sunny Paul','Sunny','Kshiti') from dual;		translate (S-K	u-s	n-h	n-i	y-t)  
+
+TRANSLATE(
+----------
+Kshht Pasl
+
+
+SQL> select translate('abcdefg','abfg','xyz') "Translate" from dual;	translate (a-x	b-y	f-z	since g donot have corrosponding translation 
+											so g is taken as empty)
+
+Transl
+------
+xycdez
+
+
+Replace('str','source','target'):
+Replace particular part of source to target
+
+
+SQL> select replace('Sunny Paul','Sunny','Mohan') "Replace" from dual;
+
+Replace
+----------
+Mohan Paul
+
+SQL> select replace('Core Java','Core','My') "Replace" from dual;
+
+Replace
+-------
+My Java
+
+SQL> select replace('Core Java','Cor','My') "Replace" from dual;
+
+Replace
+--------
+Mye Java
+
+SQL> select replace('Core Java','CJ','My') "Replace" from dual;		No possible word CJ
+
+Replace
+---------
+Core Java
+
+SQL> select replace('Core Java','CJa','My') "Replace" from dual;	
+
+Replace
+---------
+Core Java
+
+SQL> select replace('Core Java','C Ja','My') "Replace" from dual;
+
+Replace
+---------
+Core Java
+
+SQL> select replace('Core Java','C','M') "Replace" from dual;
+
+Replace
+---------
+More Java
+
+
+SQL> select replace('Core Java','CO','M') "Replace" from dual;
+
+Replace
+---------
+Core Java
+
+SQL> select replace('Core Java','CO','MA') "Replace" from dual;
+
+Replace
+---------
+Core Java
+
+SQL> select replace('Core Java','Co','Ma') "Replace" from dual;
+
+Replace
+---------
+Mare Java
+
+SQL> select replace('Core Java','Co','M') "Replace" from dual;			since o is not replace so it will take empty space
+
+Replace
+--------
+Mre Java
+
+
+Substr('str','position','length'):
+
+SQL> select substr('sunny paul',7,4) from dual;
+
+SUBS
+----
+paul
+
+SQL> select substr('sunny               paul',7,4) from dual;
+
+SUBS
+----
+
+SQL> select substr('    Raja    Singh',7,4) from dual;
+
+SUBS
+----
+        Sin
+
+
+Instr():
+
+SQL> select instr('Welcome','e') from dual;
+
+INSTR('WELCOME','E')
+--------------------
+                   2
+  
+
+SQL> select instr('Kshitimohanpaul','sh') from dual;
+
+INSTR('KSHITIMOHANPAUL','SH')			here s is at 2 position so 2
+-----------------------------
+                            2
+
+SQL> select instr('Kshitimohanpaul','hs') from dual;
+
+INSTR('KSHITIMOHANPAUL','HS')			since no letter with hs so 0
+-----------------------------
+                            0
+
+
+
+SQL> select instr('Java is popular language','is') from dual;
+
+INSTR('JAVAISPOPULARLANGUAGE','IS')
+-----------------------------------
+                                  6
+
+SQL> select instr('Java is popular language','la') from dual;		1st 'la' is at 13th position	
+
+INSTR('JAVAISPOPULARLANGUAGE','LA')
+-----------------------------------
+                                 13
+
+SQL> select instr('Java is popular language','ar') from dual;		though 1st 'a' is at 2 position but 'ar' is at 14th position so 14 
+
+INSTR('JAVAISPOPULARLANGUAGE','AR')
+-----------------------------------
+                                 14
+
+SQL> select instr('Welcome','e',+1,2) from dual;
+						+1 means search starting from begining of string and here 2 is 2nd occurence of the 'e' in the srting
+INSTR('WELCOME','E',+1,2)
+-------------------------
+                        7
+
+
+
+
+SQL> select instr('Welcome','e',-1,2) from dual;
+				          -1 means search starting from ending of string and here 2 is 2nd occurence of the 'e' in the srting from last position
+INSTR('WELCOME','E',-1,2)
+-------------------------
+                        2
+
+
+
+SQL> select instr('Welcome','e',-1,3) from dual;
+						from ending no 3rd occurence of 'e'	so 0
+INSTR('WELCOME','E',-1,3)
+-------------------------
+                        0
+
+
+Trim():
+
+SQL> select trim('         Sunny Paul  ') from dual;
+
+TRIM('SUNN
+----------
+Sunny Paul
+
+SQL> select trim(' Sunny  ') "Trimmed" from dual;
+
+Trimm
+-----
+Sunny
+
+SQL> select trim(' Welcome to Oracle ') "Trimmed" from dual;
+
+Trimmed
+-----------------
+Welcome to Oracle
+
+SQL> select trim(' Welcome                    to                         Oracle            ') "Trimmed" from dual;
+
+Trimmed
+------------------------------------------------------------
+Welcome                    to                         Oracle
+
+
+
+
+SQL> select ltrim(' Welcome                    to                         Oracle            ') "Trimmed" from dual;
+
+Trimmed
+------------------------------------------------------------------------
+Welcome                    to                         Oracle
+
+SQL> select ltrim(' Welcome to Oracle ') "Trimmed" from dual;
+
+Trimmed
+------------------
+Welcome to Oracle
+
+SQL> select ltrim('         Sunny Paul  ') from dual;
+
+LTRIM('SUNNY
+------------
+Sunny Paul
+
+
+SQL> select rtrim(' Kshiti Mohan Paul            ') from dual;
+
+RTRIM('KSHITIMOHAN
+------------------
+ Kshiti Mohan Paul
+
+SQL> select rtrim('                            Kshiti Mohan Paul            ') from dual;
+
+RTRIM('KSHITIMOHANPAUL')
+---------------------------------------------
+                            Kshiti Mohan Paul
+
+
+
+SQL> select lpad('India','12') from dual;
+
+LPAD('INDIA'
+------------
+       India
+
+SQL> select lpad('India','12',' ') from dual;
+
+LPAD('INDIA'
+------------
+       India
+
+SQL> select lpad('India','12','* ') from dual;
+
+LPAD('INDIA'
+------------
+* * * *India
+
+SQL> select lpad('India','12','MY ') from dual;
+
+LPAD('INDIA'
+------------
+MY MY MIndia
+
+SQL> select lpad('Kshiti','20','MY ') from dual;
+
+LPAD('KSHITI','20','
+--------------------
+MY MY MY MY MYKshiti
+
+
+
+SQL> select rpad('India','12') from dual;
+
+RPAD('INDIA'
+------------
+India
+
+
+SQL> select rpad('India','12',' ') from dual;
+
+RPAD('INDIA'
+------------
+India
+
+SQL> select rpad('India','12','* ') from dual;
+
+RPAD('INDIA'
+------------
+India* * * *
+
+SQL> select rpad('India','12','MY ') from dual;
+
+RPAD('INDIA'
+------------
+IndiaMY MY M
+
+SQL> select rpad('Kshiti','20','MY ') from dual;
+
+RPAD('KSHITI','20','
+--------------------
+KshitiMY MY MY MY MY
+
+
+**************************************************************************************************************************************
+
+
+
+
+Conversion Function:
+
+SQL>  insert into functable values(2,'1-Mar-1990');
+
+1 row created.
+
+SQL>  insert into functable values(2,to_date('1-Mar-1990','DD-MM-YYYY'));
+
+1 row created.
+
+SQL>  insert into functable values(2,to_date('1994-7-23','YYYY-MM-DD'));
+
+1 row created.
+
+SQL>  insert into functable values(2,to_date('11-4-1923','MM-DD-YYYY'));
+
+1 row created.
+
+SQL>  insert into functable values(2,to_date('Dec-4-1923','MM-DD-YYYY'));
+
+1 row created.
+
+SQL>  insert into functable values(2,to_date('1994-Jul-12','YYYY-MM-DD'));
+
+1 row created.
+
+SQL> select * from functable;
+
+        ID DOB
+---------- ---------
+         2 01-MAR-90
+         2 01-MAR-90
+         2 23-JUL-94
+         2 04-NOV-23
+         2 04-DEC-23
+         2 12-JUL-94
+
+6 rows selected.
+
+We can insert our date in any format,just we have to specify the format as given above
+
+*************************************************************************************************************************************
+Date Function:
+
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+02-DEC-17
+
+SQL> select to_char(sysdate,'DD-MONTH-YYYY') from dual;
+
+TO_CHAR(SYSDATE,'
+-----------------
+02-DECEMBER -2017
+
+SQL> select to_char(sysdate,'DDth MON,YYYY') "Current Date"from dual;
+
+Current Date
+-------------
+02ND DEC,2017
+
+SQL> select to_char(sysdate,'DAY') "Current Date"from dual;
+
+Current D
+---------
+SATURDAY
+
+SQL> select to_char(sysdate,'DD-MONTH-YYYY HH-MI-SS DAY') from dual;
+
+TO_CHAR(SYSDATE,'DD-MONTH-YYYYHH-MI-
+------------------------------------
+02-DECEMBER -2017 09-12-05 SATURDAY
+
+SQL> select to_char(sysdate,'DD-MONTH-YYYY HH-MI-SS DAY') "CURRENT DATE"from dual;
+
+CURRENT DATE
+------------------------------------
+02-DECEMBER -2017 09-12-22 SATURDAY
+
+SQL> select to_char(sysdate,'DY') "Current Date"from dual;				DY-CURRENT DAY NAME(say MON)
+
+Cur
+---
+SAT
+
+SQL> select to_char(123456,'9,99,999') from dual;
+
+TO_CHAR(1
+---------
+ 1,23,456
+
+SQL> select to_char(123456,'9,99,999.99') from dual;
+
+TO_CHAR(1234
+------------
+ 1,23,456.00
+
+SQL> select to_char(123456,'$9,99,999.99') from dual;
+
+TO_CHAR(12345
+-------------
+ $1,23,456.00
+
+SQL> select to_char(123456,'$9,99,999') from dual;
+
+TO_CHAR(12
+----------
+ $1,23,456
+
+
+Format Specifier:
+DD	:	Date in two digit 
+MM	:	Month in two digit
+YY	:	Year in two digit
+YYYY	:	Year in four digit
+MON	:	Month in three character 
+Month	:	Month Name
+HH	:	Hour
+MI	:	Minute
+SS	:	Second
+Day	:	Day name
+
+
+

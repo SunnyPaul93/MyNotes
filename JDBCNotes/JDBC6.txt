@@ -1,0 +1,361 @@
+****************************************************************************************************************************************
+						JDBC NEW FEATURES
+						-------------------------------------
+
+1.Auto-Loading of JDBC driver class(JDBC 4.0 from JAVA 6)
+2.SQL Exception handling enhancements(JDBC 4.0 from JAVA 6)
+3.Connection management enhancements(JDBC 4.0 from JAVA 6)
+4.try with rresources or Automatic Resource Manegement(JDBC 4.1 from JAVA 7)
+5.RowSetFactory Interface and RowSetProvider class(JDBC 4.0 from JAVA 7)
+6.Addition of REF_CURSOR support(JDBC 4.1 from JAVA 8)
+7.Addition	of the java.sql.JDBCType Enum(JDBC 4.1 from JAVA 8)
+8.Addition	support for large update count(JDBC 4.1 from JAVA 8)
+
+	Note:Add ojdbc6.jar	/ ojdbc7.jar to classpath for oracle
+
+
+
+
+1.Auto-Loading of JDBC driver class(JDBC 4.0 from JAVA 6)
+	Before to JDBC 4.0 we need to get the connection object as follows:
+	Class.forName("com.mysql.jdbc.Driver")
+	con=DriverManager.getConnection(url,un,pw);
+
+	DriverManager.getConnection() method is dowing the following tasks:	
+	~Takes URL
+	~Identify the Database releated to URL given
+	~Checks whether the driver class releated to given URL is loaded or not
+	~If loaded than creates the Connection interface sub-class object provided by that database vendor
+	~If not loaded than gives the SQLException with message -No suitble driver found
+
+
+	From JDBC 4.0 onwards we need to get Connection object as follows:
+	~Takes URL
+	~Identify the Database releated to URL given
+	~Loads the required driver class automatically when driver not loaded(if driver class not found in application classpath ) 
+	~Creates the Connection interface sub-class object provided by that database vendor
+	
+
+
+
+2.SQL Exception handling enhancements(JDBC 4.0 from JAVA 6)
+	From JDBC 4.0 onwards SQLException object is an Iterator which can hold multiple Exception object raised by JDBC code 
+	Before JDBC 4.0
+	try{
+	...............................
+	.............................
+	}catch(SQLException e){
+	
+	e.printStackTrace();}
+
+
+	From JDBC 4.0
+	try{
+	...............................
+	.............................
+	}catch(SQLException e){
+	for(Throwable e:ex)
+	sop(e);
+	e.printStackTrace();
+	}}
+
+
+3.Connection management enhancements(JDBC 4.0 from JAVA 6)
+	We have  to use DataBase vendor provided DataSource class to get the connection objects
+	Before java 7 connection,resultset,statements...... are not implementing auto-closeable but after java 7 these are implementing auto-closeable
+
+
+	For Oracle Database:
+	OracleDataSource ods=new OracleDataSource();
+	ods.setUrl("jdbc:oracle:thin:@localhost:1521:XE");
+	ods.setUser("system");
+	ods.setPassword("system");
+	con=ods.getConnection();
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import oracle.jdbc.pool.OracleDataSource;
+
+public class JDBC_Lab31 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Connection con=null;
+		Statement st=null;
+		ResultSet rs=null;
+		OracleDataSource ods=null;
+		try {
+			ods=new OracleDataSource();
+			ods.setUser("system");
+			ods.setPassword("system");
+			ods.setURL("jdbc:oracle:thin:@localhost:1521:XE");
+			con=ods.getConnection();
+			st=con.createStatement();
+			rs=st.executeQuery("select sid,name,email,phone from student6");
+			if(rs.next()){
+				do{
+					int id=rs.getInt("sid");
+					String nm=rs.getString("name");
+						System.out.println(id+"\t"+nm);		//selecting all column but displaying only id and name	
+				}while(rs.next());
+			}else{
+				System.out.println("No Record Found");
+			}
+			
+
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			for (Throwable ex:e) {
+				ex.printStackTrace();
+				
+			}
+		}
+		finally {
+			try {
+				if(rs!=null)
+					rs.close();
+				if(st!=null)
+					st.close();
+				if(con!=null)
+					con.close();
+				
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+}
+
+
+
+
+
+
+4.try with rresources or Automatic Resource Manegement(JDBC 4.1 from JAVA 7)
+
+	from java6 Try with resources is given
+		
+	try(<Resources Declaration and Initilization>){
+
+	}carch(<throwable type> refVar){
+
+	}
+
+	try with resource can be used without catch or finally block 
+	I have studies this previiously in Core Java
+
+	Hera we donot have to close our resources explicitly
+
+
+
+
+
+package jdbc1;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class JDBC_Lab32 {
+
+	public static void main(String[] args) throws SQLException  {
+		// TODO Auto-generated method stub
+		
+	/*	String url2="jdbc:oracle:thin:@localhost:1521:XE";			
+		String usnm="system";
+		String pswd="system";
+		
+	*/	String url2="jdbc:mysql://localhost:3306/sunny";			Downloading and latest mysql jar mysql is connecting 
+		String usnm="root";
+		String pswd="root";
+		
+
+		try(Connection con=DriverManager.getConnection(url2, usnm, pswd);
+				
+			Statement st=con.createStatement();
+			ResultSet rs=st.executeQuery("select * from student6");){
+			while(rs.next()){
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3));
+			}
+		}
+	catch (Exception e) {				//optional
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+				
+		
+
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5.RowSetFactory Interface and RowSetProvider class(JDBC 4.0 from JAVA 7)
+	
+	When subclass name is changed every time we have to modify code so to overcome this factory design pattern is used
+	RowSetFactory is an interface provided to crreate the object of required row set 
+
+	Following are the subtype of RowSetFactory interface:
+		JDBCRowSet interface
+		CachedRowSet interface
+		JoinRowSet interface
+		WebRowSet    "
+	
+	Before JDBC 4.1 we need to create the instance of required RowSet :
+		RowSet rs=new JdbcRowSetImpl();
+		RowSet rs=new CachedRowSet();
+		.....etc................
+
+	From JDBC 4.1 we can also create the instance of required RowSet using RowSetFactory and RowSetProvider  :
+		RowSetFactory rsf=RowSetProvider.new Factory();
+		RowSet  rs=rsf.createJdbcRowSet ();
+		RowSet  rs=rsf.createCachedRowSet ();
+
+	RowSetFactory and RowSetProvier is available in javax.sql.rowset package
+	The main goal of RowSetFactory is to centralized the RowSet instance creation
+	RowSetFactory is implemented based on GOF design pattern called Factory Pattern   
+
+
+
+
+
+	Java 7:
+	class JdbcRowSetImpl extends RowSet {}
+	
+	class RowSetFactory{
+	public RowSet  create JdbcRowSet(){
+	RowSet  rs=new JdbcRowSetImpl();
+	return rs;
+	}
+	public RowSet  create CachedRowSet(){
+	RowSet  rs=new CachedRowSetImpl();
+	return rs;
+	} 
+	..................................................
+	.................................
+	} 
+
+
+
+	Java 8:
+	class JdbcRowSetNewImpl extends RowSet {}
+	
+	class RowSetFactory{
+	public RowSet  create JdbcRowSet(){
+	RowSet  rs=new JdbcRowSetNewImpl();
+	return rs;
+	}
+	public RowSet  create CachedRowSet(){
+	RowSet  rs=new CachedRowSetNewImpl();
+	return rs;
+	} 
+	..................................................
+	.................................
+	} 
+
+
+
+
+
+package jdbc1;
+
+import javax.sql.RowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
+
+public class JDBC_Lab33 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		try {
+			RowSetFactory rsf=RowSetProvider.newFactory();
+			RowSet rs=rsf.createCachedRowSet();
+			rs.setUrl("jdbc:mysql://localhost:3306/sunny");
+			rs.setUsername("root");
+			rs.setPassword("root");
+			rs.setCommand("select sid,name,email,phone from student6");
+			rs.execute();
+			while (rs.next()) {
+				System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getLong(4));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.Addition of REF_CURSOR support(JDBC 4.1 from JAVA 8)
+	The REF_CURSOR data type is supported by several databases.To return a REF_CURSOR from stored procedure we can use this type.
+	To check whether JDBC driver supports REF_CURSOR we can invoke the supportsREF_CURSOR() mtd of database metadata
+
+
+	ResultSet :It is a java object available in heap memory 
+	Ref_Corsor is DB object and releated in DB memory
+	Reference cursor work on dynamic sql
+	They are used to store different result set at diffferent point of time
+	They are user defined datatype which are very much helpful to return multiple records from Stored Procedure or function 
+	
+
+
+
+ 
+
+7.Addition	of the java.sql.JDBCType Enum(JDBC 4.1 from JAVA 8)
+8.Addition	dupport foe large update count(JDBC 4.1 from JAVA 8)

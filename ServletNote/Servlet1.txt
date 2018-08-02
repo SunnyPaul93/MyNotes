@@ -1,0 +1,709 @@
+Types of Appplication:
+1.Standalone Application
+2.Client-server Appliction
+3.Web Applicatiion
+4.Distributed Application
+5.Enterprise Appilcation
+
+
+1.Standalone Application:Application that can be accessed by a single user at a time is called Standalone Application
+Eg.MS-Word,JDK,Music Player .......................etc 
+We can use C,C++,C#,Java for developing this type of application 
+
+Problem with this type of Appln:
+	~Application has to installed across all the machine so change in version will have to change across all the machine. This gives maintance problem 
+	~Data transfer or sharing is not possible as every machine has its own property
+All system releated software are Standalone Appln  
+
+
+2.Client-server Appliction:In case of Cline-Server Application,Application has been divided into two parts.One part is installed on the server machine and other part is 
+installed on multiple client machines i.e multiple client can access the centralized server.
+eg.Yahoo,GTalk,   etc 
+
+Here Data sharing problem is resolved but still maintance problem is there in client machine
+
+Client-Server application can be implement using C,C++,Java etc
+Data Sharing is possible because multiple client are accessing application from centarlized seerver 
+
+3.Web Application:
+ Here entire application will be installed on server machine only i.e multiple client can access web application from centralized server
+Centralize server is a WebServer and client can interect with the WebServer using a WebClient known as Web Browser
+eg.www.gmail.com,www.yahoo.com,www.youtube.com
+
+Web Application can be implemented using Servlet,JSP,Struts,JSF,Spring MVC ......................................etc
+
+Data sharing is possible because multiple client are accessing the application from centralized server
+No maintenance problem because modification will happen only at web server
+
+
+Static Web Application
+------------------------------- 
+Static Web Appln can be developed using simple HTML 
+We cannot do interaction
+Client cannot send any data to the server 
+Client simply can access static data from the server
+
+Dyanmic Web Application
+------------------------------- 
+Dyanmic Web Application can be develope using Servlet,JSP,Struts,Spring MVC ........................................etc
+Client can send data to the server
+Client can access dynamic data from the server
+
+4.Distributed Application:Is in MyNote
+5.Enterprise Appilcation:Is in MyNote
+
+
+
+
+
+
+WEB BUZZ:
+
+Web Srver:It is an  application which perform the following:
+	Receives the HTTP request from the Web Client
+	Process that request with the help of Web Conatiner
+	Send the response to the Web Client
+
+eg.	Apache Tomcat Server		------>Java
+	PWS (Personal Web Server)		------>ASP.net	
+	IIS (Internet Information Server)		------>ASP.net	
+
+Now we can also use Application server to Process our Web appln.  Application servers used now-a-days are 
+	WebLogic,WebSphere,JBoss,JRun.......................................................etc
+
+
+Web Conatiner: It is an appln. which is responsible for managing the complete lifecycle of Servlet or JSP
+
+	Web Conatiner offers the following free Services:-
+	
+	~Low Level Services:
+		IO Streams			:Supported by both Web Container and EJB Container 
+		Threads 				:Supported by both Web Container and EJB Container
+		Networking 			:Supported by both Web Container and EJB Container
+	~Middle Level Services:
+		Resource Management		:Supported by both Web Container and EJB Container
+		LifeCycle Management		:Supported by both Web Container and EJB Container
+		Declarative Security Management 	:Supported by both Web Container and EJB Container but Web Container security is not too much
+						 and EJB has more powerful security 
+		JSP LifeCycle Support		 
+		Transiction 			:Supported by EJB Container only and not by Web Container
+
+As a developer we need to write code only for High Level Security i.e Buisness operation of Application we are developing
+
+Web Client: Web Client is an application which performs the following:
+		Send the HTTP request to Web Server
+		Receive the HTTP response from Web Server
+		Renders the HTML Response Data 
+
+	eg:	InternetExplorer
+		Opera 
+		MorzillaFirefox
+		Google Chrome
+		Safari
+		...................................etc
+
+HTTP(Hyper Text Transfer Protocol):HTTP sites on the top of TCP/IP for transfering the Web Client information to the Web Server and Web Server information
+			         to the Web Client
+	
+			
+TCP/IP:	Original data transfer will be done by TCP/Ip
+  	IP(Internet Protocol) is responsible for carrying the data packets from Web Client to Web Server and vice-versa
+	TCP(Transmission Control Protocol) sits on the top of IP and moniter the Data Transmission
+DNS:	Domain Naming Service is a registry where domain name will be binded with IP address
+
+
+Web Technologies:Servlet ,JSP
+
+Web Frramework:Stuts,JSF, Spring MVC
+
+Notes:
+	1.Web Container Responsible for creating login servlet 
+	2.Service Responsible to write metadata i.e (information of appliction)
+		Write in XML file
+		Anotation(After Servlet 3.0)
+
+	3.Every Form tag has some action attribute
+	4.Form action and url patteren has to have same name
+	4. 404 error:This error occur when Request for resource is not available
+
+
+
+**************************************************************************************************************************
+Steps to Write Servlet in Java:
+	1.Write Servlet class by extending HttpServlet class
+	2.Override the lifecycle methods of Servlet:
+		a.public void init(Setvlet Logic sc)
+		b.public void service(Http srevlet request req,Http servlet response res)
+		c.public void destroy()
+
+	We can override any of them or any two of them or all of them 
+	
+	Service mtd has:	a:Servlet Exception	b:IO Exception
+	
+	3.Configure the Servlet(either by XML code or by Using Annotation)
+
+Eclipse:
+		
+1.Window
+2.Preferences
+3.Server
+4.Runtime Environment(For First Time)
+5.Add	   
+	I have add Server As Tomcat v7.0
+6.Next
+7.Browse Where I install Tomcat7.0
+	Mine is E:\\Tomcat7.0 
+ 8.Finish
+ 
+To Create Project :
+	File------>New------->Dynamic Web Project------>Provide Project Name--------->Next ---->Next----->check on generate web.xml
+
+	Create one login.html under(Web Content RightClick New HTML file FileName:login.html  Finish) WebContentFolder
+	Create Package as com.sunny.servlets
+	Create LoginServlet.java file in package com.sunny.servlets(right click on package----->new------>servlet--->ServletName-->next-->next--->check only service method--->finish)
+	In Web-Inf--->Update web.xml with login servlet configuration
+	Deploy into tomcat7:
+		Right click on Servlet1(say) 
+		Select run as---->Run On Server
+	
+ 
+	Open Browser
+	Provide url:
+	http://localhost:9999/Servlet1/Login.html
+
+
+
+*****************************************************************************************************************************************************************
+
+
+
+Static block will be executed at time of class Loading 
+Default constructor is to intilized the object 
+After creating instances it will call life cycle mtd called init() to initilize the servlet
+Service mtd:-To check whether service method is called 
+Overridding destroy methods
+
+
+NOTE:	Url pattern in <servlet-mapping> must be same as action value of HTML i.e<form>
+	The Url patteren must starts with /
+	<server-name> is a logical name and must be same in <servlet> and <servlet-mapping>
+
+
+By  default servlet will be loaded at First Response but we can make servlet at conatiner startup explicitly by using load-on-startup
+
+Servlet Initilization:
+1.Loading the class 
+2.creating the instance
+3.Calling the init() mtd for initilizing the required resources
+
+
+
+
+
+
+*************************************************************************************************************************************
+Welcome Files:
+	Default welcome files for web application are:
+	index.html
+	index.htm
+	index.jsp
+	default.html
+	default.htm
+	default.jsp
+	
+We can make one or more web resources as main web pages for our web application by specifying the welcome pages
+	<welcome-file-list>	--------->Multiple files can be specified as welcome file list
+	<welcome-file>login.html </welcome-file> 
+	<welcome-file>default.html </welcome-file> 
+	<welcome-file>index.html </welcome-file> 
+	</welcome-file-list>	
+	
+	When we specify multiple resources(html files) in welcome file list then those files will be verified in the order wise as define in web.xml fle
+	Here 
+	Whenever login.html is found than that will be displayed 
+	Whenever login.html is not found than it goes to default.html 
+	Whenever default.html is found than that will be displayed  	
+	Whenever default.html is not found than it will go for index.html 	
+	Whenever index.html is found than that will be displayed  	
+	............................
+	...........................................
+	............................. and so on
+
+With Servlet3.0 we have to option to use welcome files:
+1.Specify welcome file as above in web.xml
+2.Use index.html,default.html.....................etc which are dfault welcome files
+
+
+
+
+~Servlet Instance Creation:
+At servlet start up the servlet is Not Loaded or Instantialte
+
+By Default servelet instance is created when  client sends the 1st request to the servlet
+Only one instance is created for one servlet and will be used to process all the request by using multiple threads 
+
+
+If we want to create instance while starting the server or container (i.e To load servlet container on load-on-startup) than we use the following :
+
+In  Xml File write:
+<load-on-startup>X(here can have any number and contaiiner will be loaded at container startup only)</load-on-startup>
+
+In Case of annotation:
+@WebServlet(.............,loadOnStratup=X)
+ 	
+Note:	X will be of int type value and should not be -ve integer
+	X indicates in which order the servlet instances will be created 
+
+
+
+~Parameters:
+Parameters is a piece of information with name-value pair
+Parameter name and value are of type string
+Parameter is read-only i.e Web Container Stroes the parameter in the corrosponding object and we can read and use that values and we cannot modify the
+parameters
+
+There are 3 types Paramaters :
+1.Servlet Request Parameters
+2.Servlet Config Parameters
+3.Servlet Context Parameters
+
+All the above are done by container only. Also data storing done by Web container 
+
+1.Servlet Request Parameters:Client submittted data which are coming form Web Client to Web Server along with Http Request are Called Request parameters 
+Web container collects the client submitted data and stores that in HttpServletRequest object as RequestParameter 
+As a developerr we need to collect that data from the request objects as follows:
+	
+How I access request parameters:
+~String getParameter(String)
+~String[] getParameterValues(String)
+~Map<String,String[]> getParameterMap()
+~Ennumeration <Strinng>  getParameterNames()
+
+
+Case1:
+	String nm=request.getParameter("name");				//For collecting single value
+	String corses[]=request.getParameterValues("course");		//For collecting multiple values
+
+
+
+If I have multiple vlues and if I use getParameter() than only 1st value will be displayed but If I use getParameterValues than all the values will be displayed 
+
+
+Case2:
+	We can use parameter names and values as a Map 
+	
+	Map<String,String[]> map=request.getParameterMap();		//parameter names and values consider as single map
+	Set pnames=map.keySet();
+	Iterator it=pnames.iterator();
+	while(it.next())
+	{
+	String pnm=(String) it.next();
+	Object val=map.get(pnm);
+	String []values=(String[])val;
+	SOP("\nPname :"+pnm+"\nValues");
+	for(int i=0;i<values.length;i++){
+	SOP(values[i]);
+	}
+	}
+	 
+ 
+Case3:
+	We Can access only request parameter manes as:
+	Ennumeration <Strinng> ens=request.getParameterNames();
+	List<String> list=Collection.list(ens);
+	for(String pn:list){
+	String pv=request.getParametre(pn);
+	SOP(pn+":"+pv);
+	}
+	
+
+	
+
+2.Servlet Config Parameters:ServletConfig is an interface available in javax.servlet package and Web Container vendor is responsible to provide the subclass for 
+this interface.
+Every Servlet has its own ServletConfig object and cannot be shared
+When we want to use any data which is common for all the user but specific to a particular servlet then that data can be specified as ConfigParameter or init Parameter 
+
+With Servlet 2.x:  
+
+	Specify the config parameters in web.xml
+	<servlet>
+	<servlet-name>helloServ</servlet-name>
+	<servlet-class>fully qualified class name<servlet-class>
+	<inti-param>
+		<param-name>email</param-name>
+		<param-value>hello@gmail.com</param-value>
+	</init-param>
+	..........................................
+	....................................
+	.......................................
+	</servlet>
+
+With Servlet 3.0
+	We can use as we are using in Servlet 2.x or we can use annotations
+	Specify the config-parameters in Servlet class with annotations
+	
+	@WebServlet(name="helloServ",urlPattern={"/hello.jlc}",
+	initParams={
+		@WebInitParam(name="email",value="hello@gmail.com"),
+		@WebInitParam(name="phone",value="7889888988")
+		}
+	)
+
+
+	public class HelloServlet extends HttpServlet{
+	.....................................................
+	}
+
+	Web container collects data from either web.xml or annotation and stores that in ServletConfig object as Config Parameters
+	As a developer we can only collect the data from config object as follows:
+		String em=config.getInitParameter("email");
+	
+	We can use the following methods in servlet class to access the ServletConfig object:
+		public void init(ServletConfig cfg)
+
+	We can use the following inherited method from HttpServlet:
+		public ServletConnfig getServletConfig();
+	
+	Here when HttpServlet class init() mtd implementation is invoked from init() method then config object will be returned otherwise null will be returned 
+	
+
+3.Servlet Context Parameters:Servlet Context Parameter is a packae availbale in javax.servlet package and container vendor is responsible to provide the sub-class
+for this interface 
+One Web application will have only one ServletContext object i.e ServletContext object can be shared with all the  Servlet running in the application
+Now when we want to use any data which is common for all the users and common to all servlets the data can be specified as Context parameter in the web.xml as
+
+	  
+		<context-param>
+		<param-name>Website</param-name>
+		<param-value>www.gmail.com</param-value>
+
+		</context-param>
+
+
+
+Web Container collects the data from web.xml and stores that in ServletContext object as Context Parameters 
+	As a developer we can collect the data from context object as follows:
+	String contx=context.getInitParameter("Website");
+
+
+
+
+	We can use the following methods with  ServletConfig object to access the ServletContext object:
+
+	public ServletContext getServletContext()
+
+
+	We can use the following methods with  ServletConfig or ServletContext object to access the corrosponding name:
+	
+	Enumeration<String> ens=sc.getInitParameterNames();
+	List <String> list=Collection.list(ens);
+	for(String pn:list){
+		String pv=sc.getIntParameter(pn);
+		SOP(pn +":"+ pv);
+	}
+
+
+
+
+
+
+Every Time We Run Service method will be called
+void setContentType(java.lang.String type): Sets the content type of the response being sent to the client, if the response has not been committed yet. The given 
+content type may include a character encoding specification, for example, text/html;charset=UTF-8. The response’s character encoding is only set from the given 
+content type if this method is called before getWriter is called.Before sending data to client (displayed by Browser on client machine), the Servlet container informs
+the client browser of what type of data is being sent now. The data that can be sent may be simple plain text, html form, xml form, image form of type gif or jpg, 
+excel sheet etc. To send this information, the Servlet container uses response object with the method setContentType().
+Note: The setContentType(String) method takes a string parameter and does not return anything (returns void).
+
+
+
+
+
+
+
+
+Servlet Life Cycle:
+	Let I have developed an web application using the following:
+	~I have written 2 servlets with names HelloServlet and HaiServlet
+	~I have written 1 listener with name HelloListener
+	~I have written 1 filter with name HelloFilter
+	~I have configured the above components in web.xml or in annotation
+	~I also configured context parameter 
+	~I also configured config parameter for HelloServlet
+	~I specified <load-on-startup> tag or loadOnStartup attribute for HelloServlet
+
+Now I did the following tasks after deployingg the above said application into the server:
+	~Started the Server
+	~Send 1st request to HelloServlet
+	~Send 2nd request to HelloServlet
+	~Send 1st request to HaiServlet
+	~Send 2nd request to HaiServlet  
+	~Shutdown the server
+
+
+Case1:Started the Server:
+	When I start webserver then WebContainer is started 
+	Following tasks will happen in container start-up	(Container startup for one web application only)
+
+	1.Container read the configuration data from web.xml or Annotations specified on verious web component and stores the data in main memory (i.e checks
+	if web.xml(xml file) is there or not and if not there than checks if anotations are there are not and if not there than do nothing but if either of them is there 
+	then do the follwing)
+	
+	2.Container creates the ServletContext object and initilizes ServletContextObject with context parameter specified in web.xml (if conetext parameter is 
+	there)
+
+	3.Once context is created by WebContainer than it will create one thread pool.Now a thread pool is a special area where Java objects will run  
+	i.e Java Thread pool represents a group of worker threads that are waiting for the job and reuse many times.In case of thread pool, a group of fixed size
+	threads are created. A thread from the thread pool is pulled out and assigned a job by the service provider. After completion of the job, thread is contained
+	in the thread pool again.
+	Number of threads in a pool depends on the WebContainer vendor As a developer we cannot change the number of threads 
+	
+	4.Now container will see if any Listeners are configured or not and if Listener is configured than all the Listeners will be initilized  
+	
+	5.Now container will see if any Filters are configured or not and if Filters are configured than all the Filters will be initilized  
+	
+	6.Now container checks whether any servlet is configured with <load-on-startup> tag or LoadOnStartup attribute and if any Servlet is configured with
+	<load-on-startup> tag or LoadOnStartup attribute then that Servlet will be initilized
+	
+
+	When the Container is initilizing the Servlet at Container start-up than Container will do the following:
+	A.Servlet Class Will be Loaded 
+	B.Servlet instance will be created (i.e Servlets will be instantiated) by calling Default Constructor
+	C.Conatiner will cast the instance into javax.servlet.Servlet type to ensure it is a servlet
+	D.Container creates the ServletConfig objects and initilizes ServletConfig object with the config parameters specified in web.xml or Annotations 
+	E.ServletConfig object will be initilized with ServletContext object
+	F.Conatiner calls the init() method by passing the ServletConfig object as parameter 
+
+
+
+
+
+Case2:Sends the 1st request to Hello Servlet:
+	When we 1st sends the request to the HelloServlet which is already initilized then container will do the following tasks:
+	~Conatiner picks the thread from pool and assign the request processing.
+	~Now the threads starts the request processing as follows:
+		A.Creates the HttpServletRequest objects and initilizes that request object with incoming data coming from the client(such as request parameter,
+		request header,request cookies and other imformation releated to the client )
+		B.Create the HttpServletResponse object and initilize the response object with IO Streams
+		C.Calls the service() method with servlet instance by passing request and response object as parameters 
+		D.Once the service() method execution is completed then Stream associated with response object will be taken and that Stream will be flushed  
+		to client over the network
+		E.Destroy the request and response Object 
+
+Note:	Container returns the thread to the thread pool after finishing the request processing 
+
+
+Case3:Sends the 2nd request onwards to Hello Servlet:
+	Now when we sends the 2nd request to the HelloServlet which is already initilized then container will do the following tasks:
+	~Conatiner picks the thread from pool and assign the request processing.
+	~Now the threads starts the request processing as follows:
+		A.Creates the HttpServletRequest objects and initilizes that request object with incoming data coming from the client(such as request parameter,
+		request header,request cookies and other imformation releated to the client )
+		B.Create the HttpServletResponse object and initilize the response object with IO Streams
+		C.Calls the service() method with servlet instance by passing request and response object as parameters 
+		D.Once the service() method execution is completed then Stream associated with response object will be taken and that Stream will be flushed  
+		to client over the network
+		E.Destroy the request and response Object 
+
+
+	Similarly on 3rd,4th............................................................So on 
+
+Note:	On Every Request Service Method is Called i.e Each time the server receives a request for a servlet, the server spawns(produces) a new thread and calls
+	 service.The service() method checks the HTTP request type (GET, POST, PUT, DELETE, etc.) and calls doGet, doPost, doPut, doDelete, etc. methods
+	 as appropriate.
+
+
+
+
+
+
+
+
+
+Case4:Sends the 1st request to Hai Servlet:
+		When we 1st sends the request to the HaiServlet which is not initilized then container will do the following tasks:
+		A.Servlet Class Will be Loaded 
+		B.Servlet instance will be created (i.e Servlets will be instantiated) by calling Default Constructor
+		C.Conatiner will cast the instance into javax.servlet.Servlet type to ensure it is a servlet
+		D.Container creates the ServletConfig objects and initilizes ServletConfig object with the config parameters specified in web.xml or Annotations 
+		E.ServletConfig object will be initilized with ServletContext object
+		F.Conatiner calls the init() method by passing the ServletConfig object as parameter 
+
+		
+	~Conatiner picks the thread from pool and assign the request processing.
+	~Now the threads starts the request processing as follows:
+		A.Creates the HttpServletRequest objects and initilizes that request object with incoming data coming from the client(such as request parameter,
+		request header,request cookies and other imformation releated to the client )
+		B.Create the HttpServletResponse object and initilize the response object with IO Streams
+		C.Calls the service() method with servlet instance by passing request and response object as parameters 
+		D.Once the service() method execution is completed then Stream associated with response object will be taken and that Stream will be flushed  
+		to client over the network
+		E.Destroy the request and response Object 
+
+
+Note:	Container returns the thread to the thread pool after finishing the request processing 
+
+
+
+
+Case5:Sends the 2nd request onwards to Hai Servlet:
+	Now when we sends the 2nd request to the HaiServlet which is already initilized then container will do the following tasks:
+	~Conatiner picks the thread from pool and assign the request processing.
+	~Now the threads starts the request processing as follows:
+		A.Creates the HttpServletRequest objects and initilizes that request object with incoming data coming from the client(such as request parameter,
+		request header,request cookies and other imformation releated to the client )
+		B.Create the HttpServletResponse object and initilize the response object with IO Streams
+		C.Calls the service() method with servlet instance by passing request and response object as parameters 
+		D.Once the service() method execution is completed then Stream associated with response object will be taken and that Stream will be flushed  
+		to client over the network
+		E.Destroy the request and response Object 
+
+
+	Similarly on 3rd,4th............................................................So on 
+
+Note:	On Every Request Service Method is Called i.e Each time the server receives a request for a servlet, the server spawns(produces) a new thread and calls
+	 service.The service() method checks the HTTP request type (GET, POST, PUT, DELETE, etc.) and calls doGet, doPost, doPut, doDelete, etc. methods
+	 as appropriate.
+
+
+Case6:ShutDown the Server:
+	At conatiner shutdownn following tasks will happen:
+	~Container will destroy all the Servlets but before destroying Continer will invoke the destroy() method on all the servlet 
+	~Container will destroy all the Filters but before destroying Continer will invoke the destroy() method on all the filters 
+	~Container will destroy all the Listeners but before destroying Continer will invoke the destroy() method on all the listeners
+	~Thread pool will be destroyed
+	~All objects running inside the container will destroyed and finally the conatiner is down and it is unable to process any request 
+	
+
+
+Request Dispatcher:	It is an intrface available in  javax.servlet packge and the subclass is implemented by container vendor 
+		It has two methods as follows:
+		~public void forward(ServletRequest req,ServletResponse res)
+		~public void include(ServletRequest req,ServletResponse res)
+
+
+~Forward() method:
+		forward() method is used to forward the request from:
+		Servlet to HTML
+		Servlet to JSP
+		Servlet to Servlet
+		JSP to HTML
+		JSP to JSP
+		JSP to Servlet
+
+
+Note:		Servlet to HTML and Servlet to JSP are mainly used in MVC
+
+		We can place forward() method in one servlet conditionally to forward the control to other resources but only one forward() will be executed 
+
+
+Usage:		
+		RequestDispatcher rd=null;
+		rd=requuest.getRequestDispatcher("test.html");
+		rd=requuest.getRequestDispatcher("test.jsp");
+		rd=requuest.getRequestDispatcher("test.jlc");
+		rd.forward(request,response);
+
+Note:		When we try to invoke two or more forward method then java.lang.IllegalStateExpression:"Cannot forward after the response has been committed"
+		We can restrict the user from accessing the page directly by placing the page under WEB-INF directory
+		When we have other statements after forward method then those statements will be executed but will not be able to write any content in the 
+		response stream
+		
+
+
+
+~Include Method:
+		include() method is used to include the response of one servlet or jsp in another servlet or jsp
+		We can place many include() mtds in one servlet to include many resources and all include() mtds will be executed
+
+		Stream will be commit automatically Once committed we cannot write any data into that stream i.e data writing is completed so if we do following;
+		
+		RequestDispatcher rd=requuest.getRequestDispatcher("test.html");
+		rd.include(request,response)
+		PrintWriter pn=response.getWriter();			than we get error
+
+		We have to take stream before calling include() mtd once include() mtd is called we donot have the access to take i/p sttream
+
+
+	
+
+
+Servlet Thread Model:Servlet has implemented with 2 thread models:
+		1.Single thread model
+		2.Multi  thread model
+
+
+
+		1.Single thread model:-							
+				With this type of model Container creates new Servlet instance for every incoming request 
+				If we want to follow single thread model for our servlet then our servlet class has to implement 
+				javax.servlet.SingleThreadModel marker interface 
+		class HelloServlet extends HttpServlet implements SingleThreadModel{..........................................................................}
+				It is thread safe 
+		
+		2.Multi  thread model:
+				With this type of model Container creates only one Servlet instance per Servlet and the same will be used for every 
+				incoming request    
+				Every container uses Multi Thread Model as Default model 
+				It is not thread safe
+
+
+
+Note:	SingleThreadModel interface is depricated in J2EE 1.4
+
+
+HttpServletRequest:
+~		When we send the request using http protocol than that request is called HttpRequest
+		HttpRequest contains two parts:
+			~HttpRequest Header 
+			~HttpRequest Body
+		  When we send the request with Http method GET than data will be converted to Query String and that Query String will be attached to the
+		  URL
+		
+		http://localhost:9999/MYLAB/login.html
+		With GET method the above URL will be  :--	http://localhost:9999/MYLAB/login.com?username=sunny&password=sun93	
+
+
+		In case of Http GET method the data will be placed in HttpRequest Headers and HttpRequest Body is empty
+
+
+		We can send our request along with the URL with the help of query
+		?	:-----------To send Query Stream
+		&	:-----------To take another parameter to send with the URL
+
+
+~		  When we send the request with Http method POST than parameter data will be converted to Query String and that Query String will be 
+		   placed in HttpRequest Body Then URL be like:---http://localhost:9999/MYLAB/login.com
+
+
+
+
+		Get:---	When we send request with Http method GET than data will be attached to URL as Query String and HttpRequest Body is empty
+			Using Get we can send only limited amount of data because URL limits is upto 2000 words
+			GET is not secure because data will be visible in the URL
+		
+
+
+		Post:---	When we send request with Http method POST than data will be placed in HttpRequest Body 
+			Using Get we can send  unlimited amount of data as data is stored in HttpRequest Body
+			POST is more secure
+
+
+
+
+		At the Server side Container is responsible for creating HttpServletRequest and HttpServletResponse object and Initilizes those object with data  
+
+		HttpServerRequest contains :---
+			Request Parameters 
+			Request Header
+			Request Cookies
+			Other Informations	
+
+		HttpServerRequest contains :---
+			Response Headers 
+			Response Streams in terms of Bytes and Character
+
+
+
+	

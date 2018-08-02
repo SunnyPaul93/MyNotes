@@ -1,0 +1,763 @@
+XML stands for eXtensible Markup Language
+It is a tag based language 
+XML is designed to store and transport data 
+
+XML and HTML are two subset of SGML(STANDARD GENERATED MARKUP LANGUAGE)
+SGML are more complicated 
+
+SGML:-
+	1.XML 
+	2.HTML
+
+
+
+Difference bewteen XML and HTML	:-
+
+	1.HTML is mainly designed for Presenting The Data in Required Format while XML is designed for Storing the Data 
+	2.HTML has set of Predefined Tags whose meaning cannot be changed but XML has No Tags
+	3.We cannot define our own tags using HTML but we must have to define our tags in XML as XML donot have any tags
+	4.HTML is not case sensitive but XML is case sensitive 
+	5.HTML documenet may not be well formed document but XML document must be well formed document 
+
+
+
+
+	NOW a well formed document is the one which follows the following rules:-
+	1.Document should have single root elemnets 
+	2.Document should form a tree structures 
+	3.Evert start tag should have corrosponding end tag 
+	4.Atttribute values must be enclosed with single or double quotation mark
+	5.Tags must be nested properly
+
+
+
+
+Structure of XML 	:-
+	1.Prolog 
+	2.Body
+	3.Epilog
+
+
+
+
+
+1.Prolog	:-	Prolog is the first section of XML document and ie mandatory.Prolog has three parts 
+		A.XML Declaration
+		B.PI's(Processing Instructions)
+		C.Comments 
+
+	
+			A.XML Declaration	:-
+			<?xml version="1.0" encoding="......................"  standalone="....................."  ?> 
+			
+			varsion is mandatory but encoding and standarlone is not compulsary
+
+			encoding:-
+				We can specify any valid character set.	e.g. UTF-8,.............etc
+				
+			standalone:-
+				Standalone attribute is used to represent whether DTD declarations is provided inside or outside the XML file saparetely
+				Possible values for standalone are YES and NO and default value is NO 
+				If value is NO than we must specify the DTD rules outside XML document in a spaerate file 
+				If value is YES than we must specify the DTD rules inside same XML document file 
+		
+
+			B.PI's(Processing Instructions)	:-
+		
+			Following are the various processing instructions which we can write after the declaration section of XML document
+			i.Inculding DTD's
+			ii.Including Schemas
+			iii.Including XSL files
+
+
+			 
+		
+			C.Comments	:-
+				Same as HTML comments
+
+				<!-- GIVE SOME COMMENTS --> 
+
+
+
+
+
+2.Body	:-Body Section must starts with roots element and mainly contain the data 
+
+ 
+3.Epilog	:-Epilog is last Section of XML documemt and is completly optional. It conatains two parts 
+		A.Processing Instructions 
+		B.Comments 
+
+
+Processing Instructions can be Defined at Starting of XML Document(PROLOG) or at last part of XML decoment(EPILOG)
+
+NOTE:- But it is not good practice to write PI's in EPILOG mostly almost all developers write PI's at PROLOG only
+
+
+
+
+XML BASIC TERMS	:-
+
+
+A>Elements	:-
+		An XML elements is centarl building blocks of any XML document which conatin Start tag and End tags  
+		eg:-<body></body>......................etc
+		
+		Some elements conatin only tags without end tags 		
+		eg.:-<br />,<hr />..................etc
+	
+		
+		
+B>Tags 		:-
+		The markup character that indicate the start or end of elements but not the element content itself
+
+C>Attribute	:-
+		A part of an elements that provide the additional information about that elements
+		<font color='red' size='10' />
+		Here color and size are the attribute name and red and 10 are the attribute value 
+
+		<student sid='77' bid='B-9' />
+	
+		Here sid and bid are the attribute name and 77 and B-9 are the attribute value 
+		
+
+					References :-
+		
+		Some characters have some special meaning in XML. For say I have character like "<" inside xml elements than that will generate error 
+		because parser interprets as a start of a new elements 
+		eg.	<message>if fee < 1200 then  </message>	
+		
+		 < will give error as < means start of new element and element <message> is not being close 
+		
+		So to avoid this error they(< , > ..........etc) are being replaced with either entity reference or character reference
+
+
+
+		Character Reference	:-
+
+			Syntax	:-
+				&intnumber;
+
+
+			eg:-	<message>if fee &60; 1000 then </message>
+
+		Here 60 is a integral number	
+
+		Entity Reference	:-		
+		
+			
+		   	
+			Syntax	:-
+				&locigalname;
+
+
+			eg:-	<message>if fee &lt; 1000 then </message>
+	
+		  
+		Here lt is a loigical name 
+
+
+	XML for JAVA PROJECT must be placed in src folder and for Dynamic in WEB-INF
+
+Validating XML Document	:-
+		When we are validating XML Document than we need to verify following rules:-
+		1.XML Documents must be well formed 
+		2.Define the list of tags allowed 
+		3.Define the order of tags and number of sub elements 
+		4.Define the occurence of tags 
+		5.Define the list of attributes required for tags 
+		6.Define the possible values of attribute and default values 
+
+
+
+NOW let Suppose I have 10000 developers.Than it is not mandatory that while writing a xml file they use the same XML structure.So to enforce all developer should 
+use same Structure so validation rules is beign given in XML document using 
+	A.DTD 
+	or
+	B.SCHEMA
+
+
+
+A.DTD(Doc Type Defination)	:-
+		DTD is used to define the validation rules fro XML 
+		DTD document should be saved in a separate file with an extension .dtd and contains the XML validation rules (mainly for External DTS's)
+		
+		When we are writing the DTD then we have to use the following	:-
+			1.<!ELEMENTS>
+			2.<!ATTLIST>		//Atribute List 
+			3.<!ENTITY>
+			4.<!Cardinality>
+
+
+
+		There are two type of Data Types in DTD:-
+			PCDATA 
+			CDATA
+
+
+		1.Defining the elements using <!ELEMENTS>
+
+			<!ELEMENTS java(student*,course+)>
+			<!ELEMENTS student(sname,email)>
+			<!ELEMENTS course(cname,cost,faculty)>
+			<!ELEMENTS sname(#PCDATA)>
+			<!ELEMENTS email(oemail,pemail)>
+			<!ELEMENTS oemail(#PCDATA)>
+			<!ELEMENTS pemail(#PCDATA)>
+			<!ELEMENTS cname(#PCDATA)>
+			<!ELEMENTS cost(#PCDATA)> 
+			<!ELEMENTS faculty(#PCDATA)>
+			
+			
+		2.Defining the attributes using <!ATTLIST>
+
+			<!ATTLIST student 
+				sid CDATA #REQUIRED
+				job CDATA #IMPLIED
+			>
+
+			<!ATTLIST course 
+				cid CDATA #REQUIRED
+				free(yes|no) "no"			//Here possible values are yes or no and default is no 
+			>
+
+			#REQUIRED	:-Attribute is mandatory
+			#IMPLIED	:-Attribute is not mandatory
+		
+			
+		3.Definings Entities using <!ENTITY>
+			
+			<!ENTITY fi "SUNNY">
+			<!ENTITY company "SUN MICROSYSTEM">
+
+			ENTITY is defined to define our own entity references
+			The ENTITY statement is used to define entities in the DTD
+			An ENTITY provides an abbreviated entry to place in our XML document
+			The abbreviated name is what we provide for the name parameter. ENTITYs are extremely useful for repeating information or
+			large blocks of text that could be stored in separate files
+
+		4.Cardinality	
+		
+			Cardinility are used to specify the occurence of elements 
+			
+			No Symbol	--	Exactly Once	
+			*		--	Zero or More 	
+			+		--	One or More	
+			?		--	Zero or One
+
+
+
+		Types of DTD's	:-
+			Two types of DTD's
+			
+			a.External DTD
+			b.Internal DTD	
+
+		a.External DTD	:-
+			When we define DTD rules in a separate file and then include that dtd file in XML using Doc Tupe Declaration than it is called 
+			External DTD
+			For this type of DTD's standalone value must be "no"
+
+			After developing Doc Type Defination(DTD's)(seperate dtd file i.e External DTD) we have to include that in XML document with 
+			DOC Type Declaration with following syntax	:-
+
+				<!DOCTYPE root-element SYSTEM path>
+					or 
+				<!DOCTYPE root-elements PUBLIC Identifier path>
+
+			path is the path of the external DTD's where validation rules are given and the path can be in	:-
+			1.same folder 
+			2.some other folder in my system(Computer)
+			3.some where at world wide web(www)
+			
+		b.Internal DTD	:-
+			When we define the DTD rules inside the XML using DOC Type Declaration then that is called Internal DTD.
+			For this type of DTD's standalone value must be "yes"	
+
+
+
+
+
+
+
+
+
+
+
+
+				CDATA						PCDATA 
+		
+		CDATA stands for Character Data				PCDATA stands for Parsed Character Data  		
+		Use CDATA for specifying the data type for Attributes			Use PCDATA for specifying data type for Elements
+		CDATA will no reslove the Entity Reference			PCDATA reslove the Entity Reference
+	
+
+
+
+
+
+
+
+
+
+		XMLLab1 
+
+			myfile.xml -----Open with--- Other ---external Crome Document
+
+
+
+
+
+
+
+DOUBT in external dtd ENTITY not working
+
+
+
+XML NameSpace	:-
+		It is name which is used to solve the Naming Conflict 
+		XML namespace is almost euqivalent to java package
+		The Naming Conflict can be resolved using prefixes and uri 
+		XML NameSpace has to be specified at the root element
+
+
+
+		eg:-
+			xmlns :stu="http://www.sunny.com/students"
+			Here stu is the namespace prefix and "http://www.sunny.com/students" is namespace  name
+
+
+		Let conside <stu:name>sunny</stu:name>
+		Here we are qualifying with NameSpace Prefix but internally it qualifies the tag using NameSpace Name as follows:-
+			 <http://www.sunny.com/students:name>sunny</http://www.sunny.com/students:name>
+
+		Use URL's as namespace name as URL's are always unique
+		NameSpace name does not represent any location.It is simply a logical unique name across the globe 
+
+		When we define NameSpace Name without prefix than it will called as Default NameSpace
+
+		When we are qualifying any elements without any prefix than those elements will be considered under DefaultNameSpace
+		All name space must be defined at the Root of the elenemts 
+		We can have only one NameSpace name without prefix(Default NameSpace) and multiple NameSpace without prefix
+
+
+
+
+
+XML SCHEMA :-
+		Schema is advanced than DTD for Validating XML Document
+		Schema support various DataTypes like int,long,float,double,string,boolean,date................................................................etc
+		Schema also allows us to define custom DataTypes
+		Schema Document is itself a XML document(so XML rules has to be followed) i.e must be well formed Document
+		Schema Support XML NameSpace 	 
+		Schema  
+	
+			
+		If I have one xsd file than use schemaLocation="" and if I have more than one xsd files than use xsi:schemaLocation=""
+		but with multilple xsd file use can also use schemaLocation=""	
+	
+
+
+			
+
+
+
+
+			DTD							SCHEMA
+	DTD supports only two DataTypes called CDATA and PCDATA			SCHMA supports many DataTypes like int,long,float,double,
+									date,time,datetime ..............................etc
+		
+	DTD does not allow us to define Custom Data				Schema allows us to define Custom DataTypes  
+	
+	DTD does not support XML NameSpace					DTD supports XML NameSpace	
+
+	DTD may not be a XML document					SCHEMA must be an XML document
+
+	DTD may be internal or external 					SCHEMA must be external always
+
+	We can include only one DTD in XML documment				We can include multiple SCHEMA XSD's in XML document
+
+
+
+
+
+
+
+
+JAXP(JAVA API for XML Parsing)	:-
+	JAXP are of three types
+		
+	A)SAX
+	B)DOM
+	C)XSLT
+
+
+
+	A)SAX(Simple API for XML)	:-
+		SAX parser is read-only parser which is used to read data from xml doc
+		SAX parser is not suitable for the following such as :-
+			1.Update data for XML 
+			2.Delete Data for XML 
+			3.Generating New XML 
+
+		SAX parser is implemented based on Event-Driven  Model.When it parsing the xml it will generate following events :-
+			a.Start Document() {.............}			Document is Started   		
+			b.Start Element(){.................}			Element is Started 	
+			c.Character Data(){..............}			Character data is Found 
+			d.end Element(){...................}			Element is ended 			
+			e.end Document(){................}			Document is ended 
+			........................................................
+			..........................................................
+					
+		SAX parser reads the data in a sequential order
+
+		jars requied :-xerces.jar
+
+
+		
+
+
+
+
+
+
+	B)DOM(Document Object Model)	:-
+		1.DOM Parser is read-write Parser i.e we can do the following:-
+			Read data from XML 
+			Update data of XML 
+			Delete data from XML 
+			Insert data into XML
+			Generating new XML
+
+		2.When DOM Parser is reading the XML than it construct the Node Tree with all Element of XML document 
+		
+		3.Following are various nodes of Node Tree:-
+			Document Node 
+			Element Node 
+			Attribute Node 
+			Character Data Node
+		
+		4.Once parsing is completed with DOM than entire XML document will be loaded once into main Memory.SO DOM ocuupies more space than 
+		   SAX	
+		
+		5.DOM Parser reads data in RANDOM order
+
+
+		   
+	
+
+
+
+	
+
+
+	Difference Between SAX and DOM	:-
+
+			SAX						DOM
+
+	SAX is read only parser i.e we can read but cannot modify data		DOM is read-write parser i.e we can read,update,create new xml,delete or 
+								insert data i.e can modify data 
+	
+	SAX follows Event Driven Model 					DOM follows DOM Tree Model
+	
+	SAX occupies less memory beacuse SAX stores only one element 	DOM occupies more memory than SAX because DOM stores entire document
+	data at a time in main memory 					at a time in main memory
+	
+
+
+		 
+
+
+
+
+
+
+	C)XSLT			//LEFT
+
+
+
+
+
+
+
+	JAXB(Java API for XML Binding)	:-
+			JAXB allows us to map or bind Java Fields with XML tags 
+			This mapping is called as OXM(Object XML Mapping)
+			We can perform mainly two tasks using JAXB:-
+				a.Marshlling 
+				b.UuMarshlling 
+				
+				 	
+			a.Marshlling	:-
+					It is a process of converting Java Object Graph to XML Document
+					It is also called Serialization
+			
+			b.UuMarshlling	:-
+					It is a process of converting XML Document to Java Object Graph  
+					It is also called De-Serialization
+ 
+				
+		Following are various XML binding framework:-
+			JAXB2
+			XStream
+			Castor 
+			JiBX(XML Binding for Java)
+			XMLBeans
+			...............................................etc
+
+		JAXB implementation using JAXB2	:-
+
+			JAXB2 is implemented based on following annotations:-
+			@XmlRootElement
+			@XmlAttribute
+			@XmlElement
+
+		JARS needed	:-JAXB2.0-all-jars (StudentDVD)
+				
+
+
+
+
+		XStream 	:-
+
+			XStraeam is implemented based on following annotations:-
+			@XStreamAlias
+
+			JARS needed	:-XStream-jars (StudentDVD)
+
+
+
+
+
+
+
+
+
+
+
+
+		Spring3 OXM(Object XML Mapping)	:-
+			Spring OXM allows us to bind Java Field with XML tags
+			When we use Vendor Specific Binding Framework we may get maintenance problem when we change the framework
+			With Spring OXM we can change our binding framework with little maintenance 
+			OXM provides two global interfaces
+				1.Marshller 
+				2.UuMarshller
+
+
+			Spring OXM support following binding framework:-
+			JAXB2
+			XStream
+			Castor 
+			JiBX(XML Binding for Java)
+			XMLBeans
+			
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

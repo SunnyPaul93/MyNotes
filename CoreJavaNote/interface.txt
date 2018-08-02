@@ -1,0 +1,188 @@
+inside interface every mtd is always abstract
+
+class extends only one class at a time 
+an interface extends any number of interfaces(multiple interfaces)simultaneously
+a class can implement any number interfaces at a time
+a class can extend another class and can  implement any number at a time eg.class A extends B implements C,D,E
+a interface cannot implement any number of interfaces simultaneous at a time
+
+
+x endends y,z : x,y,z should be interface
+x implements y,z: x=class y,z=interfaces
+x extends y implementz: x and y=class z=interfaces
+x implement y extends z: //invalid because we have to take extends 1st followed by interface
+
+interface mtd is public:to make this method avavilable to every implementation class in same or different
+package inetrface method is public
+
+interfcae mtd is abstract:implenemtation class is responsible to provide implementation
+
+interface variable is public:to make this variable avavilable to every implementation class in same or 
+different package inetrface variavle is public
+
+interface variable is static because we cannot create object for variable and with static we can directly 
+call the variable with class name and no object is required
+
+interface variable is final because  if one implementation class changes value than remaining
+implementation clases will be effected to restrict this every interface variable is always final
+
+in interface we have to initilize our variable in same line as the variable is by default final 
+interface intr{
+int x=10;}
+
+interface intr{
+int x=10;}
+class test inmplement intr{
+psvm(){
+x=777;
+sop(x);
+}}//invalid as x is final in interface 
+but..............
+
+interface intr{
+int x=10;}
+class test inmplement intr{
+psvm(){
+int x=777;		//here x is local variable for main method so priority go for always local variable
+sop(x);
+}}//valid ::o/p:777
+
+
+if both interface have same method the we have to provide implementation for only one method
+interface l1{					interface l2{
+public void m1();					public void m1();
+}						}
+class test implements l1,l2{
+public void m1(){
+}					
+}
+
+
+
+
+if both interface have different method the we have to provide implementation for both method and these 
+methods are overloaded methods
+interface l1{					interface l2{
+public void m1();					public void m1(int i);
+}						}
+class test implements l1,l2{
+public void m1(){
+}			these methods are overloaded methods	
+public void m1(int i){
+}				
+}
+
+
+
+
+
+
+
+limitation of inteface:::::::::::::
+
+interface l1{					interface l2{
+public void m1();					public int m1();
+}						}
+
+
+it is impossible to implemets both inteface simultaneously as both return type is different and these are also 
+not covariant
+
+
+
+interface l1{					interface l2{
+int x=777;						int x=888;
+}						}
+
+class test implements l1,l2{
+psvm(String []args){
+//sop(x);			error: reference  to x is amgious
+sop(l1.x);
+sop(l2.x);			//since both interface by default is static variable so can accesssed with clas name
+}
+}
+
+
+marker interface:
+interface which doesnot contain any method and by implementing that inteface if our object will get some 
+ability such type of interfaces are called marker inteerfaces or ability interface or tag interface
+eg.Serialidable,Cloneable,RandomAccess,SingleThreadModel etc...... these are marked for some ability
+
+by implementing cloneable interface our objects are in a position to produce exactly duplicate cloned 
+objects
+Q:Without having any methods how the objects will get some ability in marker interfaces?
+Ans:in marker interface JVM provided the required support to get that ability if JVM won't provide 
+supprot than programmer is responsible to write the code  and  complexity of programmin increases
+
+
+market interface main purpose to reduce complexity of the programming and to make java language as 
+simpple as possible
+
+
+we can create our own marker interface but to provide support for our marker interface ability exiting
+JVM may or maynot support so i have to design my own JVM which may containg the default marker 
+interface and our newly defined marker interface
+
+
+adapter class: it is a simple java class that implements an interface with only emplty implementation
+
+interface x{
+m1();
+m2();
+m3();
+...........
+..................
+...............
+............
+m1000();
+}
+
+
+
+since adapter class has dummy method(empty implementation) so if we create object and call a 
+particular method it is of no use so better to make adapter class as abstract
+
+
+abstract calss Adapter implements X{
+m1(){}
+m2(){}
+m3(){}
+........
+............
+..............
+..............
+................
+............
+.............
+...............
+..........
+m1000(){}
+}
+
+now in new class whichever method we need we can override(implement) that method but that class 
+should extends the adapter class 
+class test extends Adapter{
+m3(){
+sop("test---m3");
+}}
+
+
+
+ 
+class test1 extends Adapter{
+m4(){
+sop("test1---m4");
+
+m838(){
+sop("test1---m838");
+}}
+
+
+
+we cant create obj for abstract class but abstract class can conttin constructor what is the need?
+ans:abstract class const will be executed when we are creating child class object 
+to perform initilization of child object(for child class initilization parent constructor will also work)
+
+Q:To perform initilization of child classs child constructor is there what is the need of parent class constructor?
+Ans: some properties may be inherited from parent  for child object to perform initilizaton of those abstract
+class can contain constructor.

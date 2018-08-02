@@ -1,0 +1,50 @@
+ORA-00923
+
+ORA-00923 is a commonly seen error that is easily resolved by simply correcting its syntax. Keep in mind ORA-00923 does not occur in Oracle 10g.
+
+The Problem
+
+When you are faced with this error, you will see the following message:
+
+ORA-00923 FROM keyword not found where expected
+
+ORA-00923 occurs when you try to execute a SELECT or REVOKE statement without a FROM keyword in its correct form and place. If you are seeing this error, the keyword FROM is spelled incorrectly, misplaced, or altogether missing. In Oracle, the keyword FROM must follow the last selected item in a SELECT statement or in the case of a REVOKE statement, the privileges. If the FROM keyword is missing or otherwise incorrect, you will see ORA-00923.
+
+The Solution
+
+To resolve ORA-00923, the user should make sure three possible causes are corrected. First, the user must correct the syntax. Make sure you have placed the keyword FROM in its correct place, and that no spelling errors have occurred. Secondly, if you used quotation marks in an alias, make sure that they have properly enclosed the alias and that they are double quotation marks. Lastly, make sure no reserved words were used as an alias. See the Oracle appendix for reserved words to view a complete list. For practical application of these practices on how to resolve ORA-00923, see the following examples.
+
+In the following example, the query is missing the keyword FROM:
+
+SELECT *
+
+employees;
+
+To correct the statement, insert the FROM keyword in the correct place, and run again:
+
+SELECT *
+
+FROM employees;
+
+Another example of the ORA-00923 error is when quotation marks do not properly enclose the alias, as in the following:
+
+SELECT manager AS manager column
+
+FROM all_tables;
+
+The alias—in this example, manager column—is not enclosed in double quotation marks. Resolve ORA-00923 by fixing this syntax mistake.
+
+SELECT manager AS “manager column”
+
+FROM all_tables;
+
+Looking Forward
+
+Avoiding ORA-00923 in the future is a matter of keeping to the proper syntax when executing SELECT or REVOKE statements. While correcting this error is not difficult, simply remember the following rules to avoid seeing this error.
+
+Remember:
+
+The FROM keyword should follow the last selected item. Make sure it is not misspelled, misplaced, or missing.
+Make sure you have enclosed the alias in double quotation marks.
+Make sure no Oracle reserved word was used as an alias.
+If you continue to experience this error, you may consider contacting your database administrator or a licensed Oracle consultant. Always check your consultant’s credentials and experience to ensure they meet your needs.

@@ -1,0 +1,303 @@
+checked exception vs unchecked exceptions::
+the exception which are checked by compiler for smooth execution for program are called checked 
+exceptions eg,FileNotFound etc.
+in our prog. if there is a chance rising checked exception than compulsary we should handle that 
+checked exception(either by try check or by throws keyword) otherwise we will get compile time error
+
+the exceptions which are not checked by compiler ehther programming handling or not such type of 
+exceptons are called unchecked exceptions eg.Aiobe,Npe
+
+throw keyword:
+ 
+class test
+{
+psvm(String ar[]){
+sop(10/0);			//internally 
+}
+}
+
+
+
+class test
+{
+psvm(String ar[]){
+
+throw new AE("/by Zero");	//creation of Arithemethic Exception obeject explicitly
+			//handover our created exception object to JVM manually
+}
+}
+
+
+sometimes we can create exception object explicitly and we can hand over to JVM manuallly for this we have to use
+throw keyword
+eg: throw new AE("/by Zero"); 
+
+hence main objective of throw keyword is to handover our created exception object to JVM manuallly
+
+withdraw(double amount){
+if(amount>balance)
+throw new InsufficientException();
+}
+
+note:best use of throw keyword is for userdefined exception or customized exception but we can also 
+do for predefined exception also
+In AE class there are two constructor one can take String arg and other can take no arg
+Case1:
+class Test{
+static AE e=new AE();
+psvm(String []arr)
+{
+throw e;
+}} //valid here exception is AE
+
+
+class Test{
+static AE e;				//here we did not create object
+psvm(String []arr)
+{
+throw e;
+}} //valid here exception is NPE be for static value default value is null  object not yet created
+
+
+Case 2:
+class Test{
+psvm(String []arr)
+{
+Sop(10/0);
+Sop("Hello");
+}}			///runtime exception
+
+
+class Test{
+psvm(String []arr)
+{
+throw new AE("/ by Zero");	//its work like return statement 
+Sop("Hello");		//unreachable statement
+}}
+
+after throw we are not allowed to write any statement directly ottherwise we will get 
+compile time error saying unreachable statement
+
+
+Case 3:
+
+class Test{
+psvm(String []arr)
+{
+throw new Test();
+}}//invalid
+
+we can throw only for exception and errors(throwable type objects)  not normal java objects
+
+class Test extends RuntimeExceptions{
+psvm(String []arr)
+{
+throw new Test();
+}}//valid RuntimeException
+
+
+
+
+Throws Keyword: 
+import java.io.*;
+class Test
+psvm(String []arr)
+{
+Printwritter pw=new Printwritter("abc.text");	//checked exception may be chance of FileNot Found
+pw.println("Hello");
+}}//invalid Unreported exception
+
+in our programme if there is a possibility of rising checked exception than compulsary we should handle 
+that checked exception otherwise we will get complie time error saying Unreported ExceptionXXXXX
+must be caught or declared to be thrown
+
+use of throws:Throws keyword rreqd. only for cheecked exceptions and useage of throws keyword for unchecked
+exception there is no use or impact but we can use here also
+throws keyword reqd. only to convince compiler and usage of throws keyword does prevernt abnormal 
+termination of programme
+
+case 1:
+class Test {
+Test() throws Exception{
+
+}
+public void m1 throws Exception(){
+
+}
+}
+
+throws keyword use at method and comstructor level but not for classes 
+
+
+
+class test{
+psv m1() throws test{			//invlaid incompatable types found test reqd. java.lang.throwable
+}
+}
+
+
+class test extends RuntimeException{
+psv m1() throws test{			//valid under throwable
+}
+}
+
+we can use throws keyword only for Throwable types if we are trying to use for normal java classes
+than compile time error occur saying incompatable types
+
+case3:
+class test{
+psvm(String []aas){
+throw new Exception();
+}}//invalid unreported exception 
+
+
+class test{
+psvm(String []aas){
+throw new Error();		//unchecked
+}}//valid	runtime exception
+
+
+
+class test{
+psvm(String []aas){
+try{
+sop("Hello");
+}catch(AE e){		//unchecked
+}
+
+}}//valid
+
+
+class test{
+psvm(String []aas){
+try{
+sop("Hello");
+}catch(Exception e){		//partially checked
+}
+
+}}//valid
+
+
+class test{
+psvm(String []aas){
+try{
+sop("Hello");
+}catch(IOException e){	//checked
+}
+
+}}//invalid
+
+
+class test{
+psvm(String []aas){
+try{
+sop("Hello");
+}catch(InterruptException e){	//checked
+}
+
+}}//invalid
+
+
+class test{
+psvm(String []aas){
+try{
+sop("Hello");
+}catch(Error e){
+}
+
+}}//valid
+
+Note:Within the try block if there is no chance of rising an exception than we cannot write 
+catch blockfor that exception otherwise we will get compile time error saying  Exception xxxx is 
+never thrown in body of corrosponding try statement but this rulr is applicable only for fully checked 
+exceptions 
+
+
+
+Summary::
+try:	to maintain problem code
+catch:	to maintain exception handling code
+finally:	to maintain cleanup code
+throw:	to handover our created exception object to the JVM manually
+throws:	to deligate responsibility of exception handling to the caller(may be method or JVM)
+  
+sometimes to meet pogram requirement we can define our own exceptions such type of exceptions are 
+called customised or user defined exceptions
+
+
+
+class TooYoungException extends RuntimeException{
+	TooYoungException(String s){	//for descriptions of exception we need String argument
+	super(s);
+	}
+}
+
+
+class TooOldException extends RuntimeExceptions{
+	 TooOldException(String s){
+	super(s);
+	}
+}
+
+
+class CustomExceptonDemo{
+psvm(String arr[]){
+	int age=Integer.parseInt(arr[0]);
+	if(age>60){
+	throw new TooOldException("Please wait some more time you get best match ");
+	else if(age<18){
+	throw new TooYoungException("Your are already crossed marrige age and no chance of marrige")}
+	else 
+	super("you will get match detail by email");
+}
+}
+}
+
+
+need of super(s)::
+to make description available to defalult exception handler
+
+
+
+
+String str=new String("Mohan");
+Object o=(Object)s;		//valid
+
+
+Object o=new String("Mohan");
+String o=(String)s;		//valid
+
+
+Object o=new Object();
+String s=(String) o;		///invalid ClassCastException
+
+
+Until 1.6 version it is highly recomended to write finally block to close resources which are open 
+as a part of try block
+
+the problen in this approach are:
+1.compulsary programmer is required  to close resources inside a finally block it increases the 
+complexity of programming
+2.we have to write finally block compulsary and hence it increases the length of the code 
+and reduces redability
+to overcome above problems sun people introduces try with resources in 1.7 version
+the main advantage of try with resources is whatevevr resources we open as a part of try block 
+will be close automatically once control reaches end of try block either normally or abnormally
+and hence we are not required to close explicitly so that complexity of programing will be 
+reduced 
+we are not required to write finally block so that length of code will be reduced and readibility 
+will be improved
+
+
+try(R1;R2;R3){
+}
+
+R1,R2,R3 should be AutoCloseable i.e R1 should implement java.lang.AutoCloseable resources
+inside AutoCloseable close method is tthere
+
+try(BufferRidder br=new BufferRidder(new FileReader("input.txt"));
+br=new BufferRidder(new FileReader("output.txt")))		//invalid
+
+by default all resources reference(here br) variables are implicitly final
+
+only try with resource is valid no need to write catch or finally block

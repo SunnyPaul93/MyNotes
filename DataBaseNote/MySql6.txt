@@ -1,0 +1,229 @@
+A trigger is a PL/SQL block which invoked automatically by DBMS when insert,delete or update operation is executed on a database table 
+
+Syntax:
+	Create or replace trigger <trigger name>
+	Before or After 
+	Insert or Update or Delete 
+	ON <table name>
+	For each row 
+	Declare 
+	variable declaration 
+	Begin
+	//SQL statement
+	End;
+	We can access the information of table which is being modifed by using following variables :
+	
+	Old <col name>
+	New<col name>
+
+
+
+	trigger_name=name of trigger 
+	trigger_time=before or after 
+	trigger_event=insert,update,delete
+	trigger_statement=standard mysql statement 
+
+generally statement is a single statement but the  is an exception which alow us to use store procdure type syntax to enable multiple statement by using begining and 
+ending clauses	
+
+
+
+mysql>  create table emp9(eid int,ename varchar(20),phone bigint,email varchar(20));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql>  insert into emp9 values(101,'Sunny',8273564732,'mohan@gmail.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into emp9 values(102,'Ravi',7283546283,'ravi@gmail.com');
+Query OK, 1 row affected (0.05 sec)
+
+mysql>  insert into emp9 values(103,'Diya',8293546758,'diya93@gmail.com');
+Query OK, 1 row affected (0.06 sec)
+
+mysql>  insert into emp9 values(104,'Neetu',9485610293,'neetu90@gmail.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  insert into emp9 values(105,'Rani',7892679463,'rani@gmail.com');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>  select * from emp9;
++------+-------+------------+-------------------+
+| eid  | ename | phone      | email             |
++------+-------+------------+-------------------+
+|  101 | Sunny | 8273564732 | mohan@gmail.com   |
+|  102 | Ravi  | 7283546283 | ravi@gmail.com    |
+|  103 | Diya  | 8293546758 | diya93@gmail.com  |
+|  104 | Neetu | 9485610293 | neetu90@gmail.com |
+|  105 | Rani  | 7892679463 | rani@gmail.com    |
++------+-------+------------+-------------------+
+5 rows in set (0.00 sec)
+
+contd.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+mysql>  create table emp9_backup(oeid int,neid int,oename varchar(20),nename varchar(20),ophone bigint,nphone bigint,Dop date,opn varchar(20));
+Query OK, 0 rows affected (0.11 sec)
+
+since we are only inserting so we donot have old data 		
+
+mysql> create trigger emptrig
+    ->  before
+    -> insert or update or delete on emp9
+    ->  for each row
+    -> declare
+    ->  opn varchar(20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'or update or delete on emp9
+ for each row
+declare
+ opn varchar(20)' at line 3
+
+
+Here also we have to change the default delimiter ; otherwise it will terminate the query as above 
+
+
+
+mysql> delimiter $
+mysql> create trigger emptrig
+    -> before
+    -> insert on emp9
+    -> for each row
+    -> begin
+    -> declare opn varchar(20);
+    -> set opn='Insert';
+    -> insert into emp9_backup values(old.eid,new.eid,old.ename,new.ename,old.phone,new.phone,old.email,new.email,current_date,opn);
+    -> end;
+    -> $
+ERROR 1363 (HY000): There is no OLD row in on INSERT trigger
+mysql> delimiter ;
+
+Since here we are only inserting so old data cannot be there so backup table donot have old data
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+contd.
+
+
+To get time when it get inserted we have to use current_date
+
+mysql> create table emp9_backup(neid int,nename varchar(20),nphone bigint,nemail varchar(20),Dop date,opn varchar(20));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> delimiter $
+mysql> create trigger emp9trig
+    -> before
+    -> insert on emp9
+    -> for each row
+    -> begin
+    -> declare opn varchar(20);
+    -> set opn='Insert';
+    -> insert into emp9_backup values(new.eid,new.ename,new.phone,new.email,current_date,opn);
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> insert into emp9 values(108,'Ravi',8878767876,'ravi@gmail.com');
+    -> $
+Query OK, 1 row affected (0.08 sec)
+
+mysql> delimiter ;
+mysql> select * from emp9;
++------+-------+------------+-------------------+
+| eid  | ename | phone      | email             |
++------+-------+------------+-------------------+
+|  101 | Sunny | 8273564732 | mohan@gmail.com   |
+|  102 | Ravi  | 7283546283 | ravi@gmail.com    |
+|  103 | Diya  | 8293546758 | diya93@gmail.com  |
+|  104 | Neetu | 9485610293 | neetu90@gmail.com |
+|  105 | Rani  | 7892679463 | rani@gmail.com    |
+|  108 | Ravi  | 8878767876 | ravi@gmail.com    |
++------+-------+------------+-------------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from emp9_backup;
++------+--------+------------+----------------+------------+--------+
+| neid | nename | nphone     | nemail         | Dop        | opn    |
++------+--------+------------+----------------+------------+--------+
+|  108 | Ravi   | 8878767876 | ravi@gmail.com | 2017-12-01 | Insert |
++------+--------+------------+----------------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> insert into emp9 values(106,'Mani',8457687980,'mani@gmail.com');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from emp9;
++------+-------+------------+-------------------+
+| eid  | ename | phone      | email             |
++------+-------+------------+-------------------+
+|  101 | Sunny | 8273564732 | mohan@gmail.com   |
+|  102 | Ravi  | 7283546283 | ravi@gmail.com    |
+|  103 | Diya  | 8293546758 | diya93@gmail.com  |
+|  104 | Neetu | 9485610293 | neetu90@gmail.com |
+|  105 | Rani  | 7892679463 | rani@gmail.com    |
+|  108 | Ravi  | 8878767876 | ravi@gmail.com    |
+|  106 | Mani  | 8457687980 | mani@gmail.com    |
++------+-------+------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from emp9_backup;
++------+--------+------------+----------------+------------+--------+
+| neid | nename | nphone     | nemail         | Dop        | opn    |
++------+--------+------------+----------------+------------+--------+
+|  108 | Ravi   | 8878767876 | ravi@gmail.com | 2017-12-01 | Insert |
+|  106 | Mani   | 8457687980 | mani@gmail.com | 2017-12-01 | Insert |
++------+--------+------------+----------------+------------+--------+
+2 rows in set (0.00 sec)
+************************************************************************************************************************************
+
+
+
+************************************************************************************************************************************
+
+mysql> select current_date;
++--------------+
+| current_date |
++--------------+
+| 2017-12-01   |
++--------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2017-12-01 18:52:41 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select now(),sleep(10),now() ;
++---------------------+-----------+---------------------+
+| now()               | sleep(10) | now()               |
++---------------------+-----------+---------------------+
+| 2017-12-01 18:53:16 |         0 | 2017-12-01 18:53:16 |
++---------------------+-----------+---------------------+
+1 row in set (10.07 sec)
+
+
+
+
+
+
+
+
+
+
+ADVANTAGE OF ORACLE OVER MYSQL
+
+In MYSQL we can only write trigger for either insert or update or delete but in ORCALE(SQL) we can insert,delete or update with if else statement
+In MYSQL we can take backup of only new or modified record we cannot take backup of old record but in ORCALE(SQL) we can take backup of both old record 
+as well as new record
+
+
+
+
+
+
+
+
+
+
+

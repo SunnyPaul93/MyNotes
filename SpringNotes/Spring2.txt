@@ -1,0 +1,998 @@
+Spring Data Access:-
+	Spring supports two existing way to manage the DataBase connection
+		1.DriverManager connection 
+		2.JNDI DataSource connection 
+
+
+
+	1.DriverManager connection :-
+			When we want to use DriverManager connections we need DriverManagerDataSouurce class in Spring Configuration Documment
+			and there we can inject datasource,url,un and pwd using Setter Injection(<property>)  	
+			
+			Now if we want to migrate from one DataBase to another DataBase than we only need to change the DriverManagerDataSouurce 
+			class in Spring Configuration Documment
+
+
+
+
+
+	2.JNDI DataSource Connections:-
+		DataSource is created in JBoss Server with keeyname called JNDI name
+		LDAP is running with different different WebLogic,JBOSS or ..........etc and for WebLogic,JBOSS or ..........etc factory class is also different
+
+
+		By Default Authentication is disabled in LDAP server
+
+
+
+NOTE	:-In Spring DataAccessException is root for all the DAO exception
+	  Instead of diffferent exceptions for different Persistence Class one common exception is given for all(i.e for JDBC,JPA,Hibernate..............etc)	
+
+
+	
+
+
+SPRING DAO Support	:-
+	Spring Support DAO in 3 ways	:-
+		1.Provide Various DAO classes for Various Persistence Implementation as follows	:-
+			a.JdbcDaoSupport
+			b.HiberbateDaoSupport
+			c.JPADaoSupport
+
+		2.Provides new Exception Hirerachy with DataAccessException as root for DAO exception.
+		   DataAcccessException is runtime exception so all the Spring DAO Exceptions are also runtime 
+			
+
+			org.springframework.dao.DataAccessException
+			
+
+
+			java.lang.Object
+				java.lang.Throwable
+					java.lang.Exception
+						java.lang.RuntimeException
+							org.springframework.core.NestedRuntimeException
+								org.springframework.dao.DataAccessException
+								
+
+
+
+
+		3.Provides Various Exception classes for various problems comming with DataBase interraction 
+			i.abstract class DataAccessException extends NestedRuntimeException
+			ii.class CleanupFailureDataAccessException extends DataAccessException		//when connection is not closed
+			iii.class DataAccessResourceFailureException extends DataAccessException
+			iv.class DataIntegriryViolationException extends DataAccessException
+			v.class DataRetrievalFailureException extends DataAccessException		//unable to retrive data
+			vi.class DeadLockLoserDataAccessException extends PessimisticLockingFailureException
+			vii.class IncorrectUpdateScmanticsDataAccessException extends InvalidDataAccessResourceUsageException
+			ix.class InvalidDataAccessResourceUsageException extends DataAccessException
+			x.class PessimisticLockingFailureException extends ConcurrrencyFailureException
+			xi.class TypeMismatchDataAccessException extends InvalidDataAccessResourceUsageException
+			
+			xii.abstract class UncategorizedDataAccessException extends DataAccessException	//if exceptions not recognized by Spring Team
+				
+
+
+	
+
+SpringDataaccess with JDBC	:-
+		
+		class JDBCTemplete {
+			DataSource dataSource;
+		
+			JDBCTemplete(){    }		
+			JDBCTemplete(DataSource dataSource){
+				this.dataSource=dataSource
+			    }		
+			
+		}	
+NOTE	:-We are not the author of JDBCTemplete i.e some one has implemented JDBCTemplete and they inject DataSource through Constructor Injection.
+	  So when we are using this we also have to inject through Constructor Injetcion 
+		
+	For Suppose if default constructor if JDBCTemplete is called then there is not use of dataSource variable of type DataSource	
+
+
+	When we want to perform any persisitence operation then we need to write the JDBC code as:-
+		try				//1
+		{				//2
+			TakeConnection		//3	
+			Create Statement		//4
+			Prepare SQL		//5
+			Submit the SQL		//6
+			Process Result		//7			
+		}
+
+NOTE	:-Line 4 and 6 change if we change my SQL statement
+
+
+	We can see the above problem with above JDBC code 
+		1.All above statements except 4 and 6 are common for all persistence opertaion which gives us code duplication
+		2.All methods of JDBC API are throwing one common exception called java.sql.SQLException which is checked exception and because of 
+		  checked exception we must have to handle either by try-catch block or have to throw some exception for every exception
+		3.There is no clear categorization of exception in JDBC
+
+	The above problems can be resolved/solved by using following	:-
+		1.JdbcTemplete is provided which centralizes the JDBC Code
+		2.In Spring DataAccess there is only one Exception called DataAccessedException which is unchecked or runtime exception.Its not complusary
+		   to handle the Exception
+		3.In Spring DataAccess there is clear catogorization of Exceptions i.e for every problem there are clear exception given
+
+
+
+
+NOTE	:-Above problems as discussed in JDBC we can get in HIBERNATE and JPA also 
+
+
+
+
+	Methods of JDBC Templete	:-
+		int update(sql)				//Delete 
+		int update(sql,args)				//Insert,Update,Delete					
+		int update(sql,args,argsType)			//Insert,Update,Delete
+
+
+		update	:-
+			public int update(java.lang.String sql)
+			           throws DataAccessException
+
+			Description copied from interface: JdbcOperations
+
+			Issue a single SQL update operation (such as an insert, update or delete statement).
+
+			Specified by:
+				update in interface JdbcOperations
+
+			Parameters:
+				sql - static SQL to execute
+
+			Returns:
+				the number of rows affected
+			
+			Throws:
+				DataAccessException - if there is any problem.
+
+		
+
+	args can be VarX or Array also 
+
+		<ClassType> queryForObject(sql,Class type)			//select	
+		Object queryForObject(sql,rowMapper)				//select	
+		Object queryForObject(sql,args,rowMapper)			//select	
+		Object queryForObject(sql,args,argsType,rowMapper)		//select	
+		Object queryForObject(sql,args,Class)				//select	
+		
+		
+
+
+queryForObject	:-The query is expected to be a single row/single column query; the returned result will be directly mapped to the corresponding object type
+		   This method is useful for running static SQL with a known outcome
+		
+		Specified by:
+			queryForObject in interface JdbcOperations
+
+		Parameters:
+			sql - SQL query to execute
+		requiredType - the type that the result object is expected to match
+
+		Returns:
+			the result object of the required type, or null in case of SQL NULL
+		Throws:
+			IncorrectResultSizeDataAccessException - if the query does not return exactly one row, or does not return exactly one column in 
+			that row
+
+		DataAccessException - if there is any problem executing the query	
+
+
+
+
+		RowMapper interface allows to map a row of the relations with the instance of user-defined class. It iterates the ResultSet internally and adds
+		it into the collection.So we don't need to write a lot of code to fetch the records as ResultSetExtractor.
+
+
+
+
+
+		List query(sql,rowMapper)				//select 
+		List querysql,args,rowMapper)				//select 
+		List query(sql,args,argsType,rowMapper)			//select 
+
+		query	:-
+			Description copied from interface: JdbcOperations
+
+			Execute a query given static SQL, mapping each row to a Java object via a RowMapper.
+			Uses a JDBC Statement, not a PreparedStatement. If you want to execute a static query with a PreparedStatement, use the
+			 overloaded query method with null as argument array.
+
+		Specified by:
+			query in interface JdbcOperations
+
+		Parameters:
+			sql - SQL query to execute
+		
+		rowMapper - object that will map one object per row
+	
+		Returns:
+			the result List, containing mapped objects
+
+		Throws:
+			DataAccessException - if there is any problem executing the query	
+
+
+
+
+		create table customers(
+			cid int PRIMARY KEY,cname CHAR(20),email CHAR(20),phone LONG,city CHAR(20)
+		)
+
+
+
+
+
+	With Annotation	:-
+		Streo Type	:-
+			@Repository
+			@Service 		-->CustomerService,AccountService ..................etc will be automatically instantiated
+			@Controller
+			@Component	-->For Uncategorized Component
+
+
+	And In JAVAConfiguration Document we can scan the Above marked classes by using 
+		@ComponentScan(basePackages="fully qualified class name")
+
+
+
+	It is mendatory to have DAO in any application for maintaining clean code.Now suppose I have 1000 DAOs so all those DAOs has to be instantiated 
+	in Configuration class (JavaBased Annotation) so instead of insantiating all those we can use @Repository so that Spring Container will inject them 
+	automatically 
+	
+
+	DAO considered as speacial bean if using @Repository so we donot need to inject that insteaad Spring Container will do that 	
+
+	Working With Row Mapper	:-
+		When we use any select statement than data will be Stored in Result Set object.Now we have to write code for collecting data from ResultSet
+		object and store that data to TransferObjects
+		
+		SO we may get the requirement to write same code at different places whenever we execute select statement.This gives us the code duplication 
+		problem.
+		
+		Even sometimes after closing connection our data will be lost. So we can keep these datas in RowMapper 
+			 
+		So we can centralized this kind of code with the help of RowMapper
+
+
+
+
+
+
+Working With NamedParameterJdbcTemplete	:-
+		
+	With JdbcTemplete	:-i.e for Positiional
+		String sql="delete from customers where cid=?"
+		Object args[]={cid};
+		int x=jTemp.update(sql,args);
+		
+		or 
+
+		String sql="delete from customers where cid=?"
+		int x=jTemp.update(sql,cid);
+
+			
+
+
+		With Row Mapper:-
+		String sql="select phone from customers where email=?";
+		Long phn=(Long)jTemp.queryForObject(sql,Long.class,email);
+				
+		or
+
+		String sql="select city from customers where email=?";
+		Object []args={email};	
+		String city=(String)jTemp.queryForObject(sql,args,String.class);
+
+		Lab113 to Lab117
+
+		
+
+	With NamedParameterJdbcTemplete	:-
+			
+		String sql="delete from customers where cid=?"
+		Map<String,Object> parametes=new HashMap<String,Object>();
+		parameters.put("CID",cid)
+		namedParameterJdbcTemplete.update(sql,parameter)
+
+
+		Lab118 to Lab122
+
+
+
+
+
+PreparedStatementCreator	:-
+		When we want to invoke any specific methods on Connections then we have to take connection in  our control.For this 
+		PreparedStatementCreator is used 
+		Using JdbcTemplete we donot have the access over Connections.So the connnections we can achieve through PreparedStatementCreator	  	
+
+
+
+
+		update(PreparedStatementCreator) is doing	:-
+		 	void update(PreparedStatementCreator	 psc){
+			Connection con=ds.getConnection();
+			ps=psc.createPreparedStatement(con);			///Here we are doing with connection
+			ps.executeUpdate();
+			}
+
+
+		update(sql,args) is doing	:-
+		 	void update(sql,args) {
+			Connection con=ds.getConnection();
+			ps=con.prepareStatement(sql);
+			ps.setInt(1,....);
+			.....................
+			.......................................
+			ps.executeUpdate();
+			}
+
+
+
+
+
+CallableStatementCreator	:-
+			When we want to invoke stored procedure running in database than CallableStatementCreator is used
+
+			Using MySQL	:-
+			
+			delimiter $
+			create procedure addCustomer(cid int,cnm varchar(20),eml varchar(20),phn long,city varchar(20))
+			begin 
+			insert into customers values(cid,cnm,eml,phn,city);
+			end;
+			$
+			delimiter ;  
+
+
+
+
+
+SPRING DATA ACCESS USING HIBERNATE	:-
+		When we want to perform any persistence operation with Hibernate then we need to write Hibernate Code like:-
+			1.Write Persistence Class 
+			2.Write Mapping Document or use Annotation with Persistence class 
+			3.Client code 
+				try{					1
+					//Take Sesion Factory 		2
+					//Take Session 			3
+					//Begin Transiction			4
+					//Perform Persistence Operation	5	
+					//End Transiction 			6
+					//Close Session 			7
+				}catch(Exception e){..........} 	
+	
+
+		We see the following problem with above code	:-
+			1.All the above statements other than 5 are common for all Persistence Operation so writing same code repeteadly cause code duplication 
+			2.All the method in Hibernate API throws common exception i.e orf.hibernate.HibernateException and it is Checked Exception 
+			  and because of that we must have to handle that Exception either with try-catch or throws Exception 
+			3.There is no clear categorization of Exception in Hibernate 
+
+
+		Above problem can be solved as follows:-
+			1.HibernateTemplete is provided which Centralizes the client code
+			2.In SpringDataAccess there is one root exception i.e DataAcccessException which is unchecked or runtime Exception.So its not 
+			   mendatory to handle the Exception  
+			3.There is clear categorization of Exception in SpringDataAccess
+
+
+
+ 
+
+
+
+		Methods Of HibernateTemplete	:-
+			1.Serializable save(Object)
+			2.void update(Object)
+			3.void update(Object,LockMode)
+			4.void delete(Object)
+			5.void delete(Object,LockMode)
+			6.void deleteAll(Collection)
+			
+			
+			7.Object load(Class,Serializable )
+			8.Object load(Class,Serializable,LockMode )
+
+			10.List find(hql)				//HQL
+			11.List find(hql,Object)			//HQL
+			12.List find(hql,Object [])			//HQL	//Because of VarX it can take one or more elements of Object Type
+
+			13.List findByCriteria(DetatchedCriteria)		//QBC
+			14.List findByCriteria(DetatchedCriteria,int,int)	//QBC
+
+			15.void execute(HibernateCallback hc)
+
+			List findByCriteria()	//NamedQuery
+
+
+
+
+
+
+Lab126 and 127:-
+		Run Lab Without any Opertaion like addCustomer,...........................ect Since Hibernate Will Automatically Create
+		mysql> insert into customer values(101,'Sunny','sun@gmail',7826277726,'Silchar');
+		Query OK, 1 row affected (0.08 sec)
+		Than Run the Program
+	
+
+
+
+
+
+
+
+
+If I want to get Large Number of Records(say 50Lakh Records) than bettter to go With NamedQuery instead of HQL or QBC
+
+Hibernate Callback	:-
+		HibernateCallback allows us to access the Hibernate Session object directly.
+
+
+
+
+Spring Transictional Management	:-
+			
+	Spring has its own Transictional model which is common for all persistence implementations
+	Without Spring we need to use Persistence Provider specific API to manage the transictions for various persistence providers(like JDBC,Hibernate,JPA...etc)
+	Various Transiction managers are provided for various persistence providers i.e
+		DataSourceTransictionManager	for JDBC
+		HibernateTransictionManager		for Hibernate
+		JpaTransictionManager		for JPA
+
+
+	PlatformTransictionManager is Root for all TransictionManagers in Spring
+	
+	PlatformTransictionManager  methods are	:-
+		TransictionStatus	getTransiction(TransictionDefination defination)
+		void 		commit(TransictionStatus status) 
+		void 		rollback(TransictionStatus status)
+
+
+
+
+	Spring supports folowing ways to manage transictions	:-
+		Programmatic Transictions
+		Declarative Transictions with AOP using Annotation support			
+		Declarative Transictions with AOP using Schema support			
+		Declarative Transictions with AOP using TransictionProxyFactoryBean	(Currently not used i.e OutDated)
+
+
+
+
+
+create table accounts(accno int primary key,bal double,atype char(2));
+insert into accounts values(101,50000,'SA');
+insert into accounts values(102,35000,'CA');
+insert into accounts values(103,45500,'SA');
+
+
+
+
+TransictionManager must either inject in HibernateAccountDAO,......................etc or initilized in XML configuration File 
+
+
+
+
+SPRING MVC(Model View Controller)	:-
+		Spring MVC is a WebFramework like Struts1,Struts2 and JSF
+		Spring MVC is use to develope web application easily and quickly with less maintenance
+		Sprinf MVC covers WebLayer which includes Persistence Layer and Controller 
+
+		Spring MVC is based on:-
+		MVC Architecture 
+		FrontControllerDesignPattern
+		Servlet and JSP
+
+
+		For Spring MVC FrontController is DispatcherSrevlet
+
+
+
+
+
+After Deploying and Strating SpringMVC based web Application
+	 Following Tasks will happen at Container Startup:-
+	1.Web container creates,loads and initilized Dispatcher by inti() method
+	2.DispatcherServlet's init method() will perform the following	:-
+		a.Identifies Spring Container Document file
+		b.Spring instance will be created by reading all the beans from that Identified Spring Configuration Document
+		c.Initilizes DispatcherServlet with Spring Conatiner instances
+
+
+	 Following Tasks will happen at Container Shutdown time:-
+	1.Web Conatiner calls destroy() method of DispatcherServlet 
+	2.destroy() method of DispatcherServlet destroy all the Spring Conatiner instances
+
+
+
+
+
+
+
+
+SPRING MVC 
+	
+	A.XML Based Spring MVC
+	B.Annotation Based Spring MVC
+
+
+
+
+Spring Framework
+
+	1.XML Config
+	2.Java Config
+
+
+	Follwing Combinations	:-
+	A1 is allowed		Spring MVC XML with Bean Config with XML
+	A2 is not allowed		Spring MVC XML with Bean Config with JAVA
+	B1 is allowed		Spring MVC Annotation with Bean Config with XML
+	B2 is allowed		Spring MVC Annotation with Bean Config with JAVA
+
+
+
+
+Spring MVC Flow	:-
+	1.DispatcherServlet takes the incoming request 
+	2.DsipatcherServlet contacts Handler Mapping with incoming request URI(/course.sunny) say
+	3.Handler Mapping identifies and return the Controller specifies(CourseController) specified for request URI(/course.sunny)
+	4.DispatcherServlet Identfies and invokes one or more Handler Interceptors registered in Spring Container if any and then DS invokes the controller 		
+		a.handlerRequestInternal() mtd of CourseController		--with XML
+		b.getCourse() or some other methods of CourseController	--with Annotation here method name can be abything
+
+	5.After finishing the Controller method execution all the registered Handler Interceptors  will be called in reverse order 				
+		a.Finally DS gets ModelAndView class Object containing the view logical name and model data 			--with XML
+		b.Finally DS gets view logical name								---with Annotation
+	6.DS contacts View Resolver with view logical name(show)
+	7.DS gets the view(/show.jsp) from View Resolver 
+	8.DS forward the identified View(/show.jsp) to the Client 
+
+
+
+When any problem comes while processing the request we can handle the request in two ways	:-
+	a.Handle as Exception
+	b.Handle as Error
+
+
+
+
+Controller Layer Components :-
+	1.Dispatcher Servlet :-DS is front Controller Component which is responsible for the following:-
+		a.Receives the incoming request 
+		b.Process the request completely 
+		c.Deliver the respopnse 
+
+	2.Handler Mapping :-
+		Handler Mapping is responsible for identifying the corrsoponding controller for incoming request URI
+		All the Handler Mapping are subclass of HandlerMapping interface
+
+		Following are various Handler Mapping Provided :-
+			BeanNameUrlHandlerMapping 			//Default --------For XML
+			DefaultAnnotationHandlerMapping		//Deprecated----For Annotation
+			RequestMappingHandlerMapping		//Default----------For Annotation	
+			SimpleUrlHandlerMapping			//XML
+			ControllerBeanNameHandlerMapping		//XML
+			ControllerClassNameHandlerMapping		//XML
+
+
+
+		BeanNameUrlHandlerMapping	:-This is the default Handler Mapping which will be register by Spring Conatiner actomatically in case of 
+		SpringMVC XML .This Handler Mapping checks whether any bean is available whose name is same as incoming request URI  
+
+		DefaultAnnotationHandlerMapping:-This checks whether any method is availble in Controller class whose @RequestMappping value is same 
+		as incoming request URI   
+			
+		RequestMappingHandlerMapping:-This scans all @RequestMapping annotation in all controller classes.It provides a method setInterceptor() 
+		to add interceptor.This is the default Handler Mapping which will be register by Spring Conatiner actomatically in case of SpringMVC XML 
+		This is given later.
+
+		Both DefaultAnnotationHandlerMapping and RequestMappingHandlerMapping tasks are almost same
+
+
+
+		3.Handler Interceptors	:-
+			It is invoked before and after the controller invocation for performing pre-proccessing and post-processing tasks.We can have one 
+			or more HandlerIntreceptors in an application 
+
+
+
+
+		perHandle():-
+				This method is called just before the controller method 
+				This methos returns Boolean value 
+				When preHandle() method returns true then the Interceptors or Controller in HandleExecutionChain will be called 
+				When preHandle() method returns false then Control will be returned to the Client without invoking Interceptors or 
+				Controller in HandleExecutionChain and no view will be renderd 
+
+
+		postHandle():-		This method will be called immediately after the controller method execution 
+  		
+		afterCompletion()	:-	This method is called just before sending response 
+
+		UsingHandlerInterceptorAdapter	:-
+					HandlerInterceptorAdapter is subclasss of HandlerInterceptor inetrface and override all these three metods.
+					We can write our own Interceptor class by extending HandlerInterceptorAdapter and have to oberride all 
+					these three methods
+						
+
+
+
+
+	Controller	:-
+		Controller is the last component in Controller Layer from where Business Layer starts
+		Controller is mainly responsible to 
+			1.Collect the client submited data from Command Object 
+			2.Calls Model Component
+			3.If Error occured then can be handled in two ways :-
+				a.throws as Exception(Handle Exception)    
+				b.Add as Error(Handle Error)
+			4.If data is returned without any error then stores that in any scope and View Logical Name	
+				
+		
+		Note:- Only one instances will be created per Controller for all the users
+		
+
+
+
+
+	Tiles Frameork:-	Tiles framework is mainly a Layout design framework which allows us to centralized the web page layout or templetes,text formats,
+			styles required...................etc
+			Tiles is a saperate Framework but not a part of SpringMVC Fraemwork 		
+			We can intergate Tiles Framework with SpringMVC,JSF1.x,JSF2.x,Struts1.x................etc
+
+
+			Spring provides integration support with apache tiles framework. So we can simply manage the layout of the Spring MVC 
+			application by the help of spring tiles support.
+
+
+			Advantage of Tiles support in Spring MVC
+			
+			Reusability: We can reuse a single component in multiple pages like header and footer components.
+			
+			Centralized control: We can control the layout of the page by a single template page only.
+
+			Easy to change the layout: By the help of single template page, we can change the layout of the page anytime. So our website can 
+			easily adapt new technologies such as bootstrap, jquery etc.
+
+
+
+
+
+		SpringLab155 and SpringLab156
+
+
+	File Upload:-
+
+		SpringLab157 and SpringLab158
+
+		File Upload is given by Spring but for File Download follow as we did in Servlet File Download
+
+
+
+	I18N	:-
+		SpringLab159
+
+
+
+
+SpringLab160	:-
+
+mysql> create table contacts(cid int primary key auto_increment,cname varchar(25),cemail varchar(50),cphone varchar(10));
+Query OK, 0 rows affected (0.91 sec)
+
+
+
+CGLIB is a code genration library. Spring uses CGLIB, to generate proxies.
+
+
+
+
+
+SpringSecurity with XML using default login page:-
+	
+	SpringLab161-SpringLab163
+
+SpringSecurity with Annotation using default login page:-
+	
+	SpringLab164-SpringLab165
+
+
+SpringSecurity with XML using custom login page:-
+	
+	SpringLab166 
+
+
+
+In Default Login Page Some default message for login and logout 
+
+In Custom Login Page we define message for login and logout 
+
+
+	SpringLab167:-
+
+create table springusers(
+	username varchar(45) primary key,
+	password varchar(45) not null,
+	enabled tinyint not null
+	 );
+
+insert into springusers values('sunny','sunny',true);
+insert into springusers values('mohan','mohan',true);
+insert into springusers values('kshiti','kshiti',false);
+
+
+create table springusers_roles(
+	user_role_id int primary key,
+	username varchar(45) not null,
+	role varchar(45) not null,
+	foreign key(username) references springusers(username)		
+	);
+
+
+insert into springusers_roles values(1,'sunny','ROLE_ADMIN');
+insert into springusers_roles values(2,'sunny','ROLE_EMP');
+insert into springusers_roles values(3,'mohan','ROLE_EMP');
+insert into springusers_roles values(4,'kshiti','ROLE_ADMIN');
+
+
+
+Here we cannot take like has any form multiple so for multiple we have to take same user name to insert multiple times with different role .For say sunny is taken 
+as ADMIN and EMP 
+
+
+mysql> select * from springusers;
++----------+----------+---------+
+| username | password | enabled |
++----------+----------+---------+
+| kshiti   | kshiti   |       0 |
+| mohan    | mohan    |       1 |
+| sunny    | sunny    |       1 |
++----------+----------+---------+
+3 rows in set (0.04 sec)
+
+mysql> select * from springusers_roles;
++--------------+----------+------------+
+| user_role_id | username | role       |
++--------------+----------+------------+
+|            1 | sunny    | ROLE_ADMIN |
+|            2 | sunny    | ROLE_EMP   |
+|            3 | mohan    | ROLE_EMP   |
+|            4 | kshiti   | ROLE_ADMIN |
++--------------+----------+------------+
+4 rows in set (0.00 sec)
+
+
+
+
+NOTE	:-
+
+	With XML we can either use 
+		<security:user-service ....................................... />		//Check values from inMemory
+			or
+		<security:jdbc-user-service ....................................... />		//Check values from DataBase
+
+
+
+	With Annotation we can either use
+
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+		auth.inMemoryAuthentication().withUser("sunny").password("sunny").roles("ADMIN");		////Check values from inMemory
+		auth.inMemoryAuthentication().withUser("mohan").password("mohan").roles("EMP");
+		auth.inMemoryAuthentication().withUser("kshiti").password("kshiti").roles("EMP","ADMIN");
+
+		}
+	
+		or 
+
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+		auth.jdbcAuthentication().dataSource(dataSource)						//Check values from DataBase
+		.usersByUsernameQuery("select usename,password,enabled from springusers where username=?")
+		.authoritiesByUsernameQuery("select usename,role from springusers_roles where username=?");
+
+		}
+	
+
+
+
+
+
+mvc:annotation- config mvc	:-annotation-driven is used for enabling the Spring MVC components with its default configurations.
+
+			If you don’t include mvc:annotation-driven then also your MVC application would work, if you have
+			used the context:component-scan for creating the beans or defined the beans in your XML file.
+
+			But, mvc:annotation-driven does some extra job on configuring the special beans that would not have been configured if you are 
+			not using this element in your XML file.
+
+			This tag would register the HandlerMapping and HandlerAdapter required to dispatch requests to your @Controllers. In addition, 
+			it also applies some defaults based on what is present in your classpath.
+
+			Such defaults are:
+
+			Using the Spring 3 Type ConversionService as a simpler and more robust alternative to JavaBeans PropertyEditors
+			Support for formatting Number fields with @NumberFormat
+			Support for formatting Date, Calendar, and Joda Time fields with @DateTimeFormat, if Joda Time is on the classpath
+			Support for validating @Controller inputs with @Valid, if a JSR-303 Provider is on the classpath
+			Support for reading and writing XML, if JAXB is on the classpath
+			Support for reading and writing JSON, if Jackson is on the classpath
+
+
+
+
+
+
+context:annotation-driven context	:-annotation-config is used for activating annotations in beans already registered in the application context.
+
+				That means it will resolve @Autowired and @Qualifier annotations for the beans which are already created and 
+				stored in the spring container.
+
+				context:component-scan can also do the same job, but context:component-scan will also scan the packages for registering
+				the beans to application context.
+
+				context:annotation-config will not search for the beans registration, this will only activate the already registered beans in
+				the context.
+
+LAST LAB LEFT NOT UNDERSTOOD AND ALSO RESTFUL WEB SERVICES
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
